@@ -3,7 +3,8 @@ from django.forms import EmailField
 from django.forms import ValidationError
 from django.utils.translation import ugettext as _
 
-from core.models import Topic, Issue, Comment, Document, Polity, UserProfile, Election
+from core.models import Topic, Issue, Comment, Document, Polity, UserProfile
+from election.models import Election
 
 
 class TopicForm(ModelForm):

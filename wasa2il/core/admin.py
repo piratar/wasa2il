@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from django.contrib import auth
 
@@ -11,8 +10,10 @@ from models import (
     PolityRuleset,
     Document, Statement, ChangeProposal,
     DocumentContent,
-    Election, Candidate, ElectionVote, VotingSystem,
-    )
+    VotingSystem,
+)
+
+from election.models import Election, Candidate, ElectionVote
 
 
 def getDerivedAdmin(base_admin, **kwargs):
