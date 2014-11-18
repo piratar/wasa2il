@@ -8,7 +8,8 @@ from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 
-from core.models import UserTopic, Vote, ElectionVote
+from core.models import UserTopic, Vote
+from election.models import ElectionVote
 
 
 register = template.Library()
@@ -76,7 +77,7 @@ def thumbnail(file, size='104x104'):
         print 'Error: %s' % e
         return ""
 
- 
+
 @register.filter(is_safe=True)
 @stringfilter
 def markdown(value):

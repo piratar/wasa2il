@@ -7,13 +7,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.conf import settings
 
-from core.models import Election
-from core.models import ElectionVote
-from core.models import Candidate
 from core.models import Polity
 from core.models import Topic
 from core.models import UserProfile
 from core.models import UserTopic
+
+from election.models import Election, ElectionVote, Candidate
 
 from core.ajax.utils import jsonize, error
 

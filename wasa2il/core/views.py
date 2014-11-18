@@ -31,7 +31,8 @@ from django.views.decorators.debug import sensitive_post_parameters
 # END
 
 from django.contrib.auth.models import User
-from core.models import Candidate, Polity, Document, DocumentContent, Topic, Issue, Election, ElectionVote, UserProfile
+from core.models import Polity, Document, DocumentContent, Topic, Issue, UserProfile
+from election.models import Candidate, Election, ElectionVote
 from core.forms import DocumentForm, UserProfileForm, TopicForm, IssueForm, CommentForm, PolityForm, ElectionForm
 from core.saml import authenticate, SamlException
 from gateway.icepirate import configure_external_member_db
@@ -313,7 +314,7 @@ class IssueCreateView(CreateView):
                 previous_topics = current_content.previous_topics()
                 context_data['selected_topics'] = json.dumps(previous_topics)
                 context_data['tab'] = 'diff'
- 
+
             context_data['documentcontent'] = current_content
             context_data['documentcontent_comments'] = current_content.comments.replace("\n", "\\n")
             context_data['selected_diff_documentcontent'] = current_content.document.preferred_version()
