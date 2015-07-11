@@ -173,3 +173,6 @@ ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_REDIRECT_URL = "/"
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+# Only send activation emails if we aren't in debug mode
+SEND_ACTIVATION_EMAIL = not DEBUG
