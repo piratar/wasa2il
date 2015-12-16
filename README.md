@@ -73,14 +73,13 @@ should support the creation of that.]
 
 ## Locally
 
-    make init
-    make run
+    python initial_setup.py
 
-`make init` will setup a local virtualenv for the python dependencies, and then
-run the `initial_setup.py` script which prompts for a username, e-mail and
-password of the first (admin) user, which get added to the sqlite database.
-`make run` runs the server using the python executable from the previously
-installed virtualenv.
+
+## Locally (with a virtualenv)
+
+    virtualenv venv
+    venv/bin/python initial_setup.py --venv
 
 
 ## Docker
@@ -111,4 +110,18 @@ and
 
 see instructions: INSTALL.Debian.txt
 
-But in general, just run python initial_setup.py and you will be all set.
+
+# Running locally
+
+In order to run wasa2il locally for development purposes you need run
+`manage.py runserver`.  If you installed the wasa2il dependencies globally
+(not in a virtualenv), you should be able to run:
+
+    cd wasa2il && python ./manage.py runserver
+
+from the repository root.
+
+If you installed the dependencies in a virtualenv, you need to run the app
+via the python there, or source the activate script:
+
+    cd wasa2il && ../venv/bin/python ./manage.py runserver
