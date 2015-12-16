@@ -71,8 +71,57 @@ should support the creation of that.]
 
 # Installation
 
-For Debian, see instructions: INSTALL.Debian.txt
+## Locally
 
-But in general, just run python initial_setup.py and you will be all set.
+    python initial_setup.py
 
-```
+
+## Locally (with a virtualenv)
+
+    virtualenv venv
+    venv/bin/python initial_setup.py --venv
+
+
+## Docker
+
+    docker build -t piratar/wasa2il .
+    docker run --name wasa2il-dev-container -p 8000:8000 -it piratar/wasa2il
+
+The first command builds a new docker image and gives it the name `piratar/wasa2il`
+The second command starts a new docker container based of the latest version
+of the `piaratar/wasa2il` image, forwards port 8000 of the docker host to the
+same port on the docker container, and names it `wasa2il-dev-container`.  The
+Docker CMD command runs `initial_setup.py` so when running the container for
+the first time you will be prompted for username, e-mail and password.
+
+Since the sqlite database is created inside the container on the first run,
+and not for example mounted through a volume, if you want your test data to
+persist you must re-use the container after building it.  You can stop and
+start the named container like so:
+
+    docker stop wasa2il-dev-container
+
+and
+
+    docker start wasa2il-dev-container
+
+
+## Debian
+
+see instructions: INSTALL.Debian.txt
+
+
+# Running locally
+
+In order to run wasa2il locally for development purposes you need run
+`manage.py runserver`.  If you installed the wasa2il dependencies globally
+(not in a virtualenv), you should be able to run:
+
+    cd wasa2il && python ./manage.py runserver
+
+from the repository root.
+
+If you installed the dependencies in a virtualenv, you need to run the app
+via the python there, or source the activate script:
+
+    cd wasa2il && ../venv/bin/python ./manage.py runserver
