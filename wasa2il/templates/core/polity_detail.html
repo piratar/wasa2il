@@ -30,7 +30,7 @@
             <div class="btn-group" role="group" data-step="1" data-intro="{% trans "introjs shortcuts" %}">
                 <a href="#newissues" type="button" class="btn btn-default" data-step="2" data-intro="{% trans "introjs new issues" %}">{{newissues.count}} {% trans "New issues" %}</a>
                 <a href="#documents" type="button" class="btn btn-default" data-step="3" data-intro="{% trans "introjs agreements" %}">{{polity.agreements.count}} {% trans "Agreements" %}<a>
-                <a href="#topics"    type="button" class="btn btn-default" data-step="4" data-intro="{% trans "introjs topics" %}" data-position="right">{{polity.topic_set.count}} {% trans "Topics" %}</a>
+                <a href="#topics"    type="button" class="btn btn-default" data-step="4" data-intro="{% trans "introjs topics" %}">{{polity.topic_set.count}} {% trans "Topics" %}</a>
             </div>
         </div>
     </div>
@@ -140,7 +140,7 @@
             </ul>
         </div>
 
-        <h2 data-step="5" data-intro="{% trans "introjs elections" %}">{% trans "Elections" %} <small>{% trans "putting people in power"%}</small></h2>
+        <h2 data-step="5" data-intro="{% trans "introjs elections" %}" data-position="top">{% trans "Elections" %} <small>{% trans "putting people in power"%}</small></h2>
 
         <p class="muted">{% trans "Sometimes you need to put people in their places. Elections do just that." %}</p>
 
