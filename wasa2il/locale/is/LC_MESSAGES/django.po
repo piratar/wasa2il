@@ -1938,15 +1938,15 @@ msgid "You are a member of this polity."
 msgstr "Þú ert meðlimur þessa þings."
 
 #: wasa2il/templates/core/polity_detail.html:30
-msgid "introjs shortcuts"
+msgid "These buttons are shortcuts"
 msgstr "Hérna eru flýtitakkar sem færa þig neðar á síðuna. (Ýttu samt á Next)"
 
 #: wasa2il/templates/core/polity_detail.html:31
-msgid "introjs new issues"
+msgid "This button will take you to new issues"
 msgstr "Nýjustu mál, sum þeirra gætu verið í kosningu"
 
 #: wasa2il/templates/core/polity_detail.html:32
-msgid "introjs agreements"
+msgid "This button will take you to agreements"
 msgstr "Þessi mál eru nú þegar samþykkt"
 
 #: wasa2il/templates/core/polity_detail.html:32
@@ -1956,7 +1956,7 @@ msgid "Agreements"
 msgstr "Samþykktir"
 
 #: wasa2il/templates/core/polity_detail.html:33
-msgid "introjs topics"
+msgid "This button will take you to topics"
 msgstr "Hérna getur þú skoðað alla flokka"
 
 #: wasa2il/templates/core/polity_detail.html:46
@@ -1964,7 +1964,7 @@ msgid "Show all new issues"
 msgstr "Sýna öll ný mál"
 
 #: wasa2il/templates/core/polity_detail.html:54
-msgid "introjs first step"
+msgid "This is a good place to start"
 msgstr "Gott fyrsta skref er að skoða mál í kosningu."
 
 #: wasa2il/templates/core/polity_detail.html:86
@@ -2014,7 +2014,7 @@ msgid "Show all elections"
 msgstr "Sýna allar kosningar"
 
 #: wasa2il/templates/core/polity_detail.html:143
-msgid "introjs elections"
+msgid "Here are all elections"
 msgstr "Þessi hluti, kosningar, er einungis notaður þegar persónukjör á sér stað."
 
 #: wasa2il/templates/core/polity_detail.html:143
