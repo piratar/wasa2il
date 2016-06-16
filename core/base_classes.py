@@ -1,6 +1,5 @@
 
 from django.db import models
-from fields import AutoUserField
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
@@ -22,17 +21,3 @@ class NameSlugBase(models.Model):
 
     def __unicode__(self):
         return u'%s' % (self.name)
-
-
-def getCreationBase(prefix):
-
-    class CreationBase(models.Model):
-        created_by = AutoUserField(related_name='%s_created_by' % prefix)
-        modified_by = AutoUserField(related_name='%s_modified_by' % prefix)
-        created = models.DateTimeField(auto_now_add=True)
-        modified = models.DateTimeField(auto_now=True)
-
-        class Meta:
-            abstract = True
-
-    return CreationBase

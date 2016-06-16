@@ -4,7 +4,7 @@ import logging
 import re
 import random
 
-from base_classes import NameSlugBase, getCreationBase
+from base_classes import NameSlugBase
 from core.utils import AttrDict
 from datetime import datetime, timedelta
 from django.conf import settings
@@ -130,8 +130,12 @@ class PolityRuleset(models.Model):
         pass
 
 
-class Polity(BaseIssue, getCreationBase('polity')):
+class Polity(BaseIssue):
     """A political entity. See the manual."""
+    created_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='polity_created_by')
+    modified_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='polity_modified_by')
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     parent = models.ForeignKey('Polity', help_text="Parent polity", **nullblank)
     members = models.ManyToManyField(User)
@@ -180,8 +184,13 @@ class Polity(BaseIssue, getCreationBase('polity')):
         return super(Polity, self).save(*args, **kwargs)
 
 
-class Topic(BaseIssue, getCreationBase('topic')):
+class Topic(BaseIssue):
     """A collection of issues unified categorically."""
+    created_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='topic_created_by')
+    modified_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='topic_modified_by')
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
     polity = models.ForeignKey(Polity)
 
     class Meta:
@@ -222,11 +231,16 @@ class UserTopic(models.Model):
         unique_together = (("topic", "user"),)
 
 
-class Issue(BaseIssue, getCreationBase('issue')):
+class Issue(BaseIssue):
     SPECIAL_PROCESS_CHOICES = (
         ('accepted_at_assembly', _('Accepted at assembly')),
         ('rejected_at_assembly', _('Rejected at assembly')),
     )
+
+    created_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='issue_created_by')
+    modified_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='issue_modified_by')
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     polity = models.ForeignKey(Polity)
     topics = models.ManyToManyField(Topic, verbose_name=_("Topics"))
@@ -332,7 +346,12 @@ class Issue(BaseIssue, getCreationBase('issue')):
         return result
 
 
-class Comment(getCreationBase('comment')):
+class Comment(models.Model):
+    created_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='comment_created_by')
+    modified_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='comment_modified_by')
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
     comment = models.TextField()
     issue = models.ForeignKey(Issue)
 
@@ -584,7 +603,12 @@ class DocumentContent(models.Model):
         return "DocumentContent (ID: %d)" % self.id
 
 
-class ChangeProposal(getCreationBase('change_proposal')):
+class ChangeProposal(models.Model):
+    created_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='change_proposal_created_by')
+    modified_by = models.ForeignKey(User, editable=False, null=True, blank=True, related_name='change_proposal_modified_by')
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
     document = models.ForeignKey(Document)    # Document to reference
     issue = models.ForeignKey(Issue)
 
