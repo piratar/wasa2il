@@ -331,6 +331,9 @@ $(document).ready(function() {
     }
 });
 
+function start_introjs(){
+    introJs().start();
+}
 
 $(function() {
 
