@@ -51,6 +51,10 @@ textarea {
 .date { text-align: right !important; }
 
 
+.navbar-fixed-top .navbar-right {
+	margin-right: 15px;
+}
+
 #statements_declarations ol li:before {
 	content: value(statement-counter);
 }
