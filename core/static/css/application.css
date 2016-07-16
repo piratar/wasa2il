@@ -50,6 +50,11 @@ textarea {
 .right { text-align: right !important; }
 .date { text-align: right !important; }
 
+.entry {
+	list-style: none;
+	padding-left: 0;
+}
+
 
 #statements_declarations ol li:before {
 	content: value(statement-counter);
