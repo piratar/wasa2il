@@ -160,6 +160,10 @@ if create_database:
         stderr.write('Error: Django migration gave errors. Quitting.\n')
         quit(1)
 
+    stdout.write('Loading database with Icelandic data...')
+    migrate_result = subprocess.call([get_executable_path('python'), os.path.join(os.getcwd(), 'manage.py'), 'load_icelandic_data'])
+    stdout.write(' done\n')
+
     stdout.write('We will now create a superuser to configure polities within Wasa2il once it has been set up.\n')
     subprocess.call([get_executable_path('python'), os.path.join(os.getcwd(), 'manage.py'), 'createsuperuser'])
 

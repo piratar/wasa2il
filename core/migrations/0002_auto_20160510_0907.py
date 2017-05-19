@@ -8,7 +8,7 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0002_zipcodes'),
+        ('core', '0001_initial'),
     ]
 
     operations = [
