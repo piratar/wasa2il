@@ -1,4 +1,5 @@
 # Wasa2il - ‫وسائل
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0bb6ea0bc27d4428ab044d97be638684)](https://www.codacy.com/app/7oi/wasa2il?utm_source=github.com&utm_medium=referral&utm_content=piratar/wasa2il&utm_campaign=badger)
 [![build status](https://gitlab.com/piratar/wasa2il/badges/development/build.svg)](https://gitlab.com/piratar/wasa2il/commits/development)
 [![coverage report](https://gitlab.com/piratar/wasa2il/badges/development/coverage.svg)](https://gitlab.com/piratar/wasa2il/commits/development)
 
