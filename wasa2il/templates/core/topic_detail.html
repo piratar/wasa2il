@@ -53,6 +53,7 @@
         {% for comment in topic.new_comments %}
         <div class="comment" id="comment_{{comment.id}}">
             <div class="comment_created_by">
+                <a href="/accounts/profile/{{comment.created_by}}/"><img class="" src="{{ comment.created_by.userprofile.picture |thumbnail:'40x40' }}" /></a>
                 <a href="/accounts/profile/{{comment.created_by}}/">{{comment.created_by}}</a>
                 {% trans "in" %} <a href="/issue/{{comment.issue.id}}/">{{comment.issue.name}}</a>
             </div>
