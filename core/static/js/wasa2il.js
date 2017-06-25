@@ -157,6 +157,32 @@ function issue_poll(issue) {
     });
 }
 
+function render_comment(comment) {
+    div = "<div class=\"comment\" id=\"comment_" + comment.id + "\">";
+    div +=  "<div class=\"profilepic\">";
+    div +=    "<a href=\"/accounts/profile/" + comment.created_by + "/\"><img src=\"" + comment.created_by_thumb + "\" /></a>";
+    div +=  "</div>";
+    div +=  "<div class=\"content\">";
+    div +=    "<div class=\"created_by\"><a href=\"/accounts/profile/" + comment.created_by + "/\">" + comment.created_by + "</a> ";
+    if (comment.issue_id) {
+        div += comment.in + " <a href=\"/issue/" + comment.issue_id + "/\">" + comment.issue_name + "</a>";
+    }
+    div += "</div>";
+    div +=    "<div class=\"text\">" + comment.comment.replace(/\n/g, '<br />') + "</div>";
+    div +=    "<div class=\"created\">" + comment.created_since + "</div>";
+    div +=  "</div>";
+    div += "</div>";
+    return div
+}
+
+function render_comments(comments, $id) {
+    $($id).empty();
+    for (i in comments) {
+        comment = comments[i];
+        $($id).append(render_comment(comment));
+    }
+}
+
 
 function issue_render(issue) {
     //remove selection and deactivate all active buttons
@@ -174,22 +200,13 @@ function issue_render(issue) {
         $("#vote_abstain").addClass('active');
     }
     $("#issue_votes_count").text(issue_object.votes.count);
-    $("#issue_comments").empty();
     if (issue_object.comments.length > 0) {
         $("#issue-comments-header").show();
     }
     else {
         $("#issue-comments-header").hide();
     }
-    for (i in issue_object.comments) {
-        comment = issue_object.comments[i];
-        div = "<div class=\"comment\" id=\"comment_" + comment.id + "\">";
-        div +=    "<div class=\"comment_created_by\"><a href=\"/accounts/profile/" + comment.created_by + "/\">" + comment.created_by + "</a></div>";
-        div +=    "<div class=\"comment_content\">" + comment.comment.replace(/\n/g, '<br />') + "</div>";
-        div +=    "<div class=\"comment_created\">" + comment.created_since + "</div>";
-        div += "</div>";
-        $("#issue_comments").append(div);
-    }
+    render_comments(issue_object.comments, "#issue_comments");
 }
 
 
@@ -197,27 +214,12 @@ function discussion_poll(discussion) {
     $.getJSON("/api/discussion/poll/", {"discussion": discussion}, function(data) {
         if (data.ok) {
             discussion_object = data.discussion;
-            discussion_render();
+            render_comments(discussion_object.comments, "#discussion_comments");
         } else {
             // Silent error reporting?
         }
     });
 }
-
-
-function discussion_render(discussion) {
-    $("#discussion_comments").empty();
-    for (i in discussion_object.comments) {
-        comment = discussion_object.comments[i];
-        div = "<div class=\"comment\" id=\"comment_" + comment.id + "\">";
-        div +=    "<div class=\"comment_created_by\"><a href=\"/accounts/profile/" + comment.created_by + "/\">" + comment.created_by + "</a></div>";
-        div +=    "<div class=\"comment_content\">" + comment.comment + "</div>";
-        div +=    "<div class=\"comment_created\">" + comment.created_since + "</div>";
-        div += "</div>";
-        $("#discussion_comments").append(div);
-    }
-}
-
 
 
 function discussion_comment_send(discussion, comment) {
@@ -227,7 +229,7 @@ function discussion_comment_send(discussion, comment) {
         if (data.ok) {
             comment.val("");
             discussion_object = data.discussion;
-            discussion_render();
+            render_comments(discussion_object.comments, "#discussion_comments");
         } else {
             // Silent error reporting?
         }
@@ -243,6 +245,28 @@ function discussion_timer_stop() {
     window.clearInterval(discussion_timer);
 }
 
+
+function topic_comment_poll(topic) {
+    $.getJSON("/api/topic/comments/", {"topic": topic}, function(data) {
+        if (data.ok) {
+            topic_object = data.topic;
+            render_comments(topic_object.comments, "#topic_comments");
+        } else {
+            // Silent error reporting?
+        }
+    });
+}
+
+function topic_timer_start() {
+    topic_timer = window.setInterval(
+        function() {
+            topic_comment_poll(topic_id);
+        }, 5000
+    );
+}
+function topic_timer_stop() {
+    window.clearInterval(topic_timer);
+}
 
 function election_timer_start() {
     // This is basically just checking for new candidates or keeping
@@ -364,6 +388,9 @@ $(document).ready(function() {
     }
 });
 
+// function start_introjs(){
+//     introJs().start();
+// }
 
 $(function() {
 
