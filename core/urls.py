@@ -11,7 +11,7 @@ from core.ajax.document import (
     document_propose, document_propose_change, render_markdown,
     documentcontent_render_diff
 )
-from core.ajax.topic import topic_comment_poll
+from core.ajax.topic import topic_poll
 from core.views import *
 from core.ajax import *
 from core.models import Polity, Topic, Issue, Delegate
@@ -64,7 +64,7 @@ urlpatterns = patterns('',
     (r'^api/issue/poll/$', issue_poll),
     (r'^api/issue/vote/$', issue_vote),
 
-    (r'^api/topic/comments/$', topic_comment_poll),
+    (r'^api/topic/poll/$', topic_poll),
 
     (r'^api/election/poll/$', election_poll),
     (r'^api/election/vote/$', election_vote),

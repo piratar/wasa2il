@@ -10,9 +10,8 @@ from core.templatetags.wasa2il import thumbnail
 
 @login_required
 @jsonize
-def topic_comment_poll(request):
+def topic_poll(request):
     topic = int(request.POST.get("topic", request.GET.get("topic", 0)))
-    print(topic)
     topic = get_object_or_404(Topic, id=topic)
     ctx = {}
     comments = [
