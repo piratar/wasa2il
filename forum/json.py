@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
@@ -6,6 +7,7 @@ from django.utils.timesince import timesince
 import json
 
 from forum.models import Discussion, DiscussionPost
+from core.templatetags.wasa2il import thumbnail
 
 
 def jsonize(f):
@@ -45,7 +47,17 @@ def discussion_comment_send(request):
 def discussion_poll(request):
     discussion = get_object_or_404(Discussion, id=request.REQUEST.get("discussion", 0))
     ctx = {}
-    comments = [{"id": comment.id, "created_by": comment.user.username, "created": str(comment.timestamp), "created_since": timesince(comment.timestamp), "comment": comment.format()} for comment in discussion.discussionpost_set.all().order_by("timestamp")]
+    comments = [
+        {
+            "id": comment.id,
+            "created_by": comment.user.username,
+            "created_by_thumb": thumbnail(
+                comment.user.userprofile.picture, '40x40'),
+            "created": str(comment.timestamp),
+            "created_since": timesince(comment.timestamp),
+            "comment": comment.format()
+        } for comment in discussion.discussionpost_set.all().order_by("timestamp")
+    ]
     ctx["discussion"] = {"comments": comments}
     ctx["ok"] = True
 
