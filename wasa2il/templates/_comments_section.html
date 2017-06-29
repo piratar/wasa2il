@@ -1,0 +1,18 @@
+<div class="comment_section">
+    <div id="{{ obj_key }}_comments">
+    </div>
+    {% if not closed %}
+        <div class="comment_form form-inline">
+            <textarea id="id_comment" class="span4"></textarea>
+            <button class="btn primary" onclick="discussion_comment_send('{{ obj_key }}', {{ obj_id }}, $('#id_comment'));">{{ btntext }}</button>
+        </div>
+    {% endif %}
+
+
+    <script>
+        $(function() {
+            commentPoll('{{ obj_key }}', {{ obj_id }});
+            discussion_timer_start('{{ obj_key }}', {{ obj_id }});
+        });
+    </script>
+</div>
