@@ -93,36 +93,6 @@ function elections_showclosed_toggle(polity_id) {
 }
 
 
-function issue_comment_send(issue, comment) {
-    comment_text = comment.val();
-
-    if (comment_text == "") {
-        comment.focus();
-        return;
-    }
-
-    data = {
-        'issue': issue,
-        'comment': comment_text,
-        'csrfmiddlewaretoken': $('.comment_form').find('input[name="csrfmiddlewaretoken"]').val(),
-    }
-
-    $.post("/api/issue/comment/send/", data, null, 'json').done(function(data) {
-        if (data.ok) {
-            comment.val("");
-            issue_object = data.issue;
-            issue_render();
-            comment.focus();
-        }
-        else {
-            alert('Error: Data was received but does not seem to be JSON');
-        }
-    }).fail(function(xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-    });
-}
-
-
 function issue_timer_start() {
     issue_timer = window.setInterval(function() { issue_poll(issue_id); }, 5000);
 }
