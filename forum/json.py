@@ -15,7 +15,7 @@ def jsonize(f):
         m = f(*args, **kwargs)
         if isinstance(m, HttpResponse):
             return m
-        return HttpResponse(json.dumps(m))
+        return HttpResponse(json.dumps(m), content_type='application/json')
 
     return wrapped
 
@@ -29,8 +29,8 @@ def error(msg, ctx={}):
 @login_required
 @jsonize
 def discussion_comment_send(request):
-    discussion = get_object_or_404(Discussion, id=request.REQUEST.get("discussion", 0))
-    text = request.REQUEST.get("comment")
+    discussion = get_object_or_404(Discussion, id=request.POST.get("discussion", 0))
+    text = request.POST.get("comment")
     if request.user not in discussion.forum.polity.members.all():
         return discussion_poll(request)
 
@@ -45,7 +45,8 @@ def discussion_comment_send(request):
 @login_required
 @jsonize
 def discussion_poll(request):
-    discussion = get_object_or_404(Discussion, id=request.REQUEST.get("discussion", 0))
+    discussion_id = request.POST.get("discussion", request.GET.get("discussion", 0))
+    discussion = get_object_or_404(Discussion, id=discussion_id)
     ctx = {}
     comments = [
         {
