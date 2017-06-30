@@ -2,10 +2,12 @@ language: python
 python:
 - '2.7'
 install: pip install -r requirements.txt
+
 script:
   - coverage run --source=. manage.py test -v 2
   - coverage xml
   - python-codacy-coverage -r coverage.xml
+
 deploy:
   provider: heroku
   api_key:
@@ -17,3 +19,6 @@ deploy:
   run:
     - "python manage.py makemessages"
     - "python manage.py compilemessages"
+after_success:
+  - ./tag.sh
+
