@@ -157,6 +157,30 @@ function issue_poll(issue) {
     });
 }
 
+function issue_render(issue) {
+    //remove selection and deactivate all active buttons
+    $("#vote_yes").parent().children().removeClass('btn-success');
+    $("#vote_yes").parent().children().removeClass('active');
+
+    if (issue_object.vote == 1) {
+        $("#vote_yes").addClass('btn-success');
+        $("#vote_yes").addClass('active');
+    } else if (issue_object.vote == -1) {
+        $("#vote_no").addClass('btn-success');
+        $("#vote_no").addClass('active');
+    } else {
+        $("#vote_abstain").addClass('btn-success');
+        $("#vote_abstain").addClass('active');
+    }
+    $("#issue_votes_count").text(issue_object.votes.count);
+    if (issue_object.comments.length > 0) {
+        $("#issue-comments-header").show();
+    }
+    else {
+        $("#issue-comments-header").hide();
+    }
+}
+
 function render_comment(comment) {
     div = "<div class=\"comment\" id=\"comment_" + comment.id + "\">";
     div +=  "<div class=\"profilepic\">";
@@ -183,89 +207,71 @@ function render_comments(comments, $id) {
     }
 }
 
+function commentPoll(obj_key, obj_id) {
+    var obj = {};
+    obj[obj_key] = obj_id;
+    var APIPath = "/api/" + obj_key + "/poll/";
 
-function issue_render(issue) {
-    //remove selection and deactivate all active buttons
-    $("#vote_yes").parent().children().removeClass('btn-success');
-    $("#vote_yes").parent().children().removeClass('active');
-
-    if (issue_object.vote == 1) {
-        $("#vote_yes").addClass('btn-success');
-        $("#vote_yes").addClass('active');
-    } else if (issue_object.vote == -1) {
-        $("#vote_no").addClass('btn-success');
-        $("#vote_no").addClass('active');
-    } else {
-        $("#vote_abstain").addClass('btn-success');
-        $("#vote_abstain").addClass('active');
-    }
-    $("#issue_votes_count").text(issue_object.votes.count);
-    if (issue_object.comments.length > 0) {
-        $("#issue-comments-header").show();
-    }
-    else {
-        $("#issue-comments-header").hide();
-    }
-    render_comments(issue_object.comments, "#issue_comments");
-}
-
-
-function discussion_poll(discussion) {
-    $.getJSON("/api/discussion/poll/", {"discussion": discussion}, function(data) {
+    $.get(APIPath, obj).done(function(data) {
         if (data.ok) {
-            discussion_object = data.discussion;
-            render_comments(discussion_object.comments, "#discussion_comments");
+            keys = Object.keys(data);
+            ok_pos = keys.indexOf("ok");
+            if (ok_pos != -1) {
+                keys.splice(keys.indexOf("ok"), 1);
+            }
+            key = keys[0];
+            object = data[key];
+            render_comments(object.comments, "#" + key + "_comments");
         } else {
             // Silent error reporting?
         }
+    }).fail(function(xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
     });
 }
 
 
-function discussion_comment_send(discussion, comment) {
+function commentSend(obj_key, obj_id, comment) {
     comment_text = comment.val();
-    if (comment_text == "") { return; }
-    $.getJSON("/api/discussion/comment/send/", {"discussion": discussion, "comment": comment_text}, function(data) {
+    if (comment_text == "") {
+        comment.focus();
+        return;
+    }
+    var APIPath = "/api/" + obj_key + "/comment/send/";
+    var postData = {};
+    postData["comment"] = comment_text;
+    postData[obj_key] = obj_id;
+    postData['csrfmiddlewaretoken'] = $('.comment_form'
+        ).find('input[name="csrfmiddlewaretoken"]').val();
+    $.post(APIPath, postData, null, 'json').done(function(data) {
         if (data.ok) {
             comment.val("");
-            discussion_object = data.discussion;
-            render_comments(discussion_object.comments, "#discussion_comments");
+            keys = Object.keys(data);
+            ok_pos = keys.indexOf("ok");
+            if (ok_pos != -1) {
+                keys.splice(keys.indexOf("ok"), 1);
+            }
+            key = keys[0];
+            object = data[key];
+            render_comments(object.comments, "#" + key + "_comments");
+            comment.focus();
         } else {
-            // Silent error reporting?
+            alert('Error: Data malformed');
         }
+    }).fail(function(xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
     });
 }
 
 
-function discussion_timer_start() {
-    discussion_timer = window.setInterval(function() { discussion_poll(discussion_id); }, 5000);
+function commentTimerStart(key, obj_id) {
+    discussion_timer = window.setInterval(function() {
+        commentPoll(key, obj_id);
+    }, 5000);
 }
 
-function discussion_timer_stop() {
+function commentTimerStop() {
     window.clearInterval(discussion_timer);
-}
-
-
-function topic_comment_poll(topic) {
-    $.getJSON("/api/topic/comments/", {"topic": topic}, function(data) {
-        if (data.ok) {
-            topic_object = data.topic;
-            render_comments(topic_object.comments, "#topic_comments");
-        } else {
-            // Silent error reporting?
-        }
-    });
-}
-
-function topic_timer_start() {
-    topic_timer = window.setInterval(
-        function() {
-            topic_comment_poll(topic_id);
-        }, 5000
-    );
-}
-function topic_timer_stop() {
-    window.clearInterval(topic_timer);
 }
 
 function election_timer_start() {
