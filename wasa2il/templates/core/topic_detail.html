@@ -50,7 +50,7 @@
 
     <div class="col-md-6 col-xs-12">
         <h2>{% trans "New discussions" %}</h2>
-        <div id="topic_comments"></div>
+        {% comments_section "topic" topic.id closed=True %}
     </div>
 </div>
 
@@ -72,13 +72,5 @@
     <a onclick="$('#modal_followers').modal('hide');" role="button" class="btn btn-primary">{% trans "Close" %}</a>
   </div>
 </div>
-
-<script>
-    topic_id = {{ topic.id }};
-    $(function() {
-        topic_comment_poll(topic_id);
-        topic_timer_start();
-    });
-</script>
 
 {% endblock %}
