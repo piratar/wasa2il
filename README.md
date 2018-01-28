@@ -57,6 +57,16 @@ If you run into errors manually installing with `pip` (or get error output from 
 
 If you want to run Wasa2il with MySQL, make sure MySQL and the relevant development headers are installed before running `pip` again.
 
+### Running tests (experimental)
+`./manage.py test wasa2il`
+
+This will run Selenium tests with Firefox + geckodriver
+
+If needed, download geckodriver here: https://github.com/mozilla/geckodriver/releases
+And add it to `/usr/local/bin/`
+
+You might also need `pip install selenium`
+
 ## Contributing
 
 Pull requests are welcome. Update translations by running **manage.py
