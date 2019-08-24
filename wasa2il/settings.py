@@ -98,13 +98,13 @@ ICEPIRATE = {
     'key': os.environ.get('W2_ICEPIRATE_KEY', '')
 }
 
-## SAML 1 support
-SAML_1 = {
-    'URL': os.environ.get('W2_SAML1_URL', ''),
+## SAML (2.0) support
+SAML = {
+    'URL': os.environ.get('W2_SAML_URL', ''),
     'AUTH': {
-        'wsdl': os.environ.get('W2_SAML1_WSDL', ''),
-        'login': os.environ.get('W2_SAML1_LOGIN', ''),
-        'password': os.environ.get('W2_SAML1_PSASWORD', ''),
+        'wsdl': os.environ.get('W2_SAML_WSDL', ''),
+        'login': os.environ.get('W2_SAML_LOGIN', ''),
+        'password': os.environ.get('W2_SAML_PSASWORD', ''),
     }
 }
 

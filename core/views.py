@@ -33,6 +33,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.utils.encoding import force_bytes
 from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_exempt
 from termsandconditions.models import TermsAndConditions
 
 from django.contrib.auth.models import User
@@ -40,7 +41,8 @@ from core.models import UserProfile, event_register
 from core.forms import UserProfileForm
 from core.forms import Wasa2ilRegistrationForm
 from core.forms import PushNotificationForm
-from core.saml import authenticate, SamlException
+from core.saml import authenticate
+from core.saml import SamlException
 from core.signals import user_verified
 from core.utils import calculate_age_from_ssn
 from core.utils import is_ssn_human_or_institution
@@ -618,16 +620,14 @@ class Wasa2ilActivationView(ActivationView):
 
 
 @login_required
+@csrf_exempt
 def verify(request):
 
     try:
-        auth = authenticate(request, settings.SAML_1['URL'])
+        auth = authenticate(request, settings.SAML['URL'])
     except SamlException as e:
         ctx = {'e': e}
         return render(request, 'registration/saml_error.html', ctx)
-    except ParseError:
-        logout(request)
-        return redirect(reverse('auth_login'))
 
     # Make sure that the user is, in fact, human.
     if is_ssn_human_or_institution(auth['ssn']) != 'human':
@@ -663,7 +663,7 @@ def verify(request):
     profile = request.user.userprofile  # It shall exist at this point
     profile.verified_ssn = auth['ssn']
     profile.verified_name = auth['name'].encode('utf8')
-    profile.verified_token = request.GET['token']
+    profile.verified_assertion_id = auth['assertion_id']
     profile.verified_timing = datetime.now()
     profile.save()
     event_register('user_verified', user=request.user)
@@ -686,7 +686,7 @@ def login_or_saml_redirect(request):
     if request.user.userprofile.verified:
         return redirect(settings.LOGIN_REDIRECT_URL)
     else:
-        return redirect(settings.SAML_1['URL'])
+        return redirect(settings.SAML['URL'])
 
 
 @login_required
