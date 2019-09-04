@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load crispy_forms_tags %}
 
 {% block dialog %}
     {% include 'cookie_dialog.html' %}
@@ -22,8 +22,7 @@
         <form method="POST">
             {%csrf_token%}
             <fieldset>
-
-                {{ form|bootstrap }}
+                {{ form|crispy }}
 
                 <input class="btn btn-primary" type="submit" value="{% trans "Login" %}"/>
                 <a href="/accounts/register/" role="button" class="btn btn-default">

@@ -292,7 +292,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     'registration',
-    'bootstrapform',
     'diff_match_patch',
     'datetimewidget',
     'crispy_forms',

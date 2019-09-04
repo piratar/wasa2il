@@ -60,4 +60,4 @@ class Wasa2ilForm(forms.ModelForm):
             elif field_type is ModelMultipleChoiceField:
                 field.widget = forms.CheckboxSelectMultiple()
             elif field_type is DateTimeField:
-                field.widget = DateTimeWidget(options=self.dateTimeOptions, bootstrap_version=3)
+                field.widget = DateTimeWidget(options=self.dateTimeOptions, bootstrap_version=4)
