@@ -40,7 +40,6 @@
     <script src="/static/js/jquery-3.3.1.min.js"></script>
     <script src="/static/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     <script src="/static/js/wasa2il.js?v={{WASA2IL_HASH}}"></script>
     <script src="/static/js/csrf.js"></script>
     <link rel="manifest" href="/manifest.json" />
@@ -92,28 +91,18 @@
     {% block head_extra %}{% endblock %}
   </head>
   <body>
-    <nav class="navbar navbar-fixed-top" role="navigation">
-      <div class="headerbar">
-      </div>
-      <div class="container-fluid">
+    <nav class="navbar navbar-expand-md" role="navigation">
+      <button type="button" class="navbar-toggler" onclick="$('#wrapper').toggleClass('toggled')">
+        <span class="sr-only">Toggle navigation</span>
+        <i class="fa fa-bars"></i>
+      </button>
+      <a class="navbar-brand" href="/"><img alt="Píratar" src="/static/img/pplogo.png"/></a>
 
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" onclick="$('#wrapper').toggleClass('toggled')">
-              <span class="sr-only">Toggle navigation</span>
-              <i class="fa fa-bars"></i>
-            </button>
-
-            <a class="navbar-brand" href="/"><img alt="Píratar" src="/static/img/pplogo.png"/></a>
-          </div>
-
-          <div class="collapse navbar-collapse piratepurple" >
-
-            <ul class="nav navbar-nav navbar-right">
-              {% include "_user_actions.html" %}
-            </ul>
-
-          </div><!-- /.navbar-collapse -->
-      </div> <!-- end container -->
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+          {% include "_user_actions.html" %}
+        </ul>
+      </div><!-- /.navbar-collapse -->
     </nav>
 
     <div class="container-fluid" id="wrapper">

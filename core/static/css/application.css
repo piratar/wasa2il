@@ -27,9 +27,7 @@ footer {
     color: #fff; }
 
 .navbar {
-  background-color: #503087;
-  height: 70px;
-  padding-right: 50px; }
+  background-color: #503087; }
   .navbar .btn, .navbar button {
     color: #fff;
     font-size: 25px; }
@@ -230,11 +228,6 @@ div.prosemirror-editor {
 
 .sidebar-nav li > span.label {
   margin-left: 10px; }
-
-.navbar-toggle {
-  float: left;
-  margin-left: 12px;
-  margin-right: 6px; }
 
 @media (max-width: 767px) {
   #sidebar-wrapper {
