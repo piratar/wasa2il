@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <title>{% trans "Voting System - Pirate Party Iceland" %}{% if polity %} - {{ polity }}{% endif %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="manifest" href="/gen/manifest.json"/>
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
@@ -96,7 +96,9 @@
         <span class="sr-only">Toggle navigation</span>
         <i class="fa fa-bars"></i>
       </button>
-      <a class="navbar-brand" href="/"><img alt="Píratar" src="/static/img/pplogo.png"/></a>
+      <a class="navbar-brand" style="max-width:50px" href="/">
+        <img class="img-fluid" alt="Píratar" src="/static/img/logo-256.png"/>
+      </a>
 
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
