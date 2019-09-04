@@ -64,7 +64,12 @@ footer {
   margin-bottom: 3px;
   font-family: "Montserrat"; }
 
+.btn-default:hover {
+  background-color: #663dad;
+  color: white; }
+
 .btn-default {
+  border: 1px solid #ccc;
   background: none;
   background-image: none;
   background-color: #eee; }
