@@ -122,7 +122,7 @@
 
 
         {% if issue %}
-            <table class="table table-compact">
+            <table class="table table-sm">
                 <tr><th>{% trans "Referenced issue" %}:</th><td><a href="{% url 'issue' polity.id issue.id %}">{{ issue.name }}</a></td></tr>
             </table>
         {% endif %}

@@ -18,13 +18,14 @@
     {% trans 'Such agreements come in a few different types such as motions, policy decisions and bylaws.' %}
   </p>
 
-  <div class="well">
+  <div class="card card-body bg-light mb-3">
     <form class="form" method="POST" action="/polity/{{ polity.id }}/agreements/">
       {% csrf_token %}
-      <div class="form-group">
-        <div class="input-group">
-          <input type="text" class="form-control" name="q" placeholder="{% trans 'Search agreements' %}" value="{{q}}">
-          <span class="input-group-addon"><span class="fas  fa-search"></span></span>
+
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" name="q" placeholder="{% trans 'Search agreements' %}" value="{{q}}">
+        <div class="input-group-append">
+          <div class="input-group-text"> <span class="fas fa-search"></span> </div>
         </div>
       </div>
     </form>

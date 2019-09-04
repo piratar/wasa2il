@@ -102,14 +102,14 @@
 {% endif %}
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <p>{{ election.description }}</p>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
-        <table id="election_details" class="table table-compact">
+    <div class="col-lg-6">
+        <table id="election_details" class="table table-sm">
             <tr id="cand_deadline"><th>{% trans "Deadline for candidacies" %}:</th><td>
                 {{ election.deadline_candidacy|may_expire }}
                 <small style="float: right">
@@ -153,8 +153,8 @@
     </div>
 
 {% if statistics and election.stats_publish_ballots_basic %}
-    <div class="col-md-6">
-        <table id="election_ballot_stats" class="table table-compact">
+    <div class="col-lg-6">
+        <table id="election_ballot_stats" class="table table-sm">
             <tr><th>{% trans "Shortest ballot length" %}:</th><td id="election_ballot_length_shortest">
                 {{ statistics.ballot_length_shortest.length }}
                 <small style="float: right">
