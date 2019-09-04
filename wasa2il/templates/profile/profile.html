@@ -25,9 +25,9 @@
   {% endfor %}
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
       <h1>{% trans "Biography" %}</h1>
-      <div class="text-center">
+      <div class="text-center my-3">
         <img class="img-thumbnail" style="max-height:350px" src="{{ profile.picture.url }}" />
       </div>
         {% if profile.bio %}
@@ -42,7 +42,7 @@
         {% endif %}
 
     </div>
-    <div class="col-md-6">
+    <div class="col-lg-6">
 
         {% if user.id == profile_user.id %}
         <div class="profile-polities">
