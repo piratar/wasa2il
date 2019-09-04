@@ -127,6 +127,9 @@ div#submit-working { background: #bbb; }
 #cancel-url { display: none; }
 
 .dropdown-menu { cursor: pointer; }
+.dropdown-item:hover{
+  color:white;
+}
 
 .nav-tabs>li.active>a {
   border-left-width: 2px;

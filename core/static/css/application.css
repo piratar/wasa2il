@@ -66,7 +66,8 @@ footer {
 
 .btn-default:hover {
   background-color: #663dad;
-  color: white; }
+  color: white;
+  cursor: pointer; }
 
 .btn-default {
   border: 1px solid #ccc;
@@ -645,6 +646,9 @@ div#submit-working {
 
 .dropdown-menu {
   cursor: pointer; }
+
+.dropdown-item:hover {
+  color: white; }
 
 .nav-tabs > li.active > a {
   border-left-width: 2px;
