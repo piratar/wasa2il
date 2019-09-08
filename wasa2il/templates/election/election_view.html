@@ -190,7 +190,7 @@
 <div class="row">
 {% endif %}
 
-    <div class="col-md-{% if statistics and election.stats_publish_ballots_basic %}12{% else %}6{% endif %} ">
+    <div class="col-lg-{% if statistics and election.stats_publish_ballots_basic %}12{% else %}6{% endif %} ">
         {% if election.instructions %}
             {% if not voting_interface_enabled or election.election_state != 'voting' or started_voting or step == "vote" %}
                 <div class="alert alert-success">
@@ -273,7 +273,7 @@
 {% if election.election_state != 'concluded' %}
 <div class="row">
     {% if voting_interface_enabled and election.election_state == 'voting' %}
-    <div class="col-md-5 well voting">
+    <div class="col-lg-5 well voting">
         {% if started_voting or step == "vote" %}
         <h2>{% trans "Votes" %} <small>{% trans "your favorites first!" %}</small></h2>
         <ol id="vote" class="candidates sortable">
@@ -298,7 +298,7 @@
     </div>
     <div class="col-md-1"></div>
     {% endif %}
-    <div class="col-md-5 well"><a name="candidates"></a>
+    <div class="col-lg-5 well"><a name="candidates"></a>
         <h2>{% trans "Candidates" %} <small>{% trans "running in this election" %}</small></h2>
         {% if can_run %}
         <div id="election_announce_working" class="alert" style="display: none;">

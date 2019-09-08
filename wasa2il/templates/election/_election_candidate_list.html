@@ -4,17 +4,17 @@
 {% if election.election_state != 'concluded' %}
 {% for candidate in candidates %}
 <li data-seqid="{{candidate.id}}">
-    <div class="row">
-        <div class="col-xs-2">
+    <div class="row justify-content-between">
+        <div class="col-2">
           <img src="{{ candidate.user.userprofile.picture|thumbnail:'50x50' }}" class="img-rounded vote-image" />
         </div>
-        <div class="col-xs-4">
+        <div class="col-4 d-flex align-items-center">
           <a href="/accounts/profile/{{ candidate.user.username }}/" style="font-size: 15px;">{{ candidate.user.get_name | truncatechars:80 }}</a>
         </div>
         {% if election.election_state == 'voting' %}
             {% if candidate_selected %}
                 {% if user_can_vote %}
-                <div class="col-xs-6">
+                <div class="col-6">
                   <button class="btn btn-default vote-button vote-up"     style="color:#000" onclick="election_up_candidate(this);">
                     <i class="fas fa-chevron-up" aria-hidden="true"></i>
                   </button>
@@ -44,7 +44,7 @@
                 {% endif %}
             {% else %}
                 {% if user_can_vote %}
-                <div class="col-xs-6">
+                <div class="col-6">
                     <button class="btn btn-default vote-button vote-yes" onclick="election_select_candidate(this);">{% trans "Vote" %}</button>
                 </div>
                 {% endif %}
