@@ -202,15 +202,7 @@ div.prosemirror-editor {
   border-top: 1px solid #eee; }
 
 .sidebar-nav .dropdown-menu {
-  width: 290px; }
-
-.sidebar-nav .dropdown-menu li {
-  text-indent: 0px;
-  border-bottom: 1px solid #eee; }
-
-.sidebar-nav .dropdown-menu li > a {
-  white-space: normal;
-  padding-left: 10px; }
+  min-width: 290px; }
 
 .sidebar-nav li {
   text-indent: 10px;

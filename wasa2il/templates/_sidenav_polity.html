@@ -12,16 +12,13 @@
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
       <i class="fas fa-users"></i>
       {{polity.name}}
-      <span class="caret" style="position: absolute; right: 10px; top: 18px"></span>
     </a>
     <ul class="dropdown-menu">
       {% for entry in polity_menulist %}
-        <li>
-          <a href="{% url 'polity' entry.polity_id %}">
-            {% repeater '-' entry.depth %}
-            {{ entry.name }}
-          </a>
-        </li>
+        <a class="dropdown-item" href="{% url 'polity' entry.polity_id %}">
+          {% repeater '-' entry.depth %}
+          {{ entry.name }}
+        </a>
       {% endfor %}
     </ul>
 </li>
