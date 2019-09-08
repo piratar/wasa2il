@@ -580,7 +580,8 @@ div.prosemirror-editor {
 
 #ajax-status-messages {
   position: absolute;
-  top: 55px;
+  top: 85px;
+  z-index: 1;
   width: 100%; }
 
 #ajax-status-messages div {

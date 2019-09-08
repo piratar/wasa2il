@@ -273,7 +273,7 @@
 {% if election.election_state != 'concluded' %}
 <div class="row">
     {% if voting_interface_enabled and election.election_state == 'voting' %}
-    <div class="col-lg-5 well voting">
+    <div class="col-lg-7 border-right voting">
         {% if started_voting or step == "vote" %}
         <h2>{% trans "Votes" %} <small>{% trans "your favorites first!" %}</small></h2>
         <ol id="vote" class="candidates sortable">
@@ -292,11 +292,10 @@
             <li>{% trans "Your vote will be counted when the deadline has passed" %}</li>
         </ul>
         <div class="alert alert-success start-voting">
-            <a href="?step=vote"><button><b>{% trans "Start Voting" %}</b></button></a>
+            <a href="?step=vote" class="btn btn-primary btn-lg">{% trans "Start Voting" %}</a>
         </div>
         {% endif %}
     </div>
-    <div class="col-md-1"></div>
     {% endif %}
     <div class="col-lg-5 well"><a name="candidates"></a>
         <h2>{% trans "Candidates" %} <small>{% trans "running in this election" %}</small></h2>

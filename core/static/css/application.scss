@@ -75,7 +75,12 @@ footer {
 .rejected { color: #a00; }
 .abstained { color: grey; }
 
-#ajax-status-messages { position: absolute; top: 55px; width: 100%; }
+#ajax-status-messages {
+  position: absolute;
+  top: 85px;
+  z-index:1;
+  width: 100%;
+}
 #ajax-status-messages div { max-width: 400px; margin: 0 auto 0 auto; }
 
 /* Headers */
