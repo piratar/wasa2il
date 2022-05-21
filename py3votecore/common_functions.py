@@ -1,9 +1,5 @@
 def matching_keys(dict, target_value):
-    return set([
-        key
-        for key, value in dict.items()
-        if value == target_value
-    ])
+    return set([key for key, value in dict.items() if value == target_value])
 
 
 def unique_permutations(xs):

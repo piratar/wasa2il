@@ -19,21 +19,102 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserProfile',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('verified_ssn', models.CharField(blank=True, max_length=30, null=True, unique=True)),
-                ('verified_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('verified_token', models.CharField(blank=True, max_length=100, null=True)),
-                ('verified_timing', models.DateTimeField(blank=True, null=True)),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'verified_ssn',
+                    models.CharField(
+                        blank=True, max_length=30, null=True, unique=True
+                    ),
+                ),
+                (
+                    'verified_name',
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                (
+                    'verified_token',
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                (
+                    'verified_timing',
+                    models.DateTimeField(blank=True, null=True),
+                ),
                 ('verified', models.BooleanField(default=False)),
-                ('displayname', models.CharField(blank=True, help_text='The name to display on the site.', max_length=255, null=True, verbose_name='Name')),
-                ('email_visible', models.BooleanField(default=False, help_text='Whether to display your email address on your profile page.', verbose_name='E-mail visible')),
-                ('bio', models.TextField(blank=True, null=True, verbose_name='Bio')),
-                ('picture', models.ImageField(blank=True, null=True, upload_to=b'profiles', verbose_name='Picture')),
+                (
+                    'displayname',
+                    models.CharField(
+                        blank=True,
+                        help_text='The name to display on the site.',
+                        max_length=255,
+                        null=True,
+                        verbose_name='Name',
+                    ),
+                ),
+                (
+                    'email_visible',
+                    models.BooleanField(
+                        default=False,
+                        help_text='Whether to display your email address on your profile page.',
+                        verbose_name='E-mail visible',
+                    ),
+                ),
+                (
+                    'bio',
+                    models.TextField(
+                        blank=True, null=True, verbose_name='Bio'
+                    ),
+                ),
+                (
+                    'picture',
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to=b'profiles',
+                        verbose_name='Picture',
+                    ),
+                ),
                 ('joined_org', models.DateTimeField(blank=True, null=True)),
-                ('email_wanted', models.NullBooleanField(default=False, help_text='Whether to consent to receiving notifications via email.', verbose_name='Consent for sending email')),
-                ('language', models.CharField(choices=[(b'is', b'\xc3\x8dslenska'), (b'en', b'English')], default=b'en', max_length=6, verbose_name='Language')),
-                ('topics_showall', models.BooleanField(default=True, help_text='Whether to show all topics in a polity, or only starred.')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'email_wanted',
+                    models.NullBooleanField(
+                        default=False,
+                        help_text='Whether to consent to receiving notifications via email.',
+                        verbose_name='Consent for sending email',
+                    ),
+                ),
+                (
+                    'language',
+                    models.CharField(
+                        choices=[
+                            (b'is', b'\xc3\x8dslenska'),
+                            (b'en', b'English'),
+                        ],
+                        default=b'en',
+                        max_length=6,
+                        verbose_name='Language',
+                    ),
+                ),
+                (
+                    'topics_showall',
+                    models.BooleanField(
+                        default=True,
+                        help_text='Whether to show all topics in a polity, or only starred.',
+                    ),
+                ),
+                (
+                    'user',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

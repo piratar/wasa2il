@@ -29,7 +29,10 @@ def issue_add_edit(request, polity_id, issue_id=None, documentcontent_id=None):
     polity = get_object_or_404(Polity, id=polity_id)
 
     # Make sure that user is allowed to do this.
-    if polity.is_newissue_only_officers and request.user not in polity.officers.all():
+    if (
+        polity.is_newissue_only_officers
+        and request.user not in polity.officers.all()
+    ):
         raise PermissionDenied()
 
     if issue_id:
@@ -43,7 +46,9 @@ def issue_add_edit(request, polity_id, issue_id=None, documentcontent_id=None):
         issue = Issue(polity=polity)
         if documentcontent_id:
             try:
-                current_content = DocumentContent.objects.select_related('document').get(id=documentcontent_id)
+                current_content = DocumentContent.objects.select_related(
+                    'document'
+                ).get(id=documentcontent_id)
             except DocumentContent.DoesNotExist:
                 raise Http404
         else:
@@ -55,7 +60,9 @@ def issue_add_edit(request, polity_id, issue_id=None, documentcontent_id=None):
             issue = form.save(commit=False)
             issue.apply_ruleset()
             issue.documentcontent = current_content
-            issue.special_process_set_by = request.user if issue.special_process else None
+            issue.special_process_set_by = (
+                request.user if issue.special_process else None
+            )
             issue.save()
 
             issue.topics.clear()
@@ -76,11 +83,16 @@ def issue_add_edit(request, polity_id, issue_id=None, documentcontent_id=None):
                 name += u', %s %d' % (_(u'version'), current_content.order)
                 selected_topics = current_content.previous_topics()
 
-            form = IssueForm(instance=issue, initial={
-                'name': name,
-                'description': current_content.comments.replace("\n", "\\n"),
-                'topics': selected_topics,
-            })
+            form = IssueForm(
+                instance=issue,
+                initial={
+                    'name': name,
+                    'description': current_content.comments.replace(
+                        "\n", "\\n"
+                    ),
+                    'topics': selected_topics,
+                },
+            )
         else:
             form = IssueForm(instance=issue)
 
@@ -115,20 +127,29 @@ def issue_view(request, polity_id, issue_id):
         if issue.is_processed:
             ctx['selected_diff_documentcontent'] = documentcontent.predecessor
         else:
-            ctx['selected_diff_documentcontent'] = documentcontent.document.preferred_version()
+            ctx[
+                'selected_diff_documentcontent'
+            ] = documentcontent.document.preferred_version()
 
     ctx['polity'] = polity
     ctx['issue'] = issue
-    ctx['can_vote'] = (request.user is not None and issue.can_vote(request.user))
-    ctx['comments_closed'] = not request.user.is_authenticated or issue.discussions_closed()
+    ctx['can_vote'] = request.user is not None and issue.can_vote(request.user)
+    ctx['comments_closed'] = (
+        not request.user.is_authenticated or issue.discussions_closed()
+    )
 
     # People say crazy things on the internet. We'd like to keep the record of
     # conversations about issues well into the future but still we'd like to
     # protect users from having to answer for something they said a long time
     # ago. To try and achieve both goals, we require a logged in user to see
     # comments to older issues.
-    comment_protection_timing = datetime.now() - timedelta(days=settings.RECENT_ISSUE_DAYS)
-    if not request.user.is_authenticated and issue.deadline_votes < comment_protection_timing:
+    comment_protection_timing = datetime.now() - timedelta(
+        days=settings.RECENT_ISSUE_DAYS
+    )
+    if (
+        not request.user.is_authenticated
+        and issue.deadline_votes < comment_protection_timing
+    ):
         ctx['comments_hidden'] = True
 
     return render(request, 'issue/issue_detail.html', ctx)
@@ -162,7 +183,9 @@ def document_add(request, polity_id):
             document.polity = polity
             document.user = request.user
             document.save()
-            return redirect(reverse('documentcontent_add', args=(polity_id, document.id)))
+            return redirect(
+                reverse('documentcontent_add', args=(polity_id, document.id))
+            )
     else:
         form = DocumentForm()
 
@@ -175,11 +198,15 @@ def document_add(request, polity_id):
 
 def document_view(request, polity_id, document_id, version=None):
     polity = get_object_or_404(Polity, id=polity_id)
-    document = get_object_or_404(Document, id=document_id, polity__id=polity_id)
+    document = get_object_or_404(
+        Document, id=document_id, polity__id=polity_id
+    )
 
     # If version is not specified, we want the "preferred" version
     if version is not None:
-        current_content = get_object_or_404(DocumentContent, document=document, order=version)
+        current_content = get_object_or_404(
+            DocumentContent, document=document, order=version
+        )
     else:
         current_content = document.preferred_version()
 
@@ -193,8 +220,9 @@ def document_view(request, polity_id, document_id, version=None):
         'edit_proposal': False,
         'retract_proposal': False,
     }
-    if ((not issue or issue.issue_state() != 'voting')
-            and current_content is not None):
+    if (
+        not issue or issue.issue_state() != 'voting'
+    ) and current_content is not None:
 
         # Check if the user should be allowed to retract the issue, which is
         # at any point in which an issue has been founded but not concluded.
@@ -207,9 +235,13 @@ def document_view(request, polity_id, document_id, version=None):
                 buttons['propose_change'] = 'enabled'
         elif current_content.status == 'proposed':
             if request.globals['user_is_officer'] and not issue:
-                buttons['put_to_vote'] = 'disabled' if document.has_open_issue() else 'enabled'
+                buttons['put_to_vote'] = (
+                    'disabled' if document.has_open_issue() else 'enabled'
+                )
             if current_content.user_id == request.user.id:
-                buttons['edit_proposal'] = 'disabled' if issue is not None else 'enabled'
+                buttons['edit_proposal'] = (
+                    'disabled' if issue is not None else 'enabled'
+                )
 
     ctx = {
         'polity': polity,
@@ -231,7 +263,7 @@ def documentcontent_edit(request, polity_id, document_id, version):
         DocumentContent,
         document_id=document_id,
         document__polity_id=polity_id,
-        order=version
+        order=version,
     )
 
     # Editing of documentcontents should only be allowed by its author or the
@@ -252,7 +284,11 @@ def documentcontent_edit(request, polity_id, document_id, version):
         form = DocumentContentForm(request.POST, instance=dc)
         if form.is_valid():
             form.save()
-            return redirect(reverse('document_view', args=(polity_id, document_id, version)))
+            return redirect(
+                reverse(
+                    'document_view', args=(polity_id, document_id, version)
+                )
+            )
     else:
         form = DocumentContentForm(instance=dc)
 
@@ -286,10 +322,12 @@ def documentcontent_add(request, polity_id, document_id):
             form.instance.order = doc.documentcontent_set.count() + 1
 
             form.save()
-            return redirect(reverse(
-                'document_view',
-                args=(polity_id, document_id, form.instance.order)
-            ))
+            return redirect(
+                reverse(
+                    'document_view',
+                    args=(polity_id, document_id, form.instance.order),
+                )
+            )
     else:
         form = DocumentContentForm()
 

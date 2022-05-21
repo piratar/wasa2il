@@ -13,10 +13,12 @@ from sys import stdout
 from sys import argv
 
 import random
+
 random = random.SystemRandom()
 
 TERMINAL_WIDTH = 80
 venv_path = os.path.relpath(os.path.dirname(sys.executable), sys.path[0])
+
 
 def get_executable_path(executable):
     if len(argv) > 1 and argv[1] == '--venv':
@@ -24,9 +26,11 @@ def get_executable_path(executable):
     return executable
 
 
-def get_random_string(length=12,
-                      allowed_chars='abcdefghijklmnopqrstuvwxyz'
-                                    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'):
+def get_random_string(
+    length=12,
+    allowed_chars='abcdefghijklmnopqrstuvwxyz'
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+):
     """
     Returns a securely generated random string.
 
@@ -48,7 +52,7 @@ def get_secret_key():
     return get_random_string(50, chars)
 
 
-def get_answer(question, proper_answers=('yes','no')):
+def get_answer(question, proper_answers=('yes', 'no')):
     """
     Ask a question and keep asking until a proper answer is received.
 
@@ -62,19 +66,34 @@ def get_answer(question, proper_answers=('yes','no')):
     return answer
 
 
-print "*" * TERMINAL_WIDTH
-print "Setting up Wasa2il from scratch with an SQLite database called 'wasa2il.sqlite'."
-print "This script assumes that both Python and Pip are installed."
-print "*" * TERMINAL_WIDTH
+print("*" * TERMINAL_WIDTH)
+print(
+    "Setting up Wasa2il from scratch with an SQLite database called 'wasa2il.sqlite'."
+)
+print("This script assumes that both Python and Pip are installed.")
+print("*" * TERMINAL_WIDTH)
 
 
 # Install (or upgrade) Python package dependencies
 stdout.write('Installing dependencies:\n')
-result = subprocess.call([get_executable_path("pip"), "install", "--upgrade", "-r", "requirements.txt"])
+result = subprocess.call(
+    [
+        get_executable_path("pip"),
+        "install",
+        "--upgrade",
+        "-r",
+        "requirements.txt",
+    ]
+)
 if result == 0:
     stdout.write('Dependency installation complete.\n')
 else:
-    if get_answer('Dependency installation seems to have failed. Continue anyway? (yes/no): ') != 'yes':
+    if (
+        get_answer(
+            'Dependency installation seems to have failed. Continue anyway? (yes/no): '
+        )
+        != 'yes'
+    ):
         stdout.write('Okay, quitting.\n')
         quit(1)
 
@@ -84,10 +103,16 @@ try:
     stdout.write('Checking if Django is installed...')
     stdout.flush()
     import django
-    stdout.write(' yes (%d.%d.%d)\n' % (django.VERSION[0], django.VERSION[1], django.VERSION[2]))
+
+    stdout.write(
+        ' yes (%d.%d.%d)\n'
+        % (django.VERSION[0], django.VERSION[1], django.VERSION[2])
+    )
 except ImportError:
     stdout.write(' no\n')
-    stderr.write('Error: Cannot continue without Django which should be installed but is not. Quitting.\n')
+    stderr.write(
+        'Error: Cannot continue without Django which should be installed but is not. Quitting.\n'
+    )
     quit(2)
 
 
@@ -98,7 +123,9 @@ if not os.path.exists('wasa2il/local_settings.py'):
     stdout.write('Creating local settings file (local_settings.py)...')
     stdout.flush()
     try:
-        shutil.copy('wasa2il/local_settings.py-example', 'wasa2il/local_settings.py')
+        shutil.copy(
+            'wasa2il/local_settings.py-example', 'wasa2il/local_settings.py'
+        )
         stdout.write(' done\n')
     except IOError as e:
         stdout.write(' failed\n')
@@ -113,34 +140,45 @@ for line in fileinput.input('wasa2il/local_settings.py', inplace=1):
     if line.startswith("SECRET_KEY = ''"):
         stdout.write('- Setting secret key to random string...')
         stdout.flush()
-        print "SECRET_KEY = '%s'" % get_secret_key()
+        print("SECRET_KEY = '%s'" % get_secret_key())
         stdout.write(' done\n')
         local_settings_changed = True
     elif line.startswith("DATABASE_ENGINE = 'django.db.backends.'"):
         stdout.write('- Configuring database engine (SQLite)...')
         stdout.flush()
-        print "DATABASE_ENGINE = 'django.db.backends.sqlite3'"
+        print("DATABASE_ENGINE = 'django.db.backends.sqlite3'")
         stdout.write(' done\n')
         local_settings_changed = True
     elif line.startswith("DATABASE_NAME = ''"):
         stdout.write('- Setting database name (wasa2il.sqlite)...')
         stdout.flush()
-        print "DATABASE_NAME = 'wasa2il.sqlite'"
+        print("DATABASE_NAME = 'wasa2il.sqlite'")
         stdout.write(' done\n')
         local_settings_changed = True
     else:
-        print line.strip()
+        print(line.strip())
 
 if not local_settings_changed:
     stdout.write('- No changes needed.\n')
 
 # Compile the translation files
-subprocess.call([get_executable_path('python'), os.path.join(os.getcwd(), 'manage.py'), 'compilemessages'])
+subprocess.call(
+    [
+        get_executable_path('python'),
+        os.path.join(os.getcwd(), 'manage.py'),
+        'compilemessages',
+    ]
+)
 
 # Setup database if needed
 create_database = False
 if os.path.exists('wasa2il.sqlite'):
-    if get_answer('SQLite database already exists. Kill it and start over? (yes/no): ') == 'yes':
+    if (
+        get_answer(
+            'SQLite database already exists. Kill it and start over? (yes/no): '
+        )
+        == 'yes'
+    ):
         stdout.write('Deleting wasa2il.sqlite...')
         stdout.flush()
         os.remove('wasa2il.sqlite')
@@ -151,28 +189,46 @@ else:
 
 if create_database:
     stdout.write('Setting up database (via "migrate"):\n')
-    migrate_result = subprocess.call([get_executable_path('python'), os.path.join(os.getcwd(), 'manage.py'), 'migrate'])
+    migrate_result = subprocess.call(
+        [
+            get_executable_path('python'),
+            os.path.join(os.getcwd(), 'manage.py'),
+            'migrate',
+        ]
+    )
 
     if migrate_result != 0:
         stderr.write('Error: Django migration gave errors. Quitting.\n')
         quit(1)
 
-    stdout.write('We will now create a superuser to configure polities within Wasa2il once it has been set up.\n')
-    subprocess.call([get_executable_path('python'), os.path.join(os.getcwd(), 'manage.py'), 'createsuperuser'])
+    stdout.write(
+        'We will now create a superuser to configure polities within Wasa2il once it has been set up.\n'
+    )
+    subprocess.call(
+        [
+            get_executable_path('python'),
+            os.path.join(os.getcwd(), 'manage.py'),
+            'createsuperuser',
+        ]
+    )
 
     stdout.write('Populate wasa2il with some fake data...\n')
-    subprocess.call([get_executable_path('python'), os.path.join(os.getcwd(), 'manage.py'), 'load_fake_data'])
+    subprocess.call(
+        [
+            get_executable_path('python'),
+            os.path.join(os.getcwd(), 'manage.py'),
+            'load_fake_data',
+        ]
+    )
 
 
-print "*" * TERMINAL_WIDTH
-print "All done!"
-print "To run Wasa2il and start configuring polities, follow these steps:"
-print "- Run '"+get_executable_path('python')+" manage.py runserver'"
-print "- Open your favorite browser and type in: http://localhost:8000"
-print "- Log in with the superuser account created previously"
-print
-print "Additional superuser accounts can be created with"
-print "- "+get_executable_path('python')+" manage.py createsuperuser"
-print "*" * TERMINAL_WIDTH
-
-
+print("*" * TERMINAL_WIDTH)
+print("All done!")
+print("To run Wasa2il and start configuring polities, follow these steps:")
+print("- Run '" + get_executable_path('python') + " manage.py runserver'")
+print("- Open your favorite browser and type in: http://localhost:8000")
+print("- Log in with the superuser account created previously")
+print()
+print("Additional superuser accounts can be created with")
+print("- " + get_executable_path('python') + " manage.py createsuperuser")
+print("*" * TERMINAL_WIDTH)

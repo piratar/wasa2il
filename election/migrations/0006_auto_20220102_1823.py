@@ -15,12 +15,22 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='election',
             name='conditions',
-            field=models.TextField(blank=True, help_text='Candidates must accept these conditions to be allowed to run in the election. Anything binding for the candidates should be placed here, for example if candidates are expected to abide by certain rules, to volunteer their time in a some way or provide particular information.', null=True, verbose_name='Conditions for candidates'),
+            field=models.TextField(
+                blank=True,
+                help_text='Candidates must accept these conditions to be allowed to run in the election. Anything binding for the candidates should be placed here, for example if candidates are expected to abide by certain rules, to volunteer their time in a some way or provide particular information.',
+                null=True,
+                verbose_name='Conditions for candidates',
+            ),
         ),
         migrations.AlterField(
             model_name='election',
             name='instructions',
-            field=models.TextField(blank=True, help_text='Instructions or other information that might be of importance to those casting their votes.', null=True, verbose_name='Instructions for voters'),
+            field=models.TextField(
+                blank=True,
+                help_text='Instructions or other information that might be of importance to those casting their votes.',
+                null=True,
+                verbose_name='Instructions for voters',
+            ),
         ),
         migrations.AlterUniqueTogether(
             name='candidate',

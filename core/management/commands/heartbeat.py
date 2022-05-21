@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 
 from core.utils import heartbeat
 
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
         """

@@ -13,6 +13,25 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='election',
             name='voting_system',
-            field=models.CharField(choices=[('condorcet', 'Condorcet'), ('schulze', 'Schulze, ordered list'), ('schulze_old', 'Schulze, ordered list (old)'), ('schulze_new', 'Schulze, ordered list (new)'), ('schulze_both', 'Schulze, ordered list (both)'), ('stcom', 'Steering Committee Election'), ('stv1', 'STV, single winner'), ('stv2', 'STV, two winners'), ('stv3', 'STV, three winners'), ('stv4', 'STV, four winners'), ('stv5', 'STV, five winners'), ('stv8', 'STV, eight winners'), ('stv10', 'STV, ten winners'), ('stonethor', 'STV partition with Schulze ranking')], max_length=30, verbose_name='Voting system'),
+            field=models.CharField(
+                choices=[
+                    ('condorcet', 'Condorcet'),
+                    ('schulze', 'Schulze, ordered list'),
+                    ('schulze_old', 'Schulze, ordered list (old)'),
+                    ('schulze_new', 'Schulze, ordered list (new)'),
+                    ('schulze_both', 'Schulze, ordered list (both)'),
+                    ('stcom', 'Steering Committee Election'),
+                    ('stv1', 'STV, single winner'),
+                    ('stv2', 'STV, two winners'),
+                    ('stv3', 'STV, three winners'),
+                    ('stv4', 'STV, four winners'),
+                    ('stv5', 'STV, five winners'),
+                    ('stv8', 'STV, eight winners'),
+                    ('stv10', 'STV, ten winners'),
+                    ('stonethor', 'STV partition with Schulze ranking'),
+                ],
+                max_length=30,
+                verbose_name='Voting system',
+            ),
         ),
     ]

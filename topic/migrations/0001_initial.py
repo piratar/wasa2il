@@ -20,15 +20,57 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Topic',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(max_length=128, verbose_name='Name'),
+                ),
                 ('slug', models.SlugField(blank=True, max_length=128)),
-                ('description', models.TextField(blank=True, null=True, verbose_name='Description')),
+                (
+                    'description',
+                    models.TextField(
+                        blank=True, null=True, verbose_name='Description'
+                    ),
+                ),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('created_by', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='topic_created_by', to=settings.AUTH_USER_MODEL)),
-                ('modified_by', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='topic_modified_by', to=settings.AUTH_USER_MODEL)),
-                ('polity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='polity.Polity')),
+                (
+                    'created_by',
+                    models.ForeignKey(
+                        blank=True,
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='topic_created_by',
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    'modified_by',
+                    models.ForeignKey(
+                        blank=True,
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='topic_modified_by',
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    'polity',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='polity.Polity',
+                    ),
+                ),
             ],
             options={
                 'ordering': ['name'],
@@ -37,9 +79,29 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserTopic',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('topic', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='topic.Topic')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'topic',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='topic.Topic',
+                    ),
+                ),
+                (
+                    'user',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AlterUniqueTogether(

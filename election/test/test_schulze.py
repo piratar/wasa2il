@@ -54,7 +54,7 @@ class SchulzeTest(TestCase):
             [(1, 'e'), (2, 'b'), (3, 'a'), (4, 'd'), (5, 'c')],
             [(1, 'e'), (2, 'b'), (3, 'a'), (4, 'd'), (5, 'c')],
             [(1, 'e'), (2, 'b'), (3, 'a'), (4, 'd'), (5, 'c')],
-            [(1, 'e'), (2, 'b'), (3, 'a'), (4, 'd'), (5, 'c')]  # 8
+            [(1, 'e'), (2, 'b'), (3, 'a'), (4, 'd'), (5, 'c')],  # 8
         ]
 
         # Randomize the votes
@@ -64,7 +64,9 @@ class SchulzeTest(TestCase):
         preference = schulze.rank_votes(votes, candidates)
 
         # Get the strongest paths of each candidate
-        strongest_paths = schulze.compute_strongest_paths(preference, candidates)
+        strongest_paths = schulze.compute_strongest_paths(
+            preference, candidates
+        )
 
         # Get final, ordered, results
         results = schulze.get_ordered_voting_results(strongest_paths)
@@ -77,7 +79,7 @@ class SchulzeTest(TestCase):
         votes = [
             [(1, 'x'), (2, 'y'), (3, 'z')],
             [(1, 'y'), (2, 'z'), (3, 'x')],
-            [(1, 'z'), (2, 'x'), (3, 'y')]
+            [(1, 'z'), (2, 'x'), (3, 'y')],
         ]
 
         # Randomize the votes
@@ -87,7 +89,9 @@ class SchulzeTest(TestCase):
         preference = schulze.rank_votes(votes, candidates)
 
         # Get the strongest paths of each candidate
-        strongest_paths = schulze.compute_strongest_paths(preference, candidates)
+        strongest_paths = schulze.compute_strongest_paths(
+            preference, candidates
+        )
 
         # Get final, ordered, results
         results = schulze.get_ordered_voting_results(strongest_paths)
@@ -155,7 +159,9 @@ class SchulzeStatisticalTest(TestCase):
         preference = schulze.rank_votes(votes, candidates)
 
         # Get the strongest paths of each candidate
-        strongest_paths = schulze.compute_strongest_paths(preference, candidates)
+        strongest_paths = schulze.compute_strongest_paths(
+            preference, candidates
+        )
 
         # Get final, ordered, results
         results = schulze.get_ordered_voting_results(strongest_paths)
@@ -164,15 +170,20 @@ class SchulzeStatisticalTest(TestCase):
         for place, candidate in enumerate(candidate_chances):
             expected_place = candidate_chances.index(candidate)
             self.assertIn(
-                place,
-                (expected_place, expected_place + 1, expected_place - 1)
+                place, (expected_place, expected_place + 1, expected_place - 1)
             )
 
-            print("candidate %s had %s%% chance of winning" % (
-                candidate[1], candidate[0]))
-            others = (0 if results[candidate[1]] is None
-                                else len(results[candidate[1]]))
+            print(
+                "candidate %s had %s%% chance of winning"
+                % (candidate[1], candidate[0])
+            )
+            others = (
+                0
+                if results[candidate[1]] is None
+                else len(results[candidate[1]])
+            )
             print("candidate was ranked above %s other candidates" % (others))
+
 
 """
 Example results from 50 candidates and 300,000 voters:

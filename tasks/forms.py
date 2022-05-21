@@ -5,12 +5,15 @@ from django.utils.translation import ugettext_lazy as _
 
 from tasks.models import Task
 
+
 class TaskForm(Wasa2ilForm):
     short_description = CharField(
         widget=Textarea(attrs={'rows': 2}),
         label=_('Short description'),
         max_length=200,
-        help_text=_('Clearly state the objective of the task. Maximum 200 letters.')
+        help_text=_(
+            'Clearly state the objective of the task. Maximum 200 letters.'
+        ),
     )
 
     class Meta:
@@ -26,5 +29,3 @@ class TaskForm(Wasa2ilForm):
             'categories',
             'skills',
         )
-
-

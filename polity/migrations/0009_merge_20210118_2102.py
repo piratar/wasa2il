@@ -10,5 +10,4 @@ class Migration(migrations.Migration):
         ('polity', '0008_polity_eligibles'),
     ]
 
-    operations = [
-    ]
+    operations = []

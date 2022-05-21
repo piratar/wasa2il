@@ -15,6 +15,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='polity',
             name='eligibles',
-            field=models.ManyToManyField(related_name='polities_eligible', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(
+                related_name='polities_eligible', to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

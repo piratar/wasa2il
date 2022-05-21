@@ -5,8 +5,8 @@ from django.core.management.base import BaseCommand
 
 from core.models import *
 
-class Command(BaseCommand):
 
+class Command(BaseCommand):
     def handle(self, *args, **options):
 
         now = datetime.now()
@@ -15,7 +15,9 @@ class Command(BaseCommand):
         for i in issues:
             if i.deadline_votes > now:
 
-                stdout.write("Setting closing time of issue '%s' to now..." % i.name)
+                stdout.write(
+                    "Setting closing time of issue '%s' to now..." % i.name
+                )
                 stdout.flush()
 
                 i.deadline_votes = now
@@ -27,4 +29,3 @@ class Command(BaseCommand):
                 i.save()
 
                 stdout.write(" done\n")
-

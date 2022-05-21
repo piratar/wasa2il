@@ -93,6 +93,11 @@ update-dependencies:
 	@make freeze-dependencies
 
 
+.PHONY: format
+format: setup
+	@. $(VENV)/bin/activate && black .
+
+
 .PHONY: test
 test: setup  ## Runs the unit tests
 	@. $(VENV)/bin/activate && ./manage.py test

@@ -1,0 +1,5 @@
+[tool.black]
+line-length = 79
+# NOTE: PEP8 does recommend double-quotes, but to start with we'll support
+# single quotes as to minimize the patch/noise produced by introducing black
+skip-string-normalization = true

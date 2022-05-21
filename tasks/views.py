@@ -14,6 +14,7 @@ from tasks.models import Task, TaskRequest
 from polity.models import Polity
 from tasks.forms import TaskForm
 
+
 def task_main(request, polity_id):
     polity = get_object_or_404(Polity, id=polity_id)
 
@@ -21,14 +22,11 @@ def task_main(request, polity_id):
     tasks = Task.objects.filter(is_recruiting=True, is_done=False)
 
     # Front polity's tasks are always shown.
-    front_tasks = tasks.filter(
-        polity__is_front_polity=True
-    )
+    front_tasks = tasks.filter(polity__is_front_polity=True)
 
     # Sub-polity's tasks are only shown if they exist.
     sub_polity_tasks = tasks.filter(
-        polity_id=polity_id,
-        polity__is_front_polity=False
+        polity_id=polity_id, polity__is_front_polity=False
     )
 
     total_task_count = len(front_tasks) + len(sub_polity_tasks)
@@ -50,13 +48,10 @@ def task_user_tasks(request, username):
     # currently not used but still required to make sure that links are
     # created with this specification in mind.
 
-    taskrequests = TaskRequest.objects.select_related(
-        'task'
-    ).prefetch_related(
-        'task__skills',
-        'task__categories'
-    ).filter(
-        user_id=request.user.id
+    taskrequests = (
+        TaskRequest.objects.select_related('task')
+        .prefetch_related('task__skills', 'task__categories')
+        .filter(user_id=request.user.id)
     )
 
     tasks = [req.task for req in taskrequests]
@@ -70,7 +65,9 @@ def task_user_tasks(request, username):
 @login_required
 def task_add_edit(request, polity_id, task_id=None):
     polity = get_object_or_404(Polity, id=polity_id)
-    if not (polity.is_member(request.user) or polity.is_wrangler(request.user)):
+    if not (
+        polity.is_member(request.user) or polity.is_wrangler(request.user)
+    ):
         raise PermissionDenied()
 
     if task_id:
@@ -146,7 +143,9 @@ def task_detail(request, polity_id, task_id):
 
 def task_applications(request, polity_id):
     polity = get_object_or_404(Polity, id=polity_id)
-    if not (polity.is_member(request.user) or polity.is_wrangler(request.user)):
+    if not (
+        polity.is_member(request.user) or polity.is_wrangler(request.user)
+    ):
         raise PermissionDenied()
 
     done = request.POST.get('done', None)
@@ -192,9 +191,9 @@ def task_applications(request, polity_id):
         # Prefetch the data for the User model that we need to determine statistics and such.
         Prefetch(
             'taskrequest_set__user',
-            queryset=User.objects.annotate_task_stats()
+            queryset=User.objects.annotate_task_stats(),
         ),
-        'taskrequest_set__user__userprofile'
+        'taskrequest_set__user__userprofile',
     ).order_by('-created')
     if not show_done:
         tasks = tasks.filter(is_done=False)

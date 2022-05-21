@@ -23,6 +23,7 @@ from issue.models import Vote
 
 from polity.models import Polity
 
+
 @login_required
 @jsonize
 def issue_vote(request):
@@ -45,7 +46,9 @@ def issue_vote(request):
     vote.save()
 
     # Update vote counts
-    issue.votecount = issue.votecount_yes = issue.votecount_abstain = issue.votecount_no = 0
+    issue.votecount = (
+        issue.votecount_yes
+    ) = issue.votecount_abstain = issue.votecount_no = 0
     votes = issue.vote_set.all()
     for vote in votes:
         if vote.value == 1:
@@ -85,13 +88,15 @@ def issue_poll(request):
             "id": comment.id,
             "created_by": comment.created_by.username,
             "created_by_thumb": thumbnail(
-                comment.created_by.userprofile.picture, '40x40'),
+                comment.created_by.userprofile.picture, '40x40'
+            ),
             "created": str(comment.created),
             "created_since": timesince(comment.created),
-            "comment": comment.comment
-        } for comment in issue.comment_set.all().order_by("created")
+            "comment": comment.comment,
+        }
+        for comment in issue.comment_set.all().order_by("created")
     ]
-    ctx["issue"] = {"comments": comments, "votecount": issue.votecount }
+    ctx["issue"] = {"comments": comments, "votecount": issue.votecount}
     if issue.issue_state() == 'concluded':
         ctx["issue"]["votecount_abstain"] = issue.votecount_abstain
     ctx["ok"] = True
@@ -109,7 +114,7 @@ def issue_showclosed(request):
     ctx = {}
 
     polity_id = int(request.GET.get('polity_id', 0))
-    showclosed = int(request.GET.get('showclosed', 0)) # 0 = False, 1 = True
+    showclosed = int(request.GET.get('showclosed', 0))  # 0 = False, 1 = True
 
     try:
         issues = Issue.objects.select_related('polity')
@@ -134,10 +139,16 @@ def issue_showclosed(request):
         }
 
         ctx['showclosed'] = showclosed
-        ctx['html'] = render_to_string('issue/_issues_recent_table.html', html_ctx)
+        ctx['html'] = render_to_string(
+            'issue/_issues_recent_table.html', html_ctx
+        )
         ctx['ok'] = True
     except Exception as e:
-        ctx['error'] = e.__str__() if settings.DEBUG else 'Error raised. Turn on DEBUG for details.'
+        ctx['error'] = (
+            e.__str__()
+            if settings.DEBUG
+            else 'Error raised. Turn on DEBUG for details.'
+        )
 
     return ctx
 
@@ -163,9 +174,15 @@ def documentcontent_render_diff(request):
 def documentcontent_retract(request, documentcontent_id):
     # Only polity officers and the documentcontent's author are allowed to do this.
     try:
-        documentcontent = DocumentContent.objects.select_related('issue').distinct().exclude(issue=None).get(
-            Q(user_id=request.user.id) | Q(document__polity__officers__id=request.user.id),
-            id=documentcontent_id
+        documentcontent = (
+            DocumentContent.objects.select_related('issue')
+            .distinct()
+            .exclude(issue=None)
+            .get(
+                Q(user_id=request.user.id)
+                | Q(document__polity__officers__id=request.user.id),
+                id=documentcontent_id,
+            )
         )
     except DocumentContent.DoesNotExist:
         return error('Access denied')

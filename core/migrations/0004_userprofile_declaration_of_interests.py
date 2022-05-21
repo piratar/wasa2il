@@ -15,6 +15,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userprofile',
             name='declaration_of_interests',
-            field=models.TextField(blank=True, null=True, verbose_name='Declaration of interests'),
+            field=models.TextField(
+                blank=True, null=True, verbose_name='Declaration of interests'
+            ),
         ),
     ]

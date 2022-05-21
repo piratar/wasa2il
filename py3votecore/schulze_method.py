@@ -19,7 +19,6 @@ from .condorcet import CondorcetSystem
 
 # This class implements the Schulze Method (aka the beatpath method)
 class SchulzeMethod(CondorcetSystem, SchulzeHelper):
-
     def __init__(self, ballots, tie_breaker=None, ballot_notation=None):
         super(SchulzeMethod, self).__init__(
             ballots,

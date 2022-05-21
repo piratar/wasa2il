@@ -59,18 +59,20 @@ def verified_sync(sender, user, request, **kwargs):
         success, member, error = get_member(user.userprofile.verified_ssn)
 
         # Have any of these values changed?
-        changed = any([
-            member['email'] != user.email,
-            member['email_wanted'] != user.userprofile.email_wanted,
-            member['username'] != user.username
-        ])
+        changed = any(
+            [
+                member['email'] != user.email,
+                member['email_wanted'] != user.userprofile.email_wanted,
+                member['username'] != user.username,
+            ]
+        )
         if changed:
             # If so, we'll update the member registry, because we've just
             # verified our account here and we'll know this information better
             # than the registry, if they differ.
             success, member, error = update_member(user)
 
-        if success: # Success may have changed since last time we asked.
+        if success:  # Success may have changed since last time we asked.
             apply_member_locally(member, user)
 
     except IcePirateException as e:

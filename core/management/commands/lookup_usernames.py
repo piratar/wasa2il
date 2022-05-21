@@ -9,7 +9,6 @@ from core.models import *
 
 
 class Command(BaseCommand):
-
     def add_arguments(self, parser):
         parser.add_argument('username', nargs='+', action='append')
 
@@ -22,5 +21,5 @@ class Command(BaseCommand):
                     name = User.objects.get(username=u).get_name()
                 except:
                     name = '[no such user]'
-                print ('%d. %s (%s)' % (count, name, u)).encode('utf-8')
+                print('%d. %s (%s)' % (count, name, u)).encode('utf-8')
                 count += 1

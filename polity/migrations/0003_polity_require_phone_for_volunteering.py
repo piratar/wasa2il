@@ -15,6 +15,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='polity',
             name='require_phone_for_volunteering',
-            field=models.BooleanField(default=True, help_text='Make users provide their phone numbers in the profiles to partake in tasks that need volunteers.', verbose_name='Require phone for volunteering'),
+            field=models.BooleanField(
+                default=True,
+                help_text='Make users provide their phone numbers in the profiles to partake in tasks that need volunteers.',
+                verbose_name='Require phone for volunteering',
+            ),
         ),
     ]

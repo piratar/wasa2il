@@ -13,6 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userprofile',
             name='email_wanted',
-            field=models.BooleanField(default=False, help_text='Whether to consent to receiving notifications via email.', null=True, verbose_name='Consent for sending email'),
+            field=models.BooleanField(
+                default=False,
+                help_text='Whether to consent to receiving notifications via email.',
+                null=True,
+                verbose_name='Consent for sending email',
+            ),
         ),
     ]

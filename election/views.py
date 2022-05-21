@@ -58,11 +58,19 @@ def election_view(request, polity_id, election_id):
     # about in the future. Still, we'd like to retain some history of their
     # candidacy. To try and attain both goals, we require a login for older
     # elections.
-    election_protection_timing = datetime.now() - timedelta(days=settings.RECENT_ISSUE_DAYS)
-    if not request.user.is_authenticated and election.deadline_votes < election_protection_timing:
+    election_protection_timing = datetime.now() - timedelta(
+        days=settings.RECENT_ISSUE_DAYS
+    )
+    if (
+        not request.user.is_authenticated
+        and election.deadline_votes < election_protection_timing
+    ):
         return redirect_to_login(request.path)
 
-    voting_interface_enabled = election.election_state() == 'voting' and election.can_vote(request.user)
+    voting_interface_enabled = (
+        election.election_state() == 'voting'
+        and election.can_vote(request.user)
+    )
 
     if election.is_processed:
         ordered_candidates = election.get_winners()
@@ -91,26 +99,31 @@ def election_view(request, polity_id, election_id):
         'vote_count': vote_count,
         'voting_interface_enabled': voting_interface_enabled,
         'user_result': user_result,
-        'can_vote': (request.user is not None and election.can_vote(request.user)),
-        'can_run': (request.user is not None and election.can_be_candidate(request.user))
+        'can_vote': (
+            request.user is not None and election.can_vote(request.user)
+        ),
+        'can_run': (
+            request.user is not None
+            and election.can_be_candidate(request.user)
+        ),
     }
     if voting_interface_enabled:
-        ctx.update({
-            'started_voting': election.has_voted(request.user),
-            'finished_voting': False
-        })
+        ctx.update(
+            {
+                'started_voting': election.has_voted(request.user),
+                'finished_voting': False,
+            }
+        )
     return render(request, 'election/election_view.html', ctx)
 
 
 def election_list(request, polity_id):
     polity = get_object_or_404(Polity, id=polity_id)
 
-    elections = Election.objects.filter(
-        polity=polity
-    ).annotate(
-        candidate_count=Count('candidate')
-    ).order_by(
-        '-deadline_votes'
+    elections = (
+        Election.objects.filter(polity=polity)
+        .annotate(candidate_count=Count('candidate'))
+        .order_by('-deadline_votes')
     )
 
     ctx = {

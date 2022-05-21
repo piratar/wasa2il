@@ -16,6 +16,10 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='electionresultrow',
             name='candidate',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='result_row', to='election.Candidate'),
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='result_row',
+                to='election.Candidate',
+            ),
         ),
     ]

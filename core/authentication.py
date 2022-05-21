@@ -21,6 +21,7 @@ class CustomAuthenticationBackend(ModelBackend):
 
 class EmailAuthenticationBackend(CustomAuthenticationBackend):
     """Allow users to log in using their e-mail address"""
+
     def custom_get_user(self, email):
         try:
             return User.objects.get(email=email)
@@ -30,6 +31,7 @@ class EmailAuthenticationBackend(CustomAuthenticationBackend):
 
 class SSNAuthenticationBackend(CustomAuthenticationBackend):
     """Allow users to log in using their SSN"""
+
     def custom_get_user(self, ssn):
         # FIXME: This may be Iceland specific; we ignore dashes.
         ssn = ssn.replace('-', '').strip()

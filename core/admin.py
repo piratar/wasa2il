@@ -7,6 +7,7 @@ from core.models import UserProfile
 def getDerivedAdmin(base_admin, **kwargs):
     class DerivedAdmin(base_admin):
         pass
+
     derived = DerivedAdmin
     for k, v in kwargs.iteritems():
         setattr(derived, k, getattr(base_admin, k, []) + v)
@@ -26,7 +27,7 @@ class UserProfileInline(admin.StackedInline):
 
 
 class UserAdmin(auth.admin.UserAdmin):
-    inlines = (UserProfileInline, )
+    inlines = (UserProfileInline,)
 
 
 # Register the admins

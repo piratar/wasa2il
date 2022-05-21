@@ -10,5 +10,4 @@ class Migration(migrations.Migration):
         ('tasks', '0007_task_require_phone'),
     ]
 
-    operations = [
-    ]
+    operations = []

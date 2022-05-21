@@ -15,31 +15,49 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='task',
             name='detailed_description',
-            field=models.TextField(blank=True, null=True, verbose_name='Detailed description'),
+            field=models.TextField(
+                blank=True, null=True, verbose_name='Detailed description'
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='estimated_duration_weeks',
-            field=models.IntegerField(default=1, help_text='Select 0 if not applicable.', verbose_name='Estimated number of weeks'),
+            field=models.IntegerField(
+                default=1,
+                help_text='Select 0 if not applicable.',
+                verbose_name='Estimated number of weeks',
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='estimated_hours_per_week',
-            field=models.IntegerField(default=1, help_text='Select 0 if not applicable.', verbose_name='Estimated hours per week'),
+            field=models.IntegerField(
+                default=1,
+                help_text='Select 0 if not applicable.',
+                verbose_name='Estimated hours per week',
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='requirements',
-            field=models.TextField(blank=True, null=True, verbose_name='Requirements'),
+            field=models.TextField(
+                blank=True, null=True, verbose_name='Requirements'
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='short_description',
-            field=models.CharField(max_length=200, verbose_name='Short description'),
+            field=models.CharField(
+                max_length=200, verbose_name='Short description'
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='volunteers_needed',
-            field=models.IntegerField(default=1, help_text='Select 0 if not applicable.', verbose_name='Number of volunteers needed'),
+            field=models.IntegerField(
+                default=1,
+                help_text='Select 0 if not applicable.',
+                verbose_name='Number of volunteers needed',
+            ),
         ),
     ]

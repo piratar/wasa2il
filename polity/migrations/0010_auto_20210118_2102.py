@@ -15,16 +15,36 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='polity',
             name='eligibles',
-            field=models.ManyToManyField(blank=True, related_name='polities_eligible', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(
+                blank=True,
+                related_name='polities_eligible',
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
             model_name='polity',
             name='name_short',
-            field=models.CharField(blank=True, default='', help_text='Optional. Could be an abbreviation or acronym, for example.', max_length=30, null=True, verbose_name='Short name'),
+            field=models.CharField(
+                blank=True,
+                default='',
+                help_text='Optional. Could be an abbreviation or acronym, for example.',
+                max_length=30,
+                null=True,
+                verbose_name='Short name',
+            ),
         ),
         migrations.AlterField(
             model_name='polity',
             name='polity_type',
-            field=models.CharField(choices=[('U', 'Unspecified'), ('R', 'Regional group'), ('C', 'Constituency group'), ('I', 'Special Interest Group')], default='U', max_length=1),
+            field=models.CharField(
+                choices=[
+                    ('U', 'Unspecified'),
+                    ('R', 'Regional group'),
+                    ('C', 'Constituency group'),
+                    ('I', 'Special Interest Group'),
+                ],
+                default='U',
+                max_length=1,
+            ),
         ),
     ]

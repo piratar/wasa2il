@@ -10,5 +10,4 @@ class Migration(migrations.Migration):
         ('polity', '0003_auto_20190822_2006'),
     ]
 
-    operations = [
-    ]
+    operations = []

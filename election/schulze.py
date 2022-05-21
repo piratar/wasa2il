@@ -17,7 +17,7 @@ def compute_strongest_paths(preference, candidates):
         strongest_paths[i,j] = bottleneck number in the strongest path between i and j
     """
     strongest_paths = defaultdict(lambda: defaultdict(int))
-    
+
     # Calculate the strongest paths between candidates
     for i in candidates:
         for j in candidates:
@@ -32,19 +32,22 @@ def compute_strongest_paths(preference, candidates):
             if i != j:
                 for k in candidates:
                     if i != k and j != k:
-                        #p[j,k] := max ( p[j,k], min ( p[j,i], p[i,k] ) )
-                        strongest_paths[j][k] = max(strongest_paths[j][k], min(strongest_paths[j][i], strongest_paths[i][k]))
+                        # p[j,k] := max ( p[j,k], min ( p[j,i], p[i,k] ) )
+                        strongest_paths[j][k] = max(
+                            strongest_paths[j][k],
+                            min(strongest_paths[j][i], strongest_paths[i][k]),
+                        )
 
     return strongest_paths
 
 
 def get_ordered_voting_results(strongest_paths):
     """
-     strongest_paths: the strongest paths of each candidate.
-     returns:
-        ordered dictionary, ordered by how many wins a candidate had against other candidates
-        key is candidate, value is list of candidates defeated by that candidate.
-     """
+    strongest_paths: the strongest paths of each candidate.
+    returns:
+       ordered dictionary, ordered by how many wins a candidate had against other candidates
+       key is candidate, value is list of candidates defeated by that candidate.
+    """
 
     # We need to determine the ordering among the candidates by comparing their respective path strengths.
     # For all candidates, compare their path strengths in both directions, the candidate that has stronger path
@@ -60,7 +63,9 @@ def get_ordered_voting_results(strongest_paths):
                 wins[ci].append(cj)
 
     # Create ordered results of candidates that actually won other candidates
-    ordered_results = sorted(wins.items(), key=lambda x: len(x[1]), reverse=True)
+    ordered_results = sorted(
+        wins.items(), key=lambda x: len(x[1]), reverse=True
+    )
 
     # Add any candidates that did not win anything in a random order
     stragglers = [c for c in strongest_paths.keys() if c not in wins]
@@ -92,7 +97,7 @@ def rank_votes(votes, candidates):
                 }
     """
     invalid_votes = list()
-    #prepare the output - 0 set all candidates
+    # prepare the output - 0 set all candidates
     preference = defaultdict(lambda: defaultdict(int))
 
     for vote in votes:
@@ -109,14 +114,21 @@ def rank_votes(votes, candidates):
             for i, choice in enumerate(vote):
                 # resolve ties: [(1, 'a'), (2, 'c'), (2, 'e'), (3, 'b'), (5, 'd')] 'e' also gets a 'c' increment
                 tied_candidates = [x[1] for x in vote if choice[0] == x[0]]
-                not_voted_candidates = set(candidates)-voted_candidates
+                not_voted_candidates = set(candidates) - voted_candidates
                 # increment against all other candidates
                 candidate = vote[i][1]
 
                 opponents_to_increment = list(
-                    set([x[1] for x in vote[i+1:]] + list(not_voted_candidates) + tied_candidates))
+                    set(
+                        [x[1] for x in vote[i + 1 :]]
+                        + list(not_voted_candidates)
+                        + tied_candidates
+                    )
+                )
 
-                increment_candidate(candidate, opponents_to_increment, preference)
+                increment_candidate(
+                    candidate, opponents_to_increment, preference
+                )
 
     return preference
 
@@ -127,4 +139,3 @@ def increment_candidate(candidate, opponents, preference_dict):
             preference_dict[candidate][opponent] += 1
         else:
             preference_dict[candidate][opponent] = 1
-

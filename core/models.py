@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 import os
 import re
 import json
@@ -33,8 +33,12 @@ class UserManager(models.Manager):
     def annotate_task_stats(self):
         return self.annotate(
             tasks_applied_count=Count('taskrequest'),
-            tasks_completed_count=Count('taskrequest', filter=Q(taskrequest__task__is_done=True)),
-            tasks_accepted_count=Count('taskrequest', filter=Q(taskrequest__is_accepted=True))
+            tasks_completed_count=Count(
+                'taskrequest', filter=Q(taskrequest__task__is_done=True)
+            ),
+            tasks_accepted_count=Count(
+                'taskrequest', filter=Q(taskrequest__is_accepted=True)
+            ),
         )
 
 
@@ -50,18 +54,34 @@ class User(BaseUser):
         # Make sure that we instruct the programmer properly if they're using
         # this function without using the proper annotation function that
         # produces the required data.
-        needed_attrs = ['tasks_applied_count', 'tasks_accepted_count', 'tasks_completed_count']
+        needed_attrs = [
+            'tasks_applied_count',
+            'tasks_accepted_count',
+            'tasks_completed_count',
+        ]
         if not all(hasattr(self, a) for a in needed_attrs):
-            raise Exception('User.tasks_percent() function can only be called when User.objects.annotate_task_stats() has been applied')
+            raise Exception(
+                'User.tasks_percent() function can only be called when User.objects.annotate_task_stats() has been applied'
+            )
 
         # Let's not bother calculating things if everything is zero anyway.
         if self.tasks_applied_count == 0:
             return {'applied': 0, 'accepted': 0, 'completed': 100}
 
         return {
-            'applied': 100*(self.tasks_applied_count - self.tasks_accepted_count - self.tasks_completed_count) / float(self.tasks_applied_count),
-            'accepted': 100*(self.tasks_accepted_count - self.tasks_completed_count) / float(self.tasks_applied_count),
-            'completed': 100*(self.tasks_completed_count) / float(self.tasks_applied_count)
+            'applied': 100
+            * (
+                self.tasks_applied_count
+                - self.tasks_accepted_count
+                - self.tasks_completed_count
+            )
+            / float(self.tasks_applied_count),
+            'accepted': 100
+            * (self.tasks_accepted_count - self.tasks_completed_count)
+            / float(self.tasks_applied_count),
+            'completed': 100
+            * (self.tasks_completed_count)
+            / float(self.tasks_applied_count),
         }
 
     class Meta:
@@ -70,15 +90,20 @@ class User(BaseUser):
 
 class UserProfile(models.Model):
     """A user's profile data. Contains various informative areas, plus various settings."""
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=CASCADE)
 
     # Verification
     # Field `verified_token` was used with SAML 1.2 whereas
     # `verified_assertion_id` has been used since adopting SAML 2.
-    verified_ssn = models.CharField(max_length=30, null=True, blank=True, unique=True)
+    verified_ssn = models.CharField(
+        max_length=30, null=True, blank=True, unique=True
+    )
     verified_name = models.CharField(max_length=100, null=True, blank=True)
     verified_token = models.CharField(max_length=100, null=True, blank=True)
-    verified_assertion_id = models.CharField(max_length=50, null=True, blank=True)
+    verified_assertion_id = models.CharField(
+        max_length=50, null=True, blank=True
+    )
     verified_timing = models.DateTimeField(null=True, blank=True)
     # When using SAML, the 'verified' field is set to true if verified_ssn,
     # verified_name and verified_timing have all been set with actual content.
@@ -86,13 +111,39 @@ class UserProfile(models.Model):
     verified = models.BooleanField(default=False)
 
     # User information
-    displayname = models.CharField(max_length=255, verbose_name=_("Name"), help_text=_("The name to display on the site."), null=True, blank=True)
-    phone = models.CharField(max_length=30, verbose_name=_('Phone'), help_text=_('Mostly intended for active participants such as volunteers and candidates.'),  null=True, blank=True)
-    email_visible = models.BooleanField(default=False, verbose_name=_("E-mail visible"), help_text=_("Whether to display your email address on your profile page."))
+    displayname = models.CharField(
+        max_length=255,
+        verbose_name=_("Name"),
+        help_text=_("The name to display on the site."),
+        null=True,
+        blank=True,
+    )
+    phone = models.CharField(
+        max_length=30,
+        verbose_name=_('Phone'),
+        help_text=_(
+            'Mostly intended for active participants such as volunteers and candidates.'
+        ),
+        null=True,
+        blank=True,
+    )
+    email_visible = models.BooleanField(
+        default=False,
+        verbose_name=_("E-mail visible"),
+        help_text=_(
+            "Whether to display your email address on your profile page."
+        ),
+    )
     bio = models.TextField(verbose_name=_("Bio"), null=True, blank=True)
-    declaration_of_interests = models.TextField(verbose_name=_('Declaration of interests'), null=True, blank=True)
-    picture = models.ImageField(upload_to='profiles', verbose_name=_("Picture"), null=True, blank=True)
-    joined_org = models.DateTimeField(null=True, blank=True) # Time when user joined organization, as opposed to registered in the system
+    declaration_of_interests = models.TextField(
+        verbose_name=_('Declaration of interests'), null=True, blank=True
+    )
+    picture = models.ImageField(
+        upload_to='profiles', verbose_name=_("Picture"), null=True, blank=True
+    )
+    joined_org = models.DateTimeField(
+        null=True, blank=True
+    )  # Time when user joined organization, as opposed to registered in the system
 
     # When this is null (None), it means that the user has not consented to,
     # nor specifically rejected receiving email. This is a left-over state
@@ -103,11 +154,23 @@ class UserProfile(models.Model):
         default=False,
         null=True,
         verbose_name=_('Consent for sending email'),
-        help_text=_('Whether to consent to receiving notifications via email.')
+        help_text=_(
+            'Whether to consent to receiving notifications via email.'
+        ),
     )
 
-    language = models.CharField(max_length=6, default='en', choices=settings.LANGUAGES, verbose_name=_("Language"))
-    topics_showall = models.BooleanField(default=True, help_text=_("Whether to show all topics in a polity, or only starred."))
+    language = models.CharField(
+        max_length=6,
+        default='en',
+        choices=settings.LANGUAGES,
+        verbose_name=_("Language"),
+    )
+    topics_showall = models.BooleanField(
+        default=True,
+        help_text=_(
+            "Whether to show all topics in a polity, or only starred."
+        ),
+    )
 
     def save(self, *largs, **kwargs):
         is_new = self.pk is None
@@ -117,15 +180,18 @@ class UserProfile(models.Model):
 
         if not self.picture:
             self.picture.name = os.path.join(
-                self.picture.field.upload_to,
-                'default.jpg'
+                self.picture.field.upload_to, 'default.jpg'
             )
 
         if settings.SAML['URL']:
-            self.verified = all((
-                self.verified_ssn is not None and len(self.verified_ssn) > 0,
-                self.verified_name is not None and len(self.verified_name) > 0
-            ))
+            self.verified = all(
+                (
+                    self.verified_ssn is not None
+                    and len(self.verified_ssn) > 0,
+                    self.verified_name is not None
+                    and len(self.verified_name) > 0,
+                )
+            )
         else:
             self.verified = self.user.is_active
 
@@ -137,9 +203,11 @@ class UserProfile(models.Model):
     def get_polity_ids(self):
         return [x.id for x in self.user.polities.all()]
 
+
 # Make sure registration creates profiles
 def _create_user_profile(**kwargs):
     UserProfile.objects.get_or_create(user=kwargs['user'])
+
 
 user_registered.connect(_create_user_profile)
 
@@ -164,6 +232,7 @@ def get_name(user):
 
     return name
 
+
 # We need to monkey-patch both `BaseUser` and `User` because we've added
 # `User` as a proxy model. Both monkey-patches should removed when
 # `get_name` gets refactored out.
@@ -180,7 +249,15 @@ class Event(models.Model):
     event = models.CharField(max_length=1024, blank=True)
 
     def __str__(self):
-        return "[%s][%s.%s/%s@%s] %s" % (self.timestamp, self.module, self.action, self.category, self.user, self.event)
+        return "[%s][%s.%s/%s@%s] %s" % (
+            self.timestamp,
+            self.module,
+            self.action,
+            self.category,
+            self.user,
+            self.event,
+        )
+
 
 def event_register(action, category="", event={}, user=None):
     e = Event()
@@ -193,8 +270,11 @@ def event_register(action, category="", event={}, user=None):
     e.event = json.dumps(event)
     e.save()
 
+
 def event_time_since_last(module, action):
-    e = Event.objects.filter(module=module, action=action).order_by('-timestamp')
+    e = Event.objects.filter(module=module, action=action).order_by(
+        '-timestamp'
+    )
     if len(e) == 0:
         return timedelta(100000000)
     else:
