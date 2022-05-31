@@ -53,11 +53,11 @@
 <li>
   {% if user_is_member %}
       {% if user in polity.officers.all %}
-          <span class="label label-success">{% trans 'You are an officer in this polity.' %}</span>
+          <span class="badge badge-success">{% trans 'You are an officer in this polity.' %}</span>
       {% else %}
-          <span class="label label-primary">{% trans 'You are a member of this polity.' %}</span>
+          <span class="badge badge-primary">{% trans 'You are a member of this polity.' %}</span>
       {% endif %}
   {% elif user.is_authenticated %}
-      <span class="label label-warning">{% trans 'You are not a member of this polity.' %}</span>
+      <span class="badge badge-warning">{% trans 'You are not a member of this polity.' %}</span>
   {% endif %}
 </li>

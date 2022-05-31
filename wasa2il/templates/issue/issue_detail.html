@@ -39,7 +39,7 @@
 
 
 <div class="row">
-    <div class="col-md-6 col-xs-12">
+    <div class="col-lg-6">
         {% if issue.is_processed %}
             {% if documentcontent %}
                 {% include "issue/stub/documentcontent_status.html" %}
@@ -50,7 +50,7 @@
           {{ issue.description|urlize|markdown }}
         </div>
 
-        <table class="table">
+        <table class="table table-sm table-responsive">
 
             <tr>
                 <th>{% trans 'Issue number' %}:</th>
@@ -123,7 +123,7 @@
     </div>
 
     {% if issue.issue_state == 'voting' and can_vote %}
-        <div class="col-md-6 col-xs-12 well">
+        <div class="col-md-6 well">
             <h2>{% trans "Vote" %} <small>{% trans "for or against this issue" %}</small></h2>
             <div class="alert alert-danger hidden">{% trans "There was an error while processing your vote. Please try again." %}</div>
             <div data-toggle="buttons-radio" style="text-align: center;">
@@ -134,7 +134,7 @@
         </div>
     {% endif %}
 
-    <div class="col-md-6 col-xs-12"><a name="documents"></a>
+    <div class="col-lg-6"><a name="documents"></a>
         {% if documentcontent %}
             {% include 'issue/stub/document_view.html' with documentcontent=documentcontent tab=tab %}
         {% endif %}

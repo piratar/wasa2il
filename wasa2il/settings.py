@@ -297,7 +297,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     'registration',
-    'bootstrapform',
     'diff_match_patch',
     'datetimewidget',
     'crispy_forms',
@@ -319,7 +318,7 @@ try:
 except:
     pass
 
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CRISPY_FAIL_SILENTLY = not DEBUG
 
 # Allow users to attempt log-ins using any of the following:

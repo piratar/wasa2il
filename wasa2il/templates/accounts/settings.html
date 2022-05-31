@@ -31,12 +31,12 @@ $(document).ready(function() {
 {% include 'accounts/dialog_email_change.html' %}
 
 <section class="content">
-<div class="pull-right">
-    <a class="btn btn-default" href="/accounts/password/change/">{% trans "Change password" %}</a>
-</div>
 
-<h1>{% trans "Settings" %}</h1>
-<p>{% trans "You are signed in as" %} {{ user.get_name }}.</p>
+<div class="">
+  <a class="btn btn-default mb-3" href="/accounts/password/change/">{% trans "Change password" %}</a>
+  <h1>{% trans "Settings" %}</h1>
+  <p>{% trans "You are signed in as" %} {{ user.get_name }}.</p>
+</div>
 
 <div class='onesignal-customlink-container'></div>
 

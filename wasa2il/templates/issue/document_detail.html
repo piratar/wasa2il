@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load wasa2il %}
-{% load bootstrap %}
 
 {% block facebook_title %}{% trans 'Document:' %} {{ document.name }} ({{ current_content.order }}){% endblock %}
 {% block facebook_description %}{% trans 'Status:' %} {{ current_content.get_status_display }}{% endblock %}
@@ -58,13 +57,13 @@
 </h1>
 
 <div class="row">
-    <div class="col-md-6 col-xs-12 document">
+    <div class="col-md-6 document">
 
         {% include 'issue/stub/document_view.html' with documentcontent=current_content %}
 
     </div>
 
-    <div class="col-md-6 col-xs-12">
+    <div class="col-md-6">
         {% include "issue/stub/documentcontent_status.html" with documentcontent=current_content %}
 
         <form id="propose-change" action="." method="post">
@@ -121,7 +120,7 @@
 
 
         {% if issue %}
-            <table class="table table-compact">
+            <table class="table table-sm">
                 <tr><th>{% trans "Referenced issue" %}:</th><td><a href="{% url 'issue' polity.id issue.id %}">{{ issue.name }}</a></td></tr>
             </table>
         {% endif %}
@@ -129,7 +128,7 @@
     </div>
 
     {% if document.get_versions.count > 0 %}
-    <div class="col-md-6 col-xs-12">
+    <div class="col-md-6">
         <h3>{% trans "Versions" %}</h3>
         <table class="table table-striped">
             <tr>

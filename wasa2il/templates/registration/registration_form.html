@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load crispy_forms_tags %}
 
 {% block dialog %}
     {% include 'cookie_dialog.html' %}
@@ -11,7 +11,7 @@
 <h1>{% trans "Sign up" %} <small>{% trans 'and partake in democracy...' %}</small></h1>
 
 <div class="row">
-    <div class="col-md-6 col-xs-12">
+    <div class="col-lg-6">
 
         <p class="alert alert-info">
             {% trans "Please be advised that by registering and verifying your account, you become a member of the Pirate Party of Iceland." %}
@@ -26,7 +26,7 @@
         {%csrf_token%}
 
         <fieldset>
-            {{ form|bootstrap }}
+            {{ form|crispy }}
             <input class="btn btn-primary" type="submit" value="{% trans 'Sign up' %}"/>
             <a class="btn btn-default" href="/accounts/login/">{% trans 'Cancel' %}</a>
         </fieldset>

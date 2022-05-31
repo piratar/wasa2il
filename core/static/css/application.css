@@ -4,7 +4,6 @@
 /* Downloaded from: https://fonts.googleapis.com/css?family=Montserrat:400,600,700,900&subset=cyrillic,cyrillic-ext,latin-ext */
 @import "downloads/fonts.googleapis.com-Montserrat.css";
 body {
-  margin-top: 70px;
   padding-bottom: 40px;
   font-size: 14pt;
 }
@@ -33,8 +32,6 @@ footer a {
 
 .navbar {
   background-color: #000;
-  height: 70px;
-  padding-right: 50px;
 }
 .navbar .btn, .navbar button {
   color: #fff;
@@ -113,7 +110,13 @@ footer a {
   font-family: "Montserrat";
 }
 
+.btn-default:hover {
+  background-color: #663dad;
+  color: white;
+  cursor: pointer; }
+
 .btn-default {
+  border: 1px solid #ccc;
   background: none;
   background-image: none;
   background-color: #eee;
@@ -262,17 +265,7 @@ footer a {
 }
 
 .sidebar-nav .dropdown-menu {
-  width: 290px;
-}
-
-.sidebar-nav .dropdown-menu li {
-  text-indent: 0px;
-  border-bottom: 1px solid #eee;
-}
-
-.sidebar-nav .dropdown-menu li > a {
-  white-space: normal;
-  padding-left: 10px;
+  min-width: 290px;
 }
 
 .sidebar-nav li {
@@ -302,12 +295,6 @@ footer a {
 
 .sidebar-nav li > span.label {
   margin-left: 10px;
-}
-
-.navbar-toggle {
-  float: left;
-  margin-left: 12px;
-  margin-right: 6px;
 }
 
 @media (max-width: 767px) {
@@ -676,40 +663,7 @@ footer a {
     padding: 0px;
   }
 }
-.profile {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: stretch;
-  align-content: stretch;
-}
 
-@media screen and (min-width: 768px) {
-  .profile {
-    flex-direction: row;
-  }
-  .profile div h1 {
-    font-size: 30px;
-    color: #000;
-  }
-  .profile-picture {
-    float: right;
-    width: 40%;
-    padding: 15px;
-  }
-  .profile-bio {
-    width: 50%;
-    text-align: justify;
-  }
-  .profile-thingsdone {
-    width: 50%;
-    padding-left: 20px;
-  }
-  .profile-candidacies {
-    width: 100%;
-  }
-}
 /* Global search field */
 @media (max-width: 767px) {
   .piratepurple {
@@ -779,12 +733,14 @@ footer a {
 
 #ajax-status-messages {
   position: absolute;
-  top: 55px;
+  top: 85px;
+  right: 10px;
   width: 100%;
+  z-index: 1;
 }
 
 #ajax-status-messages div {
-  max-width: 400px;
+  max-width: 50vw;
   margin: 0 auto 0 auto;
 }
 
@@ -859,6 +815,9 @@ div#submit-working {
 .dropdown-menu {
   cursor: pointer;
 }
+
+.dropdown-item:hover {
+  color: white; }
 
 .nav-tabs > li.active > a {
   border-left-width: 2px;
