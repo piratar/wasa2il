@@ -13,6 +13,15 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='polity',
             name='polity_type',
-            field=models.CharField(choices=[('unspecified', 'Unspecified'), ('regional', 'Regional Group'), ('constituency', 'Constituency Group'), ('special_interest', 'Special Interest Group')], default='unspecified', max_length=20),
+            field=models.CharField(
+                choices=[
+                    ('unspecified', 'Unspecified'),
+                    ('regional', 'Regional Group'),
+                    ('constituency', 'Constituency Group'),
+                    ('special_interest', 'Special Interest Group'),
+                ],
+                default='unspecified',
+                max_length=20,
+            ),
         ),
     ]

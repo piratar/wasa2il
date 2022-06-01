@@ -54,8 +54,17 @@ class TieBreaker(object):
         max_columns = len(list(tied_candidates)[0])
         column = 0
         while len(tied_candidates) > 1 and column < max_columns:
-            min_index = min(random_ordering.index(list(candidate)[column]) for candidate in tied_candidates)
-            tied_candidates = set([candidate for candidate in tied_candidates if candidate[column] == random_ordering[min_index]])
+            min_index = min(
+                random_ordering.index(list(candidate)[column])
+                for candidate in tied_candidates
+            )
+            tied_candidates = set(
+                [
+                    candidate
+                    for candidate in tied_candidates
+                    if candidate[column] == random_ordering[min_index]
+                ]
+            )
             column += 1
         return list(tied_candidates)[0]
 

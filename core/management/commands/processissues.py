@@ -6,15 +6,14 @@ from django.core.management.base import BaseCommand
 
 from core.models import *
 
-class Command(BaseCommand):
 
+class Command(BaseCommand):
     def handle(self, *args, **options):
 
         now = datetime.now()
 
         unprocessed_issues = Issue.objects.filter(
-            deadline_votes__lte=now,
-            is_processed=False
+            deadline_votes__lte=now, is_processed=False
         ).order_by('deadline_votes', 'id')
 
         for issue in unprocessed_issues:

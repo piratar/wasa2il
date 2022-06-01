@@ -14,6 +14,7 @@ import hmac
 import hashlib
 import urllib
 from urllib.parse import parse_qs
+
 # SSO done
 
 from django.contrib.auth import logout
@@ -71,6 +72,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from registration.backends.default.views import ActivationView
 from registration.backends.default.views import RegistrationView
 from registration import signals as registration_signals
+
 # END
 
 
@@ -96,60 +98,65 @@ def home(request):
         # polity listing.
         return HttpResponseRedirect(reverse('polities'))
 
+
 def manifest(request):
     manifest = {
-      "name": "%s" % (settings.INSTANCE_NAME),
-      "short_name": "%s" % (settings.INSTANCE_NAME),
-      "icons": [
-        {
-          "src": "/static/img/logo-32.png",
-          "sizes": "32x32",
-          "type": "image/png"
+        "name": "%s" % (settings.INSTANCE_NAME),
+        "short_name": "%s" % (settings.INSTANCE_NAME),
+        "icons": [
+            {
+                "src": "/static/img/logo-32.png",
+                "sizes": "32x32",
+                "type": "image/png",
+            },
+            {
+                "src": "/static/img/logo-100.png",
+                "sizes": "100x100",
+                "type": "image/png",
+            },
+            {
+                "src": "/static/img/logo-101.png",
+                "sizes": "101x101",
+                "type": "image/png",
+            },
+            {
+                "src": "/static/img/logo-192.png",
+                "sizes": "192x192",
+                "type": "image/png",
+            },
+            {
+                "src": "/static/img/logo-256.png",
+                "sizes": "256x256",
+                "type": "image/png",
+            },
+        ],
+        "start_url": "/",
+        "background_color": "#ffffff",
+        "theme_color": "#e9e9e9",
+        "display": "standalone",
+        "serviceworker": {
+            "src": "/service-worker.js?ts=%s" % (settings.WASA2IL_HASH),
+            "scope": "/",
+            "use_cache": False,
         },
-        {
-          "src": "/static/img/logo-100.png",
-          "sizes": "100x100",
-          "type": "image/png"
-        },
-        {
-          "src": "/static/img/logo-101.png",
-          "sizes": "101x101",
-          "type": "image/png"
-        },
-        {
-          "src": "/static/img/logo-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        },
-        {
-          "src": "/static/img/logo-256.png",
-          "sizes": "256x256",
-          "type": "image/png"
-        },
-      ],
-      "start_url": "/",
-      "background_color": "#ffffff",
-      "theme_color": "#e9e9e9",
-      "display": "standalone",
-      "serviceworker": {
-        "src": "/service-worker.js?ts=%s" % (settings.WASA2IL_HASH),
-        "scope": "/",
-        "use_cache": False
-      },
-      "gcm_sender_id": "%d" % (settings.GCM_SENDER_ID),
+        "gcm_sender_id": "%d" % (settings.GCM_SENDER_ID),
     }
     return JsonResponse(manifest)
 
+
 def help(request, page):
-    ctx = {
-        'language_code': settings.LANGUAGE_CODE
-    }
-    for locale in [settings.LANGUAGE_CODE, "is"]: # Icelandic fallback
-      filename = "help/%s/%s.html" % (locale, page)
-      if os.path.isfile(os.path.join(os.path.dirname(__file__), '..', 'wasa2il/templates', filename)):
-          return render(request, filename, ctx)
+    ctx = {'language_code': settings.LANGUAGE_CODE}
+    for locale in [settings.LANGUAGE_CODE, "is"]:  # Icelandic fallback
+        filename = "help/%s/%s.html" % (locale, page)
+        if os.path.isfile(
+            os.path.join(
+                os.path.dirname(__file__), '..', 'wasa2il/templates', filename
+            )
+        ):
+            return render(request, filename, ctx)
 
     raise Http404
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def view_admintools(request):
@@ -157,15 +164,23 @@ def view_admintools(request):
     users = {
         'total_count': User.objects.count(),
         'verified_count': User.objects.filter(is_active=True).count(),
-        'last30_count': User.objects.filter(last_login__gte=datetime.now()-timedelta(days=30)).count(),
-        'last365_count': User.objects.filter(last_login__gte=datetime.now()-timedelta(days=365)).count(),
+        'last30_count': User.objects.filter(
+            last_login__gte=datetime.now() - timedelta(days=30)
+        ).count(),
+        'last365_count': User.objects.filter(
+            last_login__gte=datetime.now() - timedelta(days=365)
+        ).count(),
     }
-    return render(request, 'admintools.html', {'push_form': push_form, 'users': users})
+    return render(
+        request, 'admintools.html', {'push_form': push_form, 'users': users}
+    )
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def view_admintools_push(request):
     push_info = push_get_all_users()
     return render(request, 'admintools_push.html', {'push_users': push_info})
+
 
 @never_cache
 @login_required
@@ -185,17 +200,13 @@ def profile(request, username=None):
 
     # Get running elections in which the user is currently a candidate
     current_elections = Election.objects.filter(
-        candidate__user=profile_user,
-        deadline_votes__gte=timezone.now()
+        candidate__user=profile_user, deadline_votes__gte=timezone.now()
     )
 
-    candidacies = Candidate.objects.select_related(
-        'result_row',
-        'election'
-    ).filter(
-        user=profile_user
-    ).order_by(
-        '-election__deadline_votes'
+    candidacies = (
+        Candidate.objects.select_related('result_row', 'election')
+        .filter(user=profile_user)
+        .order_by('-election__deadline_votes')
     )
 
     ctx = {
@@ -227,7 +238,7 @@ def view_settings(request):
                 con = EmailConfirmation(
                     user=request.user,
                     action='email_change',
-                    data=form.cleaned_data['email']
+                    data=form.cleaned_data['email'],
                 )
                 con.save()
                 con.send(request)
@@ -247,7 +258,7 @@ def view_settings(request):
                     # Filename relative to the uploads directory.
                     filename = os.path.join(
                         UserProfile.picture.field.upload_to,
-                        'userimg_%s.%s' % (random_word(12), extension)
+                        'userimg_%s.%s' % (random_word(12), extension),
                     )
 
                     # Full path of the image on disk.
@@ -275,7 +286,12 @@ def view_settings(request):
                 # Cleanup time!
 
                 # First, find picture files used by any profile.
-                db_pictures = [up['picture'] for up in UserProfile.objects.all().values('picture').distinct()]
+                db_pictures = [
+                    up['picture']
+                    for up in UserProfile.objects.all()
+                    .values('picture')
+                    .distinct()
+                ]
 
                 # Paths of profile pictures are denoted relative to the
                 # settings.MEDIA_ROOT directory. The "upload_to" parameter
@@ -290,7 +306,9 @@ def view_settings(request):
 
                 # List the files that are actually in the profile picture
                 # directory and delete them if they are no longer in use.
-                items = os.listdir(os.path.join(settings.MEDIA_ROOT, upload_to))
+                items = os.listdir(
+                    os.path.join(settings.MEDIA_ROOT, upload_to)
+                )
                 for item in items:
 
                     # Let's not delete the default image. That would be silly.
@@ -298,7 +316,9 @@ def view_settings(request):
                         continue
 
                     # We'll use full disk paths for file operations.
-                    item_fullpath = os.path.join(settings.MEDIA_ROOT, upload_to, item)
+                    item_fullpath = os.path.join(
+                        settings.MEDIA_ROOT, upload_to, item
+                    )
 
                     if os.path.isdir(item_fullpath):
                         # If this is a directory, we are slightly more shy of
@@ -306,14 +326,17 @@ def view_settings(request):
                         # if it's a thumbnail directory (ending with
                         # "-thumbnail"). If it's some random directory of
                         # unknown origin, we'll leave it alone.
-                        if item[-10:] == '-thumbnail' and os.path.join(upload_to, item[:-10]) not in db_pictures:
+                        if (
+                            item[-10:] == '-thumbnail'
+                            and os.path.join(upload_to, item[:-10])
+                            not in db_pictures
+                        ):
                             shutil.rmtree(item_fullpath)
                     elif os.path.isfile(item_fullpath):
                         # If this is a file, and it's not being used in a user
                         # profile, we'll delete it.
                         if os.path.join(upload_to, item) not in db_pictures:
                             os.unlink(item_fullpath)
-
 
             if settings.ICEPIRATE['url']:
                 # The request.user object doesn't yet reflect recently made
@@ -330,7 +353,9 @@ def view_settings(request):
                 return redirect(reverse('profile'))
 
     else:
-        form = UserProfileForm(initial={'email': request.user.email}, instance=profile)
+        form = UserProfileForm(
+            initial={'email': request.user.email}, instance=profile
+        )
 
     ctx = {
         'form': form,
@@ -341,11 +366,11 @@ def view_settings(request):
 @login_required
 def personal_data(request):
 
-    terms = TermsAndConditions.objects.filter(
-        userterms__user=request.user
-    ).order_by(
-        '-userterms__date_accepted'
-    ).first()
+    terms = (
+        TermsAndConditions.objects.filter(userterms__user=request.user)
+        .order_by('-userterms__date_accepted')
+        .first()
+    )
 
     ctx = {
         'terms': terms,
@@ -371,8 +396,10 @@ def personal_data_fetch(request):
     @contextlib.contextmanager
     def tempdir():
         dirpath = tempfile.mkdtemp()
+
         def cleanup():
             shutil.rmtree(dirpath)
+
         with cd(dirpath, cleanup):
             yield dirpath
 
@@ -383,7 +410,9 @@ def personal_data_fetch(request):
             'name': issue.name,
             'polity': issue.polity.slug,
             'polity_name': issue.polity.name,
-            'issue_num': ('%d/%d' % (issue.issue_num, issue.issue_year)) if issue.issue_num else None,
+            'issue_num': ('%d/%d' % (issue.issue_num, issue.issue_year))
+            if issue.issue_num
+            else None,
             'state': issue.issue_state(),
             'created': issue.created.strftime(dt_format),
             'ended': issue.deadline_votes.strftime(dt_format),
@@ -403,10 +432,7 @@ def personal_data_fetch(request):
         with open(filename, 'w') as f:
 
             output = json.dumps(
-                data,
-                indent=4,
-                sort_keys=True,
-                ensure_ascii=False
+                data, indent=4, sort_keys=True, ensure_ascii=False
             )
 
             f.write(output)
@@ -417,13 +443,17 @@ def personal_data_fetch(request):
     # https://stackoverflow.com/questions/1855095/how-to-create-a-zip-archive-of-a-directory
     def make_zipfile(output_filename, source_dir):
         relroot = os.path.abspath(os.path.join(source_dir, os.pardir))
-        with zipfile.ZipFile(output_filename, 'w', zipfile.ZIP_DEFLATED) as zip:
+        with zipfile.ZipFile(
+            output_filename, 'w', zipfile.ZIP_DEFLATED
+        ) as zip:
             for root, dirs, files in os.walk(source_dir):
                 zip.write(root, os.path.relpath(root, relroot))
                 for file in files:
                     filename = os.path.join(root, file)
                     if os.path.isfile(filename):
-                        arcname = os.path.join(os.path.relpath(root, relroot), file)
+                        arcname = os.path.join(
+                            os.path.relpath(root, relroot), file
+                        )
                         zip.write(filename, arcname)
 
     # Short-hands.
@@ -448,7 +478,7 @@ def personal_data_fetch(request):
             user.username,
             # Not the same datetime format as used in the files themselves,
             # because this needs to be filesystem-compatible.
-            timezone.now().strftime('%Y-%m-%d.%H-%M-%S')
+            timezone.now().strftime('%Y-%m-%d.%H-%M-%S'),
         )
         os.mkdir(package_name)
         os.chdir(package_name)
@@ -456,35 +486,41 @@ def personal_data_fetch(request):
         # We are now working within the temporary package directory.
 
         # Compile information about user's participation in elections.
-        elections = Election.objects.select_related(
-            'polity'
-        ).filter(
-            candidate__user_id=user.id
-        ).order_by(
-            'deadline_candidacy'
+        elections = (
+            Election.objects.select_related('polity')
+            .filter(candidate__user_id=user.id)
+            .order_by('deadline_candidacy')
         )
         election_export = []
         for election in elections:
 
             try:
                 if election.results_are_ordered:
-                    user_place = election.result.rows.get(candidate__user_id=user.id).order
+                    user_place = election.result.rows.get(
+                        candidate__user_id=user.id
+                    ).order
                 else:
-                    if election.result.rows.filter(candidate__user_id=user.id).exists():
+                    if election.result.rows.filter(
+                        candidate__user_id=user.id
+                    ).exists():
                         user_place = 'selected'
                     else:
                         user_place = 'not-selected'
             except ElectionResult.DoesNotExist:
                 user_place = 'not-yet-determined'
 
-            election_export.append({
-                'name': election.name,
-                'started': election.deadline_candidacy.strftime(dt_format),
-                'ended': election.deadline_votes.strftime(dt_format),
-                'polity_name': election.polity.name,
-                'result_type': 'ordered' if election.results_are_ordered else 'not-ordered',
-                'user_place': user_place,
-            })
+            election_export.append(
+                {
+                    'name': election.name,
+                    'started': election.deadline_candidacy.strftime(dt_format),
+                    'ended': election.deadline_votes.strftime(dt_format),
+                    'polity_name': election.polity.name,
+                    'result_type': 'ordered'
+                    if election.results_are_ordered
+                    else 'not-ordered',
+                    'user_place': user_place,
+                }
+            )
         write_json('elections.json', election_export)
 
         # Compile user information from Wasa2il itself.
@@ -497,7 +533,12 @@ def personal_data_fetch(request):
             'verified_ssn': profile.verified_ssn,
             'verified_name': profile.verified_name,
             'verified_timing': profile.verified_timing.strftime(dt_format),
-            'polities': dict([(p.slug, p.name) for p in user.polities.exclude(is_front_polity=True)]),
+            'polities': dict(
+                [
+                    (p.slug, p.name)
+                    for p in user.polities.exclude(is_front_polity=True)
+                ]
+            ),
             'date_joined': user.date_joined.strftime(dt_format),
             'bio': profile.bio,
         }
@@ -508,36 +549,46 @@ def personal_data_fetch(request):
         # the user, but is the aggregate result of whatever was before, plus
         # the work of the user.
         document_content_export = []
-        for dc in user.documentcontent_set.select_related('document__polity').order_by('created'):
+        for dc in user.documentcontent_set.select_related(
+            'document__polity'
+        ).order_by('created'):
 
             try:
-                issue = Issue.objects.select_related('polity').get(documentcontent=dc)
+                issue = Issue.objects.select_related('polity').get(
+                    documentcontent=dc
+                )
                 issue_data = jsonize_issue(issue)
 
             except Issue.DoesNotExist:
                 issue_data = None
 
-            document_content_export.append({
-                'name': dc.name,
-                'order': dc.order,
-                'author_comment': dc.comments,
-                'status': dc.status,
-                'created': dc.created.strftime(dt_format),
-                'polity': dc.document.polity.slug,
-                'polity_name': dc.document.polity.name,
-                'issue': issue_data,
-                'text': dc.text,
-            })
+            document_content_export.append(
+                {
+                    'name': dc.name,
+                    'order': dc.order,
+                    'author_comment': dc.comments,
+                    'status': dc.status,
+                    'created': dc.created.strftime(dt_format),
+                    'polity': dc.document.polity.slug,
+                    'polity_name': dc.document.polity.name,
+                    'issue': issue_data,
+                    'text': dc.text,
+                }
+            )
         write_json('document_contents.json', document_content_export)
 
         # Compile comments made by user.
         comment_export = []
-        for comment in user.comment_created_by.select_related('issue__polity').order_by('created'):
-            comment_export.append({
-                'issue': jsonize_issue(comment.issue),
-                'created': comment.created.strftime(dt_format),
-                'text': comment.comment,
-            })
+        for comment in user.comment_created_by.select_related(
+            'issue__polity'
+        ).order_by('created'):
+            comment_export.append(
+                {
+                    'issue': jsonize_issue(comment.issue),
+                    'created': comment.created.strftime(dt_format),
+                    'text': comment.comment,
+                }
+            )
         write_json('comments.json', comment_export)
 
         # Include the user's picture, if available.
@@ -567,7 +618,9 @@ def personal_data_fetch(request):
 
     # Push the content to the user as a zip file for download.
     response = HttpResponse(package_data, content_type='application/zip')
-    response['Content-Disposition'] = 'attachment; filename=%s.zip' % package_name
+    response['Content-Disposition'] = (
+        'attachment; filename=%s.zip' % package_name
+    )
     return response
 
 
@@ -593,37 +646,36 @@ class Wasa2ilRegistrationView(RegistrationView):
         )
 
         registration_signals.user_registered.send(
-            sender=self.__class__,
-            user=new_user,
-            request=self.request
+            sender=self.__class__, user=new_user, request=self.request
         )
 
         return new_user
 
 
 class Wasa2ilActivationView(ActivationView):
-
     def activate(self, *args, **kwargs):
         activation_key = kwargs.get('activation_key', '')
         site = get_current_site(self.request)
         user, activated = self.registration_profile.objects.activate_user(
-            activation_key,
-            site
+            activation_key, site
         )
 
         if activated:
             registration_signals.user_activated.send(
-                sender=self.__class__,
-                user=user,
-                request=self.request
+                sender=self.__class__, user=user, request=self.request
             )
 
-            login(self.request, user, 'django.contrib.auth.backends.ModelBackend')
+            login(
+                self.request, user, 'django.contrib.auth.backends.ModelBackend'
+            )
 
         return user
 
     def get_success_url(self, user):
-        return '%s?returnTo=%s' % (reverse('tc_accept_page'), reverse('login_or_saml_redirect'))
+        return '%s?returnTo=%s' % (
+            reverse('tc_accept_page'),
+            reverse('login_or_saml_redirect'),
+        )
 
 
 @csrf_exempt
@@ -650,7 +702,11 @@ def verify(request):
         # this, we will grab the token if the user is not logged in (because
         # of the SameSite restriction), place it in an HTML form and
         # automatically submit it to the same page again.
-        return render(request, 'registration/verification_autopost.html', {'token': token})
+        return render(
+            request,
+            'registration/verification_autopost.html',
+            {'token': token},
+        )
 
     # XML is received as a base64-encoded string.
     input_xml = b64decode(token)
@@ -667,7 +723,9 @@ def verify(request):
             'ssn': auth['UserSSN'],
             'name': auth['Name'].encode('utf8'),
         }
-        return render(request, 'registration/verification_invalid_entity.html', ctx)
+        return render(
+            request, 'registration/verification_invalid_entity.html', ctx
+        )
 
     # Make sure that user has reached the minimum required age, if applicable.
     if hasattr(settings, 'AGE_LIMIT') and settings.AGE_LIMIT > 0:
@@ -678,10 +736,16 @@ def verify(request):
                 'age': age,
                 'age_limit': settings.AGE_LIMIT,
             }
-            return render(request, 'registration/verification_age_limit.html', ctx)
+            return render(
+                request, 'registration/verification_age_limit.html', ctx
+            )
 
     if UserProfile.objects.filter(verified_ssn=auth['UserSSN']).exists():
-        taken_user = UserProfile.objects.select_related('user').get(verified_ssn=auth['UserSSN']).user
+        taken_user = (
+            UserProfile.objects.select_related('user')
+            .get(verified_ssn=auth['UserSSN'])
+            .user
+        )
         ctx = {
             'taken_user': taken_user,
         }
@@ -698,7 +762,9 @@ def verify(request):
     profile.save()
     event_register('user_verified', user=request.user)
 
-    user_verified.send(sender=request.user.__class__, user=request.user, request=request)
+    user_verified.send(
+        sender=request.user.__class__, user=request.user, request=request
+    )
 
     return HttpResponseRedirect('/')
 
@@ -741,7 +807,9 @@ def sso(request):
     except:
         return HttpResponseBadRequest('Malformed payload.')
 
-    our_signature = hmac.new(key, payload, digestmod=hashlib.sha256).hexdigest()
+    our_signature = hmac.new(
+        key, payload, digestmod=hashlib.sha256
+    ).hexdigest()
 
     if our_signature != their_signature:
         return HttpResponseBadRequest('Malformed payload.')
@@ -760,11 +828,19 @@ def sso(request):
         'name': name,
     }
 
-    out_payload = base64.b64encode(urllib.parse.urlencode(outbound).encode('utf-8'))
-    out_signature = hmac.new(key, out_payload, digestmod=hashlib.sha256).hexdigest()
-    out_query = urllib.parse.urlencode({'sso': out_payload, 'sig' : out_signature})
+    out_payload = base64.b64encode(
+        urllib.parse.urlencode(outbound).encode('utf-8')
+    )
+    out_signature = hmac.new(
+        key, out_payload, digestmod=hashlib.sha256
+    ).hexdigest()
+    out_query = urllib.parse.urlencode(
+        {'sso': out_payload, 'sig': out_signature}
+    )
 
-    event_register('sso_signin', event={'client': 'discourse'}, user=request.user)
+    event_register(
+        'sso_signin', event={'client': 'discourse'}, user=request.user
+    )
 
     return HttpResponseRedirect('%s?%s' % (return_url, out_query))
 

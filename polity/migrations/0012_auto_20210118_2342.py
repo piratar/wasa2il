@@ -11,7 +11,10 @@ def update_polity_types(apps, schema_editor):
     Polity.objects.filter(polity_type='U').update(polity_type='unspecified')
     Polity.objects.filter(polity_type='R').update(polity_type='regional')
     Polity.objects.filter(polity_type='C').update(polity_type='constituency')
-    Polity.objects.filter(polity_type='I').update(polity_type='special_interest')
+    Polity.objects.filter(polity_type='I').update(
+        polity_type='special_interest'
+    )
+
 
 class Migration(migrations.Migration):
 
@@ -19,6 +22,4 @@ class Migration(migrations.Migration):
         ('polity', '0011_auto_20210118_2303'),
     ]
 
-    operations = [
-        migrations.RunPython(update_polity_types)
-    ]
+    operations = [migrations.RunPython(update_polity_types)]

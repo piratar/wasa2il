@@ -11,13 +11,15 @@ class PreverifiedRegistrationView(RegistrationView):
     A registration backend which accepts e-mail addresses which have been
     validated by icepirate and immediately creates a user.
     """
+
     SIG_VALIDITY = 31 * 24 * 3600
 
     def _make_email_sig(self, email, when=None):
         ts = '%x/' % (when or time.time())
         key = settings.ICEPIRATE['key']
-        return ts + hashlib.sha1(
-            '%s:%s%s:%s' % (key, ts, email, key)).hexdigest()
+        return (
+            ts + hashlib.sha1('%s:%s%s:%s' % (key, ts, email, key)).hexdigest()
+        )
 
     def _email_sig_is_ok(self, email, email_sig):
         try:
@@ -31,7 +33,7 @@ class PreverifiedRegistrationView(RegistrationView):
 
     def registration_allowed(self):
         # Check if there is an email_sig variable that correctly signs
-        # the provided e-mail address. 
+        # the provided e-mail address.
 
         email = self.request.GET.get('email')
         email2 = self.request.POST.get('email')
@@ -39,8 +41,9 @@ class PreverifiedRegistrationView(RegistrationView):
 
         if email2 is None and email_sig is None:
             return True
-        elif (email2 in (None, email)
-                and self._email_sig_is_ok(email, email_sig)):
+        elif email2 in (None, email) and self._email_sig_is_ok(
+            email, email_sig
+        ):
             return RegistrationView.registration_allowed(self)
         else:
             return False

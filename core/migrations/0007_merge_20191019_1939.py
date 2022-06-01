@@ -10,5 +10,4 @@ class Migration(migrations.Migration):
         ('core', '0006_userprofile_phone'),
     ]
 
-    operations = [
-    ]
+    operations = []

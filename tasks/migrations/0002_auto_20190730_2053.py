@@ -15,21 +15,29 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='task',
             name='estimated_duration_weeks',
-            field=models.IntegerField(default=1, verbose_name='Estimated number of weeks'),
+            field=models.IntegerField(
+                default=1, verbose_name='Estimated number of weeks'
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='estimated_hours_per_week',
-            field=models.IntegerField(default=1, verbose_name='Estimated hours per week'),
+            field=models.IntegerField(
+                default=1, verbose_name='Estimated hours per week'
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='is_recruiting',
-            field=models.BooleanField(default=True, verbose_name='Is recruiting'),
+            field=models.BooleanField(
+                default=True, verbose_name='Is recruiting'
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='volunteers_needed',
-            field=models.IntegerField(default=1, verbose_name='Number of volunteers needed'),
+            field=models.IntegerField(
+                default=1, verbose_name='Number of volunteers needed'
+            ),
         ),
     ]

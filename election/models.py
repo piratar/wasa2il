@@ -15,13 +15,18 @@ from election.utils import BallotCounter
 
 class ElectionQuerySet(models.QuerySet):
     def recent(self):
-        return self.filter(deadline_votes__gt=datetime.now() - timedelta(days=settings.RECENT_ELECTION_DAYS))
+        return self.filter(
+            deadline_votes__gt=datetime.now()
+            - timedelta(days=settings.RECENT_ELECTION_DAYS)
+        )
+
 
 class Election(models.Model):
     """
     An election is different from an issue vote; it's a vote
     on people. Users, specifically.
     """
+
     objects = ElectionQuerySet.as_manager()
 
     # Note: Not used for model field options (at least not yet), but rather
@@ -39,7 +44,9 @@ class Election(models.Model):
     slug = models.SlugField(max_length=128, blank=True)
 
     polity = models.ForeignKey('polity.Polity', on_delete=CASCADE)
-    voting_system = models.CharField(max_length=30, verbose_name=_('Voting system'), choices=VOTING_SYSTEMS)
+    voting_system = models.CharField(
+        max_length=30, verbose_name=_('Voting system'), choices=VOTING_SYSTEMS
+    )
 
     # Tells whether the election results page should show the winning
     # candidates as an ordered list or as a set of winners. Some voting
@@ -48,7 +55,9 @@ class Election(models.Model):
     # elegant to set this in a model describing the voting system in more
     # detail. To achieve that, the BallotCounter.VOTING_SYSTEMS list above
     # should to be turned into a proper Django model.
-    results_are_ordered = models.BooleanField(default=True, verbose_name=_('Results are ordered'))
+    results_are_ordered = models.BooleanField(
+        default=True, verbose_name=_('Results are ordered')
+    )
 
     # How many candidates will be publicly listed in the results of an
     # election. Officers still see entire list. Individual candidates can also
@@ -56,33 +65,75 @@ class Election(models.Model):
     results_limit = models.IntegerField(
         null=True,
         blank=True,
-        verbose_name=_('How many candidates will be publicly listed in the results of an election')
+        verbose_name=_(
+            'How many candidates will be publicly listed in the results of an election'
+        ),
     )
 
-    deadline_candidacy = models.DateTimeField(verbose_name=_('Deadline for candidacies'))
-    starttime_votes = models.DateTimeField(null=True, blank=True, verbose_name=_('Election begins'))
+    deadline_candidacy = models.DateTimeField(
+        verbose_name=_('Deadline for candidacies')
+    )
+    starttime_votes = models.DateTimeField(
+        null=True, blank=True, verbose_name=_('Election begins')
+    )
     deadline_votes = models.DateTimeField(verbose_name=_('Election ends'))
 
     # This allows one polity to host elections for one or more others, in
     # particular allowing access to elections based on geographical polities
     # without residency granting access to participate in all other polity
     # activities.
-    voting_polities = models.ManyToManyField('polity.Polity', blank=True, related_name='remote_election_votes', verbose_name=_('Voting polities'))
-    candidate_polities = models.ManyToManyField('polity.Polity', blank=True, related_name='remote_election_candidates', verbose_name=_('Candidate polities'))
+    voting_polities = models.ManyToManyField(
+        'polity.Polity',
+        blank=True,
+        related_name='remote_election_votes',
+        verbose_name=_('Voting polities'),
+    )
+    candidate_polities = models.ManyToManyField(
+        'polity.Polity',
+        blank=True,
+        related_name='remote_election_candidates',
+        verbose_name=_('Candidate polities'),
+    )
 
     # Sometimes elections may depend on a user having been the organization's member for an X amount of time
     # This optional field lets the vote counter disregard members who are too new.
-    deadline_joined_org = models.DateTimeField(null=True, blank=True, verbose_name=_('Membership deadline'))
+    deadline_joined_org = models.DateTimeField(
+        null=True, blank=True, verbose_name=_('Membership deadline')
+    )
     is_processed = models.BooleanField(default=False)
 
-    instructions = models.TextField(null=True, blank=True, verbose_name=_('Instructions for voters'), help_text=_('Instructions or other information that might be of importance to those casting their votes.'))
-    conditions = models.TextField(null=True, blank=True, verbose_name=_('Conditions for candidates'), help_text=_('Candidates must accept these conditions to be allowed to run in the election. Anything binding for the candidates should be placed here, for example if candidates are expected to abide by certain rules, to volunteer their time in a some way or provide particular information.'))
+    instructions = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('Instructions for voters'),
+        help_text=_(
+            'Instructions or other information that might be of importance to those casting their votes.'
+        ),
+    )
+    conditions = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('Conditions for candidates'),
+        help_text=_(
+            'Candidates must accept these conditions to be allowed to run in the election. Anything binding for the candidates should be placed here, for example if candidates are expected to abide by certain rules, to volunteer their time in a some way or provide particular information.'
+        ),
+    )
 
     # These are election statistics;
-    stats = models.TextField(null=True, blank=True, verbose_name=_('Statistics as JSON'))
-    stats_publish_ballots_basic = models.BooleanField(default=False, verbose_name=_('Publish basic ballot statistics'))
-    stats_publish_ballots_per_candidate = models.BooleanField(default=False, verbose_name=_('Publish ballot statistics for each candidate'))
-    stats_publish_files = models.BooleanField(default=False, verbose_name=_('Publish advanced statistics (downloadable)'))
+    stats = models.TextField(
+        null=True, blank=True, verbose_name=_('Statistics as JSON')
+    )
+    stats_publish_ballots_basic = models.BooleanField(
+        default=False, verbose_name=_('Publish basic ballot statistics')
+    )
+    stats_publish_ballots_per_candidate = models.BooleanField(
+        default=False,
+        verbose_name=_('Publish ballot statistics for each candidate'),
+    )
+    stats_publish_files = models.BooleanField(
+        default=False,
+        verbose_name=_('Publish advanced statistics (downloadable)'),
+    )
 
     class Meta:
         ordering = ['-deadline_votes']
@@ -101,13 +152,15 @@ class Election(models.Model):
             try:
                 filename = settings.BALLOT_SAVEFILE_FORMAT % {
                     'election_id': self.id,
-                    'voting_system': self.voting_system}
+                    'voting_system': self.voting_system,
+                }
                 directory = os.path.dirname(filename)
                 if not os.path.exists(directory):
                     os.mkdir(directory)
                 ballot_counter.save_ballots(filename)
             except:
                 import traceback
+
                 traceback.print_exc()
                 return False
         return True
@@ -118,20 +171,26 @@ class Election(models.Model):
             try:
                 filename = settings.BALLOT_SAVEFILE_FORMAT % {
                     'election_id': self.id,
-                    'voting_system': self.voting_system}
+                    'voting_system': self.voting_system,
+                }
                 bc.load_ballots(filename)
             except:
                 import traceback
+
                 traceback.print_exc()
         return bc
 
     @transaction.atomic
     def process(self):
         if self.election_state() != 'concluded':
-            raise Election.ElectionInProgressException('Election %s is still in progress!' % self)
+            raise Election.ElectionInProgressException(
+                'Election %s is still in progress!' % self
+            )
 
         if self.is_processed:
-            raise Election.AlreadyProcessedException('Election %s has already been processed!' % self)
+            raise Election.AlreadyProcessedException(
+                'Election %s has already been processed!' % self
+            )
 
         # "Flatten" the values of votes in an election. A candidate may be
         # removed from an election when voting has already started. When that
@@ -163,7 +222,9 @@ class Election(models.Model):
 
         else:
             ordered_candidates, ballot_counter = self.process_votes()
-            vote_count = self.electionvote_set.values('user').distinct().count()
+            vote_count = (
+                self.electionvote_set.values('user').distinct().count()
+            )
 
             # Save anonymized ballots to a file, so we can recount later
             save_failed = not self.save_ballots(ballot_counter)
@@ -175,7 +236,9 @@ class Election(models.Model):
         try:
             election_result = ElectionResult.objects.get(election=self)
         except ElectionResult.DoesNotExist:
-            election_result = ElectionResult.objects.create(election=self, vote_count=vote_count)
+            election_result = ElectionResult.objects.create(
+                election=self, vote_count=vote_count
+            )
 
         election_result.rows.all().delete()
         order = 0
@@ -197,7 +260,11 @@ class Election(models.Model):
         if self.polity.push_on_election_end:
             # Doing this just to force the translation string creation:
             __ = _("Election results in election '%s' have been calculated.")
-            push_send_notification_to_polity_users(self.polity.id, "Election results in election '%s' have been calculated.", [self.name])
+            push_send_notification_to_polity_users(
+                self.polity.id,
+                "Election results in election '%s' have been calculated.",
+                [self.name],
+            )
 
     def generate_stats(self):
         ballot_counter = self.load_archived_ballots()
@@ -213,22 +280,31 @@ class Election(models.Model):
 
     def get_voters(self):
         if self.voting_polities.count() > 0:
-            voters = User.objects.filter(polities__in=self.voting_polities.all())
+            voters = User.objects.filter(
+                polities__in=self.voting_polities.all()
+            )
         else:
             voters = self.polity.election_voters()
 
         if self.deadline_joined_org:
-            return voters.filter(userprofile__joined_org__lt = self.deadline_joined_org)
+            return voters.filter(
+                userprofile__joined_org__lt=self.deadline_joined_org
+            )
         else:
             return voters
 
     def can_vote(self, user=None, user_id=None):
-        return self.get_voters().filter(
-            id=(user_id if (user_id is not None) else user.id)).exists()
+        return (
+            self.get_voters()
+            .filter(id=(user_id if (user_id is not None) else user.id))
+            .exists()
+        )
 
     def get_potential_candidates(self):
         if self.candidate_polities.count() > 0:
-            pcands = User.objects.filter(polities__in=self.candidate_polities.all())
+            pcands = User.objects.filter(
+                polities__in=self.candidate_polities.all()
+            )
         else:
             pcands = self.polity.election_potential_candidates()
 
@@ -239,14 +315,24 @@ class Election(models.Model):
         return pcands
 
     def can_be_candidate(self, user=None, user_id=None):
-        return self.get_potential_candidates().filter(
-            id=(user_id if (user_id is not None) else user.id)).exists()
+        return (
+            self.get_potential_candidates()
+            .filter(id=(user_id if (user_id is not None) else user.id))
+            .exists()
+        )
 
     def process_votes(self):
         if self.deadline_joined_org:
-            votes = ElectionVote.objects.select_related('candidate__user').filter(election=self, user__userprofile__joined_org__lt = self.deadline_joined_org)
+            votes = ElectionVote.objects.select_related(
+                'candidate__user'
+            ).filter(
+                election=self,
+                user__userprofile__joined_org__lt=self.deadline_joined_org,
+            )
         else:
-            votes = ElectionVote.objects.select_related('candidate__user').filter(election=self)
+            votes = ElectionVote.objects.select_related(
+                'candidate__user'
+            ).filter(election=self)
 
         votemap = {}
         for vote in votes:
@@ -311,7 +397,8 @@ class Election(models.Model):
             'ballot_lengths': {},
             'ballots': 0,
             'ballot_length_average': 0,
-            'ballot_length_most_common': 0}
+            'ballot_length_most_common': 0,
+        }
 
         # Parse the stats JSON, if it exists.
         try:
@@ -331,8 +418,10 @@ class Election(models.Model):
         if self.results_limit:
             excluded = set([])
             if not user or not user.is_staff:
-                excluded |= set(cand.user.username for cand in
-                                self.get_winners()[self.results_limit:])
+                excluded |= set(
+                    cand.user.username
+                    for cand in self.get_winners()[self.results_limit :]
+                )
             if user and user.username in excluded:
                 excluded.remove(user.username)
             stats = BallotCounter.exclude_candidate_stats(stats, excluded)
@@ -373,12 +462,19 @@ class Election(models.Model):
             return None
 
     def get_winners(self):
-        return [r.candidate for r in self.result.rows.select_related('candidate__user__userprofile').order_by('order')]
+        return [
+            r.candidate
+            for r in self.result.rows.select_related(
+                'candidate__user__userprofile'
+            ).order_by('order')
+        ]
 
     def get_candidates(self):
         ctx = {}
         ctx["count"] = self.candidate_set.count()
-        ctx["users"] = [{"username": x.user.username} for x in self.candidate_set.all()]
+        ctx["users"] = [
+            {"username": x.user.username} for x in self.candidate_set.all()
+        ]
         return ctx
 
     def get_unchosen_candidates(self, user):
@@ -388,7 +484,11 @@ class Election(models.Model):
         votes = ElectionVote.objects.filter(election=self, user=user)
         votedcands = [x.candidate.id for x in votes]
         if len(votedcands) != 0:
-            candidates = Candidate.objects.filter(election=self).exclude(id__in=votedcands).order_by('?')
+            candidates = (
+                Candidate.objects.filter(election=self)
+                .exclude(id__in=votedcands)
+                .order_by('?')
+            )
         else:
             candidates = Candidate.objects.filter(election=self).order_by('?')
 
@@ -404,12 +504,15 @@ class Election(models.Model):
         if user.is_anonymous:
             return False
         return ElectionVote.objects.filter(
-            election=self, user=user, **constraints).exists()
+            election=self, user=user, **constraints
+        ).exists()
 
     def get_vote(self, user):
         votes = []
         if not user.is_anonymous:
-            votes = ElectionVote.objects.filter(election=self, user=user).order_by("value")
+            votes = ElectionVote.objects.filter(
+                election=self, user=user
+            ).order_by("value")
         return [x.candidate for x in votes]
 
     def get_ballots(self):
@@ -417,7 +520,9 @@ class Election(models.Model):
         for voter in self.electionvote_set.values("user").distinct():
             user = User.objects.get(pk=voter["user"])
             ballot = []
-            for vote in user.electionvote_set.filter(election=self).order_by('value'):
+            for vote in user.electionvote_set.filter(election=self).order_by(
+                'value'
+            ):
                 ballot.append(vote.candidate.user.username)
             ballot_box.append(ballot)
         random.shuffle(ballot_box)
@@ -446,21 +551,29 @@ class ElectionVote(models.Model):
     value = models.IntegerField()
 
     class Meta:
-        unique_together = (('election', 'user', 'candidate'),
-                    ('election', 'user', 'value'))
+        unique_together = (
+            ('election', 'user', 'candidate'),
+            ('election', 'user', 'value'),
+        )
 
     def __str__(self):
         return u'User %s has voted in election %s' % (self.user, self.election)
 
 
 class ElectionResult(models.Model):
-    election = models.OneToOneField('Election', related_name='result', on_delete=CASCADE)
+    election = models.OneToOneField(
+        'Election', related_name='result', on_delete=CASCADE
+    )
     vote_count = models.IntegerField()
 
 
 class ElectionResultRow(models.Model):
-    election_result = models.ForeignKey('ElectionResult', related_name='rows', on_delete=CASCADE)
-    candidate = models.OneToOneField('Candidate', related_name='result_row', on_delete=CASCADE)
+    election_result = models.ForeignKey(
+        'ElectionResult', related_name='rows', on_delete=CASCADE
+    )
+    candidate = models.OneToOneField(
+        'Candidate', related_name='result_row', on_delete=CASCADE
+    )
     order = models.IntegerField()
 
     class Meta:

@@ -20,24 +20,55 @@ from issue.views import issue_view
 from issue.views import issues
 
 urlpatterns = [
-
     url(r'^polity/(?P<polity_id>\d+)/issues/$', issues, name='issues'),
-    url(r'^polity/(?P<polity_id>\d+)/issue/(?P<issue_id>\d+)/edit/$', issue_add_edit, name='issue_edit'),
-    url(r'^polity/(?P<polity_id>\d+)/issue/new/(documentcontent/(?P<documentcontent_id>\d+)/)?$', issue_add_edit, name='issue_add'),
-    url(r'^polity/(?P<polity_id>\d+)/issue/(?P<issue_id>\d+)/$', never_cache(issue_view), name='issue'),
-
-    url(r'^polity/(?P<polity_id>\d+)/agreements/$', document_agreements, name="agreements"),
+    url(
+        r'^polity/(?P<polity_id>\d+)/issue/(?P<issue_id>\d+)/edit/$',
+        issue_add_edit,
+        name='issue_edit',
+    ),
+    url(
+        r'^polity/(?P<polity_id>\d+)/issue/new/(documentcontent/(?P<documentcontent_id>\d+)/)?$',
+        issue_add_edit,
+        name='issue_add',
+    ),
+    url(
+        r'^polity/(?P<polity_id>\d+)/issue/(?P<issue_id>\d+)/$',
+        never_cache(issue_view),
+        name='issue',
+    ),
+    url(
+        r'^polity/(?P<polity_id>\d+)/agreements/$',
+        document_agreements,
+        name="agreements",
+    ),
     url(r'^polity/(?P<polity_id>\d+)/document/new/$', document_add),
-    url(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/v(?P<version>\d+)/$', document_view, name='document_view'),
-    url(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/v(?P<version>\d+)/edit/$', documentcontent_edit, name='documentcontent_edit'),
-    url(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/new/$', documentcontent_add, name='documentcontent_add'),
-    url(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/$', document_view, name='document'),
-
+    url(
+        r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/v(?P<version>\d+)/$',
+        document_view,
+        name='document_view',
+    ),
+    url(
+        r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/v(?P<version>\d+)/edit/$',
+        documentcontent_edit,
+        name='documentcontent_edit',
+    ),
+    url(
+        r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/new/$',
+        documentcontent_add,
+        name='documentcontent_add',
+    ),
+    url(
+        r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/$',
+        document_view,
+        name='document',
+    ),
     url(r'^api/issue/comment/send/$', never_cache(issue_comment_send)),
     url(r'^api/issue/poll/$', never_cache(issue_poll)),
     url(r'^api/issue/vote/$', never_cache(issue_vote)),
     url(r'^api/issue/showclosed/$', issue_showclosed),
-
     url(r'^api/documentcontent/render-diff/$', documentcontent_render_diff),
-    url(r'^api/documentcontent/(?P<documentcontent_id>\d+)/retract/$', documentcontent_retract),
+    url(
+        r'^api/documentcontent/(?P<documentcontent_id>\d+)/retract/$',
+        documentcontent_retract,
+    ),
 ]

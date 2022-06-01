@@ -27,8 +27,16 @@ from polity.models import Polity
 def polity_list(request):
     polities = Polity.objects.all()
 
-    issues_recent = Issue.objects.recent().filter(polity__in=polities).order_by('polity__name')
-    elections_recent = Election.objects.recent().filter(polity__in=polities).order_by('polity__name')
+    issues_recent = (
+        Issue.objects.recent()
+        .filter(polity__in=polities)
+        .order_by('polity__name')
+    )
+    elections_recent = (
+        Election.objects.recent()
+        .filter(polity__in=polities)
+        .order_by('polity__name')
+    )
 
     ctx = {
         'polities': polities,
@@ -47,7 +55,9 @@ def polity_view(request, polity_id):
 
     sub_polities = polity.polity_set.all()
 
-    election_set = Election.objects.recent().filter(Q(polity=polity) | Q(polity__parent=polity))
+    election_set = Election.objects.recent().filter(
+        Q(polity=polity) | Q(polity__parent=polity)
+    )
 
     ctx = {
         'sub_polities': sub_polities,
@@ -57,7 +67,9 @@ def polity_view(request, polity_id):
         'elections_recent': election_set,
         'RECENT_ISSUE_DAYS': settings.RECENT_ISSUE_DAYS,
         'RECENT_ELECTION_DAYS': settings.RECENT_ELECTION_DAYS,
-        'verified_user_count': polity.members.filter(userprofile__verified=True).count(),
+        'verified_user_count': polity.members.filter(
+            userprofile__verified=True
+        ).count(),
     }
 
     return render(request, 'polity/polity_detail.html', ctx)
@@ -134,7 +146,9 @@ def polity_apply(request, polity_id):
     # from IcePirate again and apply the new version locally. This will place
     # the user in the local polity.
     try:
-        success, member, error = add_member_to_membergroup(request.user, polity)
+        success, member, error = add_member_to_membergroup(
+            request.user, polity
+        )
         if success:
             apply_member_locally(member, request.user)
     except:

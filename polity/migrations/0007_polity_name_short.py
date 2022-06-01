@@ -13,6 +13,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='polity',
             name='name_short',
-            field=models.CharField(default='', help_text='Optional. Could be an abbreviation or acronym, for example.', max_length=30, verbose_name='Short name'),
+            field=models.CharField(
+                default='',
+                help_text='Optional. Could be an abbreviation or acronym, for example.',
+                max_length=30,
+                verbose_name='Short name',
+            ),
         ),
     ]

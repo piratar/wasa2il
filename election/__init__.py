@@ -1,4 +1,2 @@
-
-
 def heartbeat(t):
     pass

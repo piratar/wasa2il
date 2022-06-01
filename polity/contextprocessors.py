@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from polity.models import Polity
 
+
 def navigation(request):
 
     # For now, we only support one level of sub-polities in the navigation.
@@ -22,7 +23,11 @@ def navigation(request):
     type_order = [t[0] for t in Polity.POLITY_TYPES]
 
     # Get visible sub-polities of uppermost polity.
-    polities = Polity.objects.visible().exclude(parent=None).filter(parent__parent=None)
+    polities = (
+        Polity.objects.visible()
+        .exclude(parent=None)
+        .filter(parent__parent=None)
+    )
 
     # Sort polities by type, in the order defined in Polity.POLITY_TYPES.
     polities = sorted(polities, key=lambda p: type_order.index(p.polity_type))
@@ -38,4 +43,4 @@ def navigation(request):
 
         polity_nav[polity.polity_type]['polities'].append(polity)
 
-    return { 'polity_nav': polity_nav }
+    return {'polity_nav': polity_nav}

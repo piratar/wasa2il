@@ -14,8 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.CreateModel(
             name='User',
-            fields=[
-            ],
+            fields=[],
             options={
                 'proxy': True,
                 'indexes': [],
@@ -26,6 +25,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='core.User'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to='core.User',
+            ),
         ),
     ]

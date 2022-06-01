@@ -17,6 +17,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='polity',
             name='order',
-            field=models.IntegerField(default=1, help_text='Optional, custom sort order. Polities with the same order are ordered by name.', verbose_name='Order'),
+            field=models.IntegerField(
+                default=1,
+                help_text='Optional, custom sort order. Polities with the same order are ordered by name.',
+                verbose_name='Order',
+            ),
         ),
     ]

@@ -15,7 +15,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='taskrequest',
             name='available_time',
-            field=models.TextField(default='', verbose_name='What available time do I have?'),
+            field=models.TextField(
+                default='', verbose_name='What available time do I have?'
+            ),
             preserve_default=False,
         ),
     ]

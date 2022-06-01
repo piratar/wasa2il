@@ -3,7 +3,6 @@ from .stv import STV
 
 
 class IRV(AbstractSingleWinnerVotingSystem):
-
     def __init__(self, ballots, tie_breaker=None):
         super(IRV, self).__init__(ballots, STV, tie_breaker=tie_breaker)
 

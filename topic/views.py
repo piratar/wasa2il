@@ -49,6 +49,7 @@ def topic_view(request, polity_id, topic_id):
     }
     return render(request, 'topic/topic_detail.html', ctx)
 
+
 def topic_list(request, polity_id):
     polity = get_object_or_404(Polity, id=polity_id)
 

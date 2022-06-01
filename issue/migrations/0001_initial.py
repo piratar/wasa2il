@@ -21,22 +21,74 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Comment',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('comment', models.TextField()),
-                ('created_by', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='comment_created_by', to=settings.AUTH_USER_MODEL)),
+                (
+                    'created_by',
+                    models.ForeignKey(
+                        blank=True,
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='comment_created_by',
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name='Document',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(max_length=128, verbose_name='Name'),
+                ),
                 ('slug', models.SlugField(blank=True, max_length=128)),
-                ('document_type', models.IntegerField(choices=[(1, 'Policy'), (2, 'Bylaw'), (3, 'Motion'), (999, 'Other')], default=1)),
-                ('polity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='polity.Polity')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'document_type',
+                    models.IntegerField(
+                        choices=[
+                            (1, 'Policy'),
+                            (2, 'Bylaw'),
+                            (3, 'Motion'),
+                            (999, 'Other'),
+                        ],
+                        default=1,
+                    ),
+                ),
+                (
+                    'polity',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='polity.Polity',
+                    ),
+                ),
+                (
+                    'user',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
                 'ordering': ['-id'],
@@ -45,48 +97,197 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DocumentContent',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(max_length=128, verbose_name='Name'),
+                ),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('text', models.TextField()),
                 ('order', models.IntegerField(default=1)),
                 ('comments', models.TextField(blank=True)),
-                ('status', models.CharField(choices=[(b'proposed', 'Proposed'), (b'accepted', 'Accepted'), (b'rejected', 'Rejected'), (b'deprecated', 'Deprecated'), (b'retracted', 'Retracted')], default=b'proposed', max_length=32)),
-                ('document', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='issue.Document')),
-                ('predecessor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='issue.DocumentContent')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'status',
+                    models.CharField(
+                        choices=[
+                            (b'proposed', 'Proposed'),
+                            (b'accepted', 'Accepted'),
+                            (b'rejected', 'Rejected'),
+                            (b'deprecated', 'Deprecated'),
+                            (b'retracted', 'Retracted'),
+                        ],
+                        default=b'proposed',
+                        max_length=32,
+                    ),
+                ),
+                (
+                    'document',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='issue.Document',
+                    ),
+                ),
+                (
+                    'predecessor',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='issue.DocumentContent',
+                    ),
+                ),
+                (
+                    'user',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name='Issue',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='A great issue name expresses the essence of a proposal as briefly as possible.', max_length=128, verbose_name='Name')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(
+                        help_text='A great issue name expresses the essence of a proposal as briefly as possible.',
+                        max_length=128,
+                        verbose_name='Name',
+                    ),
+                ),
                 ('slug', models.SlugField(blank=True, max_length=128)),
                 ('issue_num', models.IntegerField(null=True)),
                 ('issue_year', models.IntegerField(null=True)),
-                ('description', models.TextField(blank=True, help_text="An issue description is usually just a copy of the proposal's description, but you can customize it here if you so wish.", null=True, verbose_name='Description')),
+                (
+                    'description',
+                    models.TextField(
+                        blank=True,
+                        help_text="An issue description is usually just a copy of the proposal's description, but you can customize it here if you so wish.",
+                        null=True,
+                        verbose_name='Description',
+                    ),
+                ),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deadline_discussions', models.DateTimeField(blank=True, null=True)),
-                ('deadline_proposals', models.DateTimeField(blank=True, null=True)),
-                ('deadline_votes', models.DateTimeField(blank=True, null=True)),
-                ('majority_percentage', models.DecimalField(decimal_places=2, max_digits=5)),
+                (
+                    'deadline_discussions',
+                    models.DateTimeField(blank=True, null=True),
+                ),
+                (
+                    'deadline_proposals',
+                    models.DateTimeField(blank=True, null=True),
+                ),
+                (
+                    'deadline_votes',
+                    models.DateTimeField(blank=True, null=True),
+                ),
+                (
+                    'majority_percentage',
+                    models.DecimalField(decimal_places=2, max_digits=5),
+                ),
                 ('is_processed', models.BooleanField(default=False)),
                 ('votecount', models.IntegerField(default=0)),
                 ('votecount_yes', models.IntegerField(default=0)),
                 ('votecount_abstain', models.IntegerField(default=0)),
                 ('votecount_no', models.IntegerField(default=0)),
-                ('special_process', models.CharField(blank=True, choices=[(b'accepted_at_assembly', 'Accepted at assembly'), (b'rejected_at_assembly', 'Rejected at assembly'), (b'retracted', 'Retracted')], default=b'', max_length=32, null=True, verbose_name='Special process')),
+                (
+                    'special_process',
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            (b'accepted_at_assembly', 'Accepted at assembly'),
+                            (b'rejected_at_assembly', 'Rejected at assembly'),
+                            (b'retracted', 'Retracted'),
+                        ],
+                        default=b'',
+                        max_length=32,
+                        null=True,
+                        verbose_name='Special process',
+                    ),
+                ),
                 ('comment_count', models.IntegerField(default=0)),
                 ('archived', models.BooleanField(default=False)),
-                ('created_by', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='issue_created_by', to=settings.AUTH_USER_MODEL)),
-                ('documentcontent', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='issue', to='issue.DocumentContent')),
-                ('modified_by', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='issue_modified_by', to=settings.AUTH_USER_MODEL)),
-                ('polity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='polity.Polity')),
-                ('ruleset', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='polity.PolityRuleset', verbose_name='Ruleset')),
-                ('special_process_set_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='special_process_issues', to=settings.AUTH_USER_MODEL)),
-                ('topics', models.ManyToManyField(to='topic.Topic', verbose_name='Topics')),
+                (
+                    'created_by',
+                    models.ForeignKey(
+                        blank=True,
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='issue_created_by',
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    'documentcontent',
+                    models.OneToOneField(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='issue',
+                        to='issue.DocumentContent',
+                    ),
+                ),
+                (
+                    'modified_by',
+                    models.ForeignKey(
+                        blank=True,
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='issue_modified_by',
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    'polity',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='polity.Polity',
+                    ),
+                ),
+                (
+                    'ruleset',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='polity.PolityRuleset',
+                        verbose_name='Ruleset',
+                    ),
+                ),
+                (
+                    'special_process_set_by',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='special_process_issues',
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    'topics',
+                    models.ManyToManyField(
+                        to='topic.Topic', verbose_name='Topics'
+                    ),
+                ),
             ],
             options={
                 'ordering': ['-deadline_votes'],
@@ -95,22 +296,51 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Vote',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('value', models.IntegerField()),
                 ('cast', models.DateTimeField(auto_now_add=True)),
-                ('issue', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='issue.Issue')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'issue',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='issue.Issue',
+                    ),
+                ),
+                (
+                    'user',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
             model_name='comment',
             name='issue',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='issue.Issue'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='issue.Issue'
+            ),
         ),
         migrations.AddField(
             model_name='comment',
             name='modified_by',
-            field=models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='comment_modified_by', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                blank=True,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='comment_modified_by',
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterUniqueTogether(
             name='vote',

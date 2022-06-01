@@ -13,6 +13,7 @@ from django.forms.fields import TypedChoiceField
 from django.forms.models import ModelChoiceField
 from django.forms.models import ModelMultipleChoiceField
 
+
 class Wasa2ilForm(forms.ModelForm):
     '''
     A custom form base class with functionality intended to be used with forms
@@ -36,12 +37,14 @@ class Wasa2ilForm(forms.ModelForm):
 
         # Add save/cancel buttons
         self.helper.add_input(Submit('save', _('Save')))
-        self.helper.add_input(Button(
-            'cancel',
-            _('Cancel'),
-            css_class='btn btn-default',
-            onclick="var $cancel_url = $('#cancel-url').text(); if ($cancel_url) { location.href = $cancel_url } else { window.history.back(); }"
-        ))
+        self.helper.add_input(
+            Button(
+                'cancel',
+                _('Cancel'),
+                css_class='btn btn-default',
+                onclick="var $cancel_url = $('#cancel-url').text(); if ($cancel_url) { location.href = $cancel_url } else { window.history.back(); }",
+            )
+        )
 
         # Automatically make selection fields prettier and easier to use.
         for fieldname in self.fields:
@@ -55,9 +58,15 @@ class Wasa2ilForm(forms.ModelForm):
             elif field_type is TypedChoiceField:
                 field.widget = forms.RadioSelect()
                 # Remove ugly and pointless '---------' option.
-                if field.required and len(field.choices) > 0 and field.choices[0][1] == '---------':
+                if (
+                    field.required
+                    and len(field.choices) > 0
+                    and field.choices[0][1] == '---------'
+                ):
                     field.choices.pop(0)
             elif field_type is ModelMultipleChoiceField:
                 field.widget = forms.CheckboxSelectMultiple()
             elif field_type is DateTimeField:
-                field.widget = DateTimeWidget(options=self.dateTimeOptions, bootstrap_version=3)
+                field.widget = DateTimeWidget(
+                    options=self.dateTimeOptions, bootstrap_version=3
+                )

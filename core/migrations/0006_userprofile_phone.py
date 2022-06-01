@@ -15,6 +15,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userprofile',
             name='phone',
-            field=models.CharField(blank=True, help_text='Mostly intended for active participants such as volunteers and candidates.', max_length=30, null=True, verbose_name='Phone'),
+            field=models.CharField(
+                blank=True,
+                help_text='Mostly intended for active participants such as volunteers and candidates.',
+                max_length=30,
+                null=True,
+                verbose_name='Phone',
+            ),
         ),
     ]

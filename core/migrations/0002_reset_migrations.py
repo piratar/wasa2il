@@ -39,6 +39,7 @@ entirely at their own risk.)
 
 '''
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -46,14 +47,26 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL([
-            ("""
+        migrations.RunSQL(
+            [
+                (
+                    """
                 DELETE FROM
                     django_migrations
                 WHERE
                     app = '%s'
                 AND
-                    name != '0001_initial'""" % app
-            ) for app in ['core', 'polity', 'issue', 'tasks', 'topic', 'election']]
+                    name != '0001_initial'"""
+                    % app
+                )
+                for app in [
+                    'core',
+                    'polity',
+                    'issue',
+                    'tasks',
+                    'topic',
+                    'election',
+                ]
+            ]
         )
     ]

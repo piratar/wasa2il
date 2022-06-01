@@ -13,7 +13,7 @@ def electionvoted(election, user):
     except TypeError:
         pass
 
-    return (ut > 0)
+    return ut > 0
 
 
 @register.filter

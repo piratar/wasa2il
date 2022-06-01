@@ -12,6 +12,7 @@ class PolityQuerySet(models.QuerySet):
     def visible(self):
         return self.filter(is_listed=True)
 
+
 class Polity(models.Model):
     objects = PolityQuerySet.as_manager()
 
@@ -27,18 +28,30 @@ class Polity(models.Model):
     name_short = models.CharField(
         max_length=30,
         verbose_name=_('Short name'),
-        help_text=_('Optional. Could be an abbreviation or acronym, for example.'),
+        help_text=_(
+            'Optional. Could be an abbreviation or acronym, for example.'
+        ),
         default='',
         null=True,
-        blank=True
+        blank=True,
     )
     slug = models.SlugField(max_length=128, blank=True)
 
-    description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
+    description = models.TextField(
+        verbose_name=_("Description"), null=True, blank=True
+    )
 
-    order = models.IntegerField(default=1, verbose_name=_('Order'), help_text=_('Optional, custom sort order. Polities with the same order are ordered by name.'))
+    order = models.IntegerField(
+        default=1,
+        verbose_name=_('Order'),
+        help_text=_(
+            'Optional, custom sort order. Polities with the same order are ordered by name.'
+        ),
+    )
 
-    polity_type = models.CharField(max_length=20, choices=POLITY_TYPES, default='unspecified')
+    polity_type = models.CharField(
+        max_length=20, choices=POLITY_TYPES, default='unspecified'
+    )
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -46,7 +59,7 @@ class Polity(models.Model):
         null=True,
         blank=True,
         related_name='polity_created_by',
-        on_delete=SET_NULL
+        on_delete=SET_NULL,
     )
     modified_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -54,35 +67,81 @@ class Polity(models.Model):
         null=True,
         blank=True,
         related_name='polity_modified_by',
-        on_delete=SET_NULL
+        on_delete=SET_NULL,
     )
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-    parent = models.ForeignKey('Polity', help_text="Parent polity", null=True, blank=True, on_delete=SET_NULL)
-    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='polities')
-    eligibles = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='polities_eligible', blank=True)
-    officers = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("Officers"), related_name="officers")
-    wranglers = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("Volunteer wranglers"), related_name="wranglers")
+    parent = models.ForeignKey(
+        'Polity',
+        help_text="Parent polity",
+        null=True,
+        blank=True,
+        on_delete=SET_NULL,
+    )
+    members = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name='polities'
+    )
+    eligibles = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name='polities_eligible', blank=True
+    )
+    officers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("Officers"),
+        related_name="officers",
+    )
+    wranglers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("Volunteer wranglers"),
+        related_name="wranglers",
+    )
 
-    is_listed = models.BooleanField(verbose_name=_("Publicly listed?"), default=True, help_text=_("Whether the polity is publicly listed or not."))
-    is_newissue_only_officers = models.BooleanField(verbose_name=_("Can only officers make new issues?"), default=False, help_text=_("If this is checked, only officers can create new issues. If it's unchecked, any member can start a new issue."))
-    is_front_polity = models.BooleanField(verbose_name=_("Front polity?"), default=False, help_text=_("If checked, this polity will be displayed on the front page. The first created polity automatically becomes the front polity."))
+    is_listed = models.BooleanField(
+        verbose_name=_("Publicly listed?"),
+        default=True,
+        help_text=_("Whether the polity is publicly listed or not."),
+    )
+    is_newissue_only_officers = models.BooleanField(
+        verbose_name=_("Can only officers make new issues?"),
+        default=False,
+        help_text=_(
+            "If this is checked, only officers can create new issues. If it's unchecked, any member can start a new issue."
+        ),
+    )
+    is_front_polity = models.BooleanField(
+        verbose_name=_("Front polity?"),
+        default=False,
+        help_text=_(
+            "If checked, this polity will be displayed on the front page. The first created polity automatically becomes the front polity."
+        ),
+    )
 
-    push_on_debate_start = models.BooleanField(default=False,
-        verbose_name=_("Send notification when debate starts?"))
-    push_on_vote_start = models.BooleanField(default=False,
-        verbose_name=_("Send notification when issue goes to vote?"))
-    push_before_vote_end = models.BooleanField(default=False,
-        verbose_name=_("Send notification an hour before voting ends?"))
-    push_on_vote_end = models.BooleanField(default=False,
-        verbose_name=_("Send notification when voting ends?"))
-    push_on_election_start = models.BooleanField(default=False,
-        verbose_name=_("Send notification when an election starts?"))
-    push_before_election_end = models.BooleanField(default=False,
-        verbose_name=_("Send notification an hour before election ends?"))
-    push_on_election_end = models.BooleanField(default=False,
-        verbose_name=_("Send notification when an election ends?"))
+    push_on_debate_start = models.BooleanField(
+        default=False, verbose_name=_("Send notification when debate starts?")
+    )
+    push_on_vote_start = models.BooleanField(
+        default=False,
+        verbose_name=_("Send notification when issue goes to vote?"),
+    )
+    push_before_vote_end = models.BooleanField(
+        default=False,
+        verbose_name=_("Send notification an hour before voting ends?"),
+    )
+    push_on_vote_end = models.BooleanField(
+        default=False, verbose_name=_("Send notification when voting ends?")
+    )
+    push_on_election_start = models.BooleanField(
+        default=False,
+        verbose_name=_("Send notification when an election starts?"),
+    )
+    push_before_election_end = models.BooleanField(
+        default=False,
+        verbose_name=_("Send notification an hour before election ends?"),
+    )
+    push_on_election_end = models.BooleanField(
+        default=False,
+        verbose_name=_("Send notification when an election ends?"),
+    )
 
     def is_member(self, user):
         return self.members.filter(id=user.id).exists()
@@ -106,23 +165,25 @@ class Polity(models.Model):
 
     def agreements(self, query=None):
         DocumentContent = apps.get_model('issue', 'DocumentContent')
-        res = DocumentContent.objects.select_related(
-            'document',
-            'issue'
-        ).filter(
-            status='accepted',
-            document__polity_id=self.id
-        ).order_by('-issue__deadline_votes')
+        res = (
+            DocumentContent.objects.select_related('document', 'issue')
+            .filter(status='accepted', document__polity_id=self.id)
+            .order_by('-issue__deadline_votes')
+        )
         if query:
-            res = res.filter(Q(issue__name__icontains=query)
-                           | Q(issue__description__icontains=query)
-                           | Q(text__icontains=query))
+            res = res.filter(
+                Q(issue__name__icontains=query)
+                | Q(issue__description__icontains=query)
+                | Q(text__icontains=query)
+            )
 
         return res
 
     def update_agreements(self):
         Issue = apps.get_model('issue', 'Issue')
-        issues_to_process = Issue.objects.filter(is_processed=False).filter(deadline_votes__lt=timezone.now())
+        issues_to_process = Issue.objects.filter(is_processed=False).filter(
+            deadline_votes__lt=timezone.now()
+        )
         for issue in issues_to_process:
             issue.process()
         return None
@@ -133,7 +194,9 @@ class Polity(models.Model):
         if polities.count() == 0:
             self.is_front_polity = True
         elif self.is_front_polity:
-            for frontpolity in polities.filter(is_front_polity=True).exclude(id=self.id): # Should never return more than 1
+            for frontpolity in polities.filter(is_front_polity=True).exclude(
+                id=self.id
+            ):  # Should never return more than 1
                 frontpolity.is_front_polity = False
                 frontpolity.save()
 
@@ -148,6 +211,7 @@ class Polity(models.Model):
 
 class PolityRuleset(models.Model):
     """A polity's ruleset."""
+
     polity = models.ForeignKey('polity.Polity', on_delete=CASCADE)
     name = models.CharField(max_length=255)
 
@@ -160,8 +224,8 @@ class PolityRuleset(models.Model):
     issue_proposal_time = models.DurationField()
     issue_vote_time = models.DurationField()
 
-    #issue_proponents_required = models.IntegerField(help_text='The minimum number of people who must explicitly state support before the issue progresses. If zero, no automatic progression will occur.')
-    #issue_voter_quorum = models.IntegerField()
+    # issue_proponents_required = models.IntegerField(help_text='The minimum number of people who must explicitly state support before the issue progresses. If zero, no automatic progression will occur.')
+    # issue_voter_quorum = models.IntegerField()
 
     def __str__(self):
         return u'%s' % self.name

@@ -13,7 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pygraph.algorithms.accessibility import accessibility, mutual_accessibility
+from pygraph.algorithms.accessibility import (
+    accessibility,
+    mutual_accessibility,
+)
 from pygraph.classes.digraph import digraph
 from pygraph.algorithms.minmax import maximum_flow
 from .condorcet import CondorcetHelper
@@ -31,7 +34,6 @@ NODE_SOURCE = -2
 
 
 class SchulzeHelper(CondorcetHelper):
-
     def condorcet_completion_method(self):
         self.schwartz_set_heuristic()
 
@@ -44,7 +46,9 @@ class SchulzeHelper(CondorcetHelper):
             mutual_access = mutual_accessibility(self.graph)
             candidates_to_remove = set()
             for candidate in self.graph.nodes():
-                candidates_to_remove |= (set(access[candidate]) - set(mutual_access[candidate]))
+                candidates_to_remove |= set(access[candidate]) - set(
+                    mutual_access[candidate]
+                )
 
             # Remove nodes at the end of non-cycle paths
             if len(candidates_to_remove) > 0:
@@ -55,7 +59,13 @@ class SchulzeHelper(CondorcetHelper):
             # If none exist, remove the weakest edges
             else:
                 edge_weights = self.edge_weights(self.graph)
-                self.actions.append({'edges': matching_keys(edge_weights, min(edge_weights.values()))})
+                self.actions.append(
+                    {
+                        'edges': matching_keys(
+                            edge_weights, min(edge_weights.values())
+                        )
+                    }
+                )
                 for edge in self.actions[-1]["edges"]:
                     self.graph.del_edge(edge)
 
@@ -64,7 +74,9 @@ class SchulzeHelper(CondorcetHelper):
     def generate_vote_management_graph(self):
         self.vote_management_graph = digraph()
         self.vote_management_graph.add_nodes(self.completed_patterns)
-        self.vote_management_graph.del_node(tuple([PREFERRED_MORE] * self.required_winners))
+        self.vote_management_graph.del_node(
+            tuple([PREFERRED_MORE] * self.required_winners)
+        )
         self.pattern_nodes = self.vote_management_graph.nodes()
         self.vote_management_graph.add_nodes([NODE_SOURCE, NODE_SINK])
         for pattern_node in self.pattern_nodes:
@@ -83,21 +95,33 @@ class SchulzeHelper(CondorcetHelper):
         self.completed_patterns = []
         for i in range(0, self.required_winners + 1):
             for pattern in unique_permutations(
-                    [PREFERRED_LESS] * (self.required_winners - i)
-                    + [PREFERRED_MORE] * (i)
+                [PREFERRED_LESS] * (self.required_winners - i)
+                + [PREFERRED_MORE] * (i)
             ):
                 self.completed_patterns.append(tuple(pattern))
 
     def proportional_completion(self, candidate, other_candidates):
-        profile = dict(list(zip(self.completed_patterns, [0] * len(self.completed_patterns))))
+        profile = dict(
+            list(
+                zip(
+                    self.completed_patterns, [0] * len(self.completed_patterns)
+                )
+            )
+        )
 
         # Obtain an initial tally from the ballots
         for ballot in self.ballots:
             pattern = []
             for other_candidate in other_candidates:
-                if ballot["ballot"][candidate] < ballot["ballot"][other_candidate]:
+                if (
+                    ballot["ballot"][candidate]
+                    < ballot["ballot"][other_candidate]
+                ):
                     pattern.append(PREFERRED_LESS)
-                elif ballot["ballot"][candidate] == ballot["ballot"][other_candidate]:
+                elif (
+                    ballot["ballot"][candidate]
+                    == ballot["ballot"][other_candidate]
+                ):
                     pattern.append(PREFERRED_SAME)
                 else:
                     pattern.append(PREFERRED_MORE)
@@ -119,7 +143,10 @@ class SchulzeHelper(CondorcetHelper):
         try:
             assert round(weight_sum, 5) == round(sum(profile.values()), 5)
         except:
-            print("Proportional completion broke (went from %s to %s)" % (weight_sum, sum(profile.values())))
+            print(
+                "Proportional completion broke (went from %s to %s)"
+                % (weight_sum, sum(profile.values()))
+            )
 
         return profile
 
@@ -156,16 +183,28 @@ class SchulzeHelper(CondorcetHelper):
         # Reweight the remaining items
         for pattern in list(patterns_to_consider.keys()):
             if denominator == 0:
-                profile[pattern] += completion_pattern_weight / len(patterns_to_consider)
+                profile[pattern] += completion_pattern_weight / len(
+                    patterns_to_consider
+                )
             else:
                 if pattern not in profile:
                     profile[pattern] = 0
-                profile[pattern] += sum(profile[considered_pattern] for considered_pattern in patterns_to_consider[pattern]) * completion_pattern_weight / denominator
+                profile[pattern] += (
+                    sum(
+                        profile[considered_pattern]
+                        for considered_pattern in patterns_to_consider[pattern]
+                    )
+                    * completion_pattern_weight
+                    / denominator
+                )
 
         try:
             assert round(weight_sum, 5) == round(sum(profile.values()), 5)
         except:
-            print("Proportional completion round broke (went from %s to %s)" % (weight_sum, sum(profile.values())))
+            print(
+                "Proportional completion round broke (went from %s to %s)"
+                % (weight_sum, sum(profile.values()))
+            )
 
         return profile
 
@@ -178,18 +217,36 @@ class SchulzeHelper(CondorcetHelper):
 
         # Initialize the graph weights
         for pattern in self.pattern_nodes:
-            self.vote_management_graph.set_edge_weight((NODE_SOURCE, pattern), voter_profile[pattern])
+            self.vote_management_graph.set_edge_weight(
+                (NODE_SOURCE, pattern), voter_profile[pattern]
+            )
             for i in range(self.required_winners):
                 if pattern[i] == 1:
-                    self.vote_management_graph.set_edge_weight((pattern, i), voter_profile[pattern])
+                    self.vote_management_graph.set_edge_weight(
+                        (pattern, i), voter_profile[pattern]
+                    )
 
         # Iterate towards the limit
-        r = [(float(sum(voter_profile.values())) - voter_profile[tuple([PREFERRED_MORE] * self.required_winners)]) / self.required_winners]
+        r = [
+            (
+                float(sum(voter_profile.values()))
+                - voter_profile[
+                    tuple([PREFERRED_MORE] * self.required_winners)
+                ]
+            )
+            / self.required_winners
+        ]
         while len(r) < 2 or r[-2] - r[-1] > STRENGTH_TOLERANCE:
             for i in range(self.required_winners):
-                self.vote_management_graph.set_edge_weight((i, NODE_SINK), r[-1])
-            max_flow = maximum_flow(self.vote_management_graph, NODE_SOURCE, NODE_SINK)
-            sink_sum = sum(v for k, v in max_flow[0].items() if k[1] == NODE_SINK)
+                self.vote_management_graph.set_edge_weight(
+                    (i, NODE_SINK), r[-1]
+                )
+            max_flow = maximum_flow(
+                self.vote_management_graph, NODE_SOURCE, NODE_SINK
+            )
+            sink_sum = sum(
+                v for k, v in max_flow[0].items() if k[1] == NODE_SINK
+            )
             r.append(sink_sum / self.required_winners)
 
             # We expect strengths to be above a specified threshold

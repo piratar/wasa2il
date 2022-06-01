@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 # Django settings for wasa2il project.
 
 import os
@@ -10,53 +10,62 @@ from hashlib import sha256
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ## Base configuration
-DEBUG=os.environ.get('W2_DEBUG', True)
-ALLOWED_HOSTS=os.environ.get('W2_ALLOWED_HOSTS', 'localhost').split(',')
+DEBUG = os.environ.get('W2_DEBUG', True)
+ALLOWED_HOSTS = os.environ.get('W2_ALLOWED_HOSTS', 'localhost').split(',')
 
-ADMINS=os.environ.get('W2_ADMINS', 'username,user@example.com').split(',')
+ADMINS = os.environ.get('W2_ADMINS', 'username,user@example.com').split(',')
 
 # Contact email address
-CONTACT_EMAIL=os.environ.get('W2_CONTACT_EMAIL', 'contact@example.com')
+CONTACT_EMAIL = os.environ.get('W2_CONTACT_EMAIL', 'contact@example.com')
 
-BALLOT_SAVEFILE_FORMAT=os.environ.get('W2_BALLOT_SAVEFILE_FORMAT', 'elections/ballots-%(voting_system)s-%(election_id)s.json')
+BALLOT_SAVEFILE_FORMAT = os.environ.get(
+    'W2_BALLOT_SAVEFILE_FORMAT',
+    'elections/ballots-%(voting_system)s-%(election_id)s.json',
+)
 
 ## Security settings
 if not os.environ.get('W2_SECRET_KEY'):
-    print("You must configure the environment variable $W2_SECRET_KEY. It must be a long, hard to guess string.")
+    print(
+        "You must configure the environment variable $W2_SECRET_KEY. It must be a long, hard to guess string."
+    )
     print("To generate one, try running 'head /dev/urandom | sha256sum'.")
     exit()
-SECRET_KEY=os.environ.get('W2_SECRET_KEY')
-AUTO_LOGOUT_DELAY=int(os.environ.get('W2_AUTO_LOGOUT_DELAY', 30))
+SECRET_KEY = os.environ.get('W2_SECRET_KEY')
+AUTO_LOGOUT_DELAY = int(os.environ.get('W2_AUTO_LOGOUT_DELAY', 30))
 
 ## Instance identity
-INSTANCE_LOGO=os.environ.get('W2_INSTANCE_LOGO', '')
-INSTANCE_NAME=os.environ.get('W2_INSTANCE_NAME', 'Unconfigured Wasa2il')
-INSTANCE_SLUG=os.environ.get('W2_INSTANCE_SLUG', 'unconfiguredwasa2il')
-INSTANCE_URL=os.environ.get('W2_INSTANCE_URL', '')
-ORGANIZATION_NAME=os.environ.get('W2_ORGANIZATION_NAME', 'orgName')
-ORGANIZATION_NEWS_URL=os.environ.get('W2_ORGANIZATION_NEWS_URL', '')
+INSTANCE_LOGO = os.environ.get('W2_INSTANCE_LOGO', '')
+INSTANCE_NAME = os.environ.get('W2_INSTANCE_NAME', 'Unconfigured Wasa2il')
+INSTANCE_SLUG = os.environ.get('W2_INSTANCE_SLUG', 'unconfiguredwasa2il')
+INSTANCE_URL = os.environ.get('W2_INSTANCE_URL', '')
+ORGANIZATION_NAME = os.environ.get('W2_ORGANIZATION_NAME', 'orgName')
+ORGANIZATION_NEWS_URL = os.environ.get('W2_ORGANIZATION_NEWS_URL', '')
 
 ## Overall instance rules
-AGE_LIMIT=int(os.environ.get('W2_AGE_LIMIT', 16))
-ALLOW_LEAVE_POLITY=os.environ.get('W2_ALLOW_LEAVE_POLITY', False)
-RECENT_ELECTION_DAYS=int(os.environ.get('W2_RECENT_ELECTION_DAYS', 7))
-RECENT_ISSUE_DAYS=int(os.environ.get('W2_RECENT_ISSUE_DAYS', 7))
+AGE_LIMIT = int(os.environ.get('W2_AGE_LIMIT', 16))
+ALLOW_LEAVE_POLITY = os.environ.get('W2_ALLOW_LEAVE_POLITY', False)
+RECENT_ELECTION_DAYS = int(os.environ.get('W2_RECENT_ELECTION_DAYS', 7))
+RECENT_ISSUE_DAYS = int(os.environ.get('W2_RECENT_ISSUE_DAYS', 7))
 
 ## Database configuration
-DATABASE_ENGINE=os.environ.get('W2_DATABASE_ENGINE', 'django.db.backends.mysql')
-DATABASE_HOST=os.environ.get('W2_DATABASE_HOST', '127.0.0.1')
-DATABASE_NAME=os.environ.get('W2_DATABASE_NAME', 'wasa2il')
-DATABASE_PASSWORD=os.environ.get('W2_DATABASE_PASSWORD', 'wasa2il')
-DATABASE_PORT=os.environ.get('W2_DATABASE_PORT', '3306')
-DATABASE_USER=os.environ.get('W2_DATABASE_USER', 'wasa2il')
-DATABASE_EXPORT_DB_NAME=os.environ.get('W2_DATABASE_EXPORT_DB_NAME', '')
+DATABASE_ENGINE = os.environ.get(
+    'W2_DATABASE_ENGINE', 'django.db.backends.mysql'
+)
+DATABASE_HOST = os.environ.get('W2_DATABASE_HOST', '127.0.0.1')
+DATABASE_NAME = os.environ.get('W2_DATABASE_NAME', 'wasa2il')
+DATABASE_PASSWORD = os.environ.get('W2_DATABASE_PASSWORD', 'wasa2il')
+DATABASE_PORT = os.environ.get('W2_DATABASE_PORT', '3306')
+DATABASE_USER = os.environ.get('W2_DATABASE_USER', 'wasa2il')
+DATABASE_EXPORT_DB_NAME = os.environ.get('W2_DATABASE_EXPORT_DB_NAME', '')
 
 ## Locale settings
-DATETIME_FORMAT=os.environ.get('W2_DATETIME_FORMAT', 'd/m/Y H:i:s')
-DATETIME_FORMAT_DJANGO_WIDGET=os.environ.get('W2_DATETIME_FORMAT_DJANGO_WIDGET', 'dd/mm/yyyy hh:ii')
-DATE_FORMAT=os.environ.get('W2_DATE_FORMAT', 'd/m/Y')
-LANGUAGE_CODE=os.environ.get('W2_LANGUAGE_CODE', 'en-US')
-TIME_ZONE=os.environ.get('W2_TIME_ZONE', 'Iceland')
+DATETIME_FORMAT = os.environ.get('W2_DATETIME_FORMAT', 'd/m/Y H:i:s')
+DATETIME_FORMAT_DJANGO_WIDGET = os.environ.get(
+    'W2_DATETIME_FORMAT_DJANGO_WIDGET', 'dd/mm/yyyy hh:ii'
+)
+DATE_FORMAT = os.environ.get('W2_DATE_FORMAT', 'd/m/Y')
+LANGUAGE_CODE = os.environ.get('W2_LANGUAGE_CODE', 'en-US')
+TIME_ZONE = os.environ.get('W2_TIME_ZONE', 'Iceland')
 DATETIME_INPUT_FORMATS = (
     '%Y-%m-%d %H:%M:%S',
     '%Y-%m-%d %H:%M:%S.%f',
@@ -69,13 +78,15 @@ DATETIME_INPUT_FORMATS = (
     '%d/%m/%y %H:%M:%S',
     '%d/%m/%y %H:%M:%S.%f',
     '%d/%m/%y %H:%M',
-    '%d/%m/%y'
+    '%d/%m/%y',
 )
 
 ## Email settings
-EMAIL_BACKEND=os.environ.get('W2_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-SERVER_EMAIL=os.environ.get('W2_SERVER_EMAIL', '')
-DEFAULT_FROM_EMAIL=os.environ.get('W2_DEFAULT_FROM_EMAIL', '')
+EMAIL_BACKEND = os.environ.get(
+    'W2_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend'
+)
+SERVER_EMAIL = os.environ.get('W2_SERVER_EMAIL', '')
+DEFAULT_FROM_EMAIL = os.environ.get('W2_DEFAULT_FROM_EMAIL', '')
 EMAIL_HOST = os.environ.get('W2_EMAIL_HOST', 'localhost')
 EMAIL_PORT = int(os.environ.get('W2_EMAIL_PORT', 25))
 EMAIL_USE_TLS = os.environ.get('W2_EMAIL_USE_TLS', False) == '1'
@@ -85,37 +96,44 @@ EMAIL_HOST_PASSWORD = os.environ.get('W2_EMAIL_HOST_PASSWORD', '')
 EMAIL_SUBJECT_PREFIX = os.environ.get('W2_EMAIL_SUBJECT_PREFIX', '[Wasa2il] ')
 
 ## Push notifications
-GCM_APP_ID=os.environ.get('W2_GCM_APP_ID', '')
-GCM_SENDER_ID=os.environ.get('W2_GCM_SENDER_ID', 0)
-GCM_REST_API_KEY=os.environ.get('W2_GCM_REST_API_KEY', '')
+GCM_APP_ID = os.environ.get('W2_GCM_APP_ID', '')
+GCM_SENDER_ID = os.environ.get('W2_GCM_SENDER_ID', 0)
+GCM_REST_API_KEY = os.environ.get('W2_GCM_REST_API_KEY', '')
 
 ## Facebook integration
-INSTANCE_FACEBOOK_APP_ID=os.environ.get('W2_INSTANCE_FACEBOOK_APP_ID', '')
-INSTANCE_FACEBOOK_IMAGE=os.environ.get('W2_INSTANCE_FACEBOOK_IMAGE', 'https://example.com/full/url/to/image.png')
+INSTANCE_FACEBOOK_APP_ID = os.environ.get('W2_INSTANCE_FACEBOOK_APP_ID', '')
+INSTANCE_FACEBOOK_IMAGE = os.environ.get(
+    'W2_INSTANCE_FACEBOOK_IMAGE', 'https://example.com/full/url/to/image.png'
+)
 
 ## Discourse integration
-DISCOURSE_URL=os.environ.get('W2_DISCOURSE_URL', '')
-DISCOURSE_SECRET=os.environ.get('W2_DISCOURSE_SECRET', '')
+DISCOURSE_URL = os.environ.get('W2_DISCOURSE_URL', '')
+DISCOURSE_SECRET = os.environ.get('W2_DISCOURSE_SECRET', '')
 
 ## IcePirate integration
 ICEPIRATE = {
     'url': os.environ.get('W2_ICEPIRATE_URL', ''),
-    'key': os.environ.get('W2_ICEPIRATE_KEY', '')
+    'key': os.environ.get('W2_ICEPIRATE_KEY', ''),
 }
 
 # SAML (2.0) support
 SAML = {
     'URL': os.environ.get('W2_SAML_URL', ''),
-    'CERT': os.environ.get('W2_SAML_CERT', '')
+    'CERT': os.environ.get('W2_SAML_CERT', ''),
 }
 
 FEATURES = {
     'tasks': os.environ.get('W2_FEATURE_TASKS', False) == '1',
     'topic': os.environ.get('W2_FEATURE_TOPIC', False) == '1',
-    'push_notifications': os.environ.get('W2_FEATURE_PUSH_NOTIFICATIONS', False) == '1',
+    'push_notifications': os.environ.get(
+        'W2_FEATURE_PUSH_NOTIFICATIONS', False
+    )
+    == '1',
 }
 
-if not GCM_APP_ID:  # We cannot have push notifications without a registered app ID.
+if (
+    not GCM_APP_ID
+):  # We cannot have push notifications without a registered app ID.
     FEATURES['push_notifications'] = False
 
 # Get Wasa2il version.
@@ -128,8 +146,9 @@ with open(os.path.join(BASE_DIR, 'VERSION'), 'r') as f:
 
 # Some error checking for local_settings
 if not SECRET_KEY:
-    raise Exception('You need to specify Django SECRET_KEY in the local_settings!')
-
+    raise Exception(
+        'You need to specify Django SECRET_KEY in the local_settings!'
+    )
 
 
 MANAGERS = ADMINS
@@ -137,11 +156,11 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': DATABASE_ENGINE,  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': DATABASE_NAME,                      # Or path to database file if using sqlite3.
-        'USER': DATABASE_USER,                      # Not used with sqlite3.
-        'PASSWORD': DATABASE_PASSWORD,                  # Not used with sqlite3.
-        'HOST': DATABASE_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': DATABASE_PORT,                      # Set to empty string for default. Not used with sqlite3.
+        'NAME': DATABASE_NAME,  # Or path to database file if using sqlite3.
+        'USER': DATABASE_USER,  # Not used with sqlite3.
+        'PASSWORD': DATABASE_PASSWORD,  # Not used with sqlite3.
+        'HOST': DATABASE_HOST,  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': DATABASE_PORT,  # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -169,6 +188,7 @@ try:
     db_url = os.environ['DATABASE_URL']
     # If exists, confic accordingly
     import dj_database_url
+
     # Update database configuration with $DATABASE_URL.
     db_from_env = dj_database_url.config(conn_max_age=500)
     DATABASES['default'].update(db_from_env)
@@ -178,8 +198,8 @@ except KeyError:
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGES = (
-  ('is', 'Íslenska'),
-  ('en', 'English'),
+    ('is', 'Íslenska'),
+    ('en', 'English'),
 )
 
 SITE_ID = 1
@@ -228,9 +248,8 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
-
 
 
 MIDDLEWARE = (
@@ -281,9 +300,7 @@ TEMPLATES = [
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 
-LOCALE_PATHS = (
-    here('locale'),
-)
+LOCALE_PATHS = (here('locale'),)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -293,19 +310,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.forms',
-
     'django.contrib.admin',
-
     'registration',
     'bootstrapform',
     'diff_match_patch',
     'datetimewidget',
     'crispy_forms',
     'termsandconditions',
-
     'languagecontrol',
     'emailconfirmation',
-
     'core',
     'polity',
     'topic',
@@ -327,12 +340,12 @@ CRISPY_FAIL_SILENTLY = not DEBUG
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'core.authentication.SSNAuthenticationBackend',
-#
-# Note: It may make sense to disable the following, so merely compromising
-# an e-mail account isn't sufficient to take over a wasa2il account. However,
-# Icelandic SSNs are such poorly kept secrets (they're effectively public)
-# that this wouldn't improve security for us, it'd just hurt usability.
-#
+    #
+    # Note: It may make sense to disable the following, so merely compromising
+    # an e-mail account isn't sufficient to take over a wasa2il account. However,
+    # Icelandic SSNs are such poorly kept secrets (they're effectively public)
+    # that this wouldn't improve security for us, it'd just hurt usability.
+    #
     'core.authentication.EmailAuthenticationBackend',
 )
 
@@ -367,9 +380,7 @@ TERMS_EXCLUDE_URL_PREFIX_LIST = (
     '/accounts/verify/',
 )
 
-SAML_VERIFICATION_EXCLUDE_URL_PREFIX_LIST = (
-    '/terms/',
-)
+SAML_VERIFICATION_EXCLUDE_URL_PREFIX_LIST = ('/terms/',)
 
 AUTH_PROFILE_MODULE = "core.UserProfile"
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -379,15 +390,14 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 if DEBUG:
     import imp
+
     try:
         imp.find_module('debug_toolbar')
 
         INSTALLED_APPS += ('debug_toolbar.apps.DebugToolbarConfig',)
         MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
         INTERNAL_IPS = ('127.0.0.1',)
-        DEBUG_TOOLBAR_CONFIG = {
-            'JQUERY_URL': ''
-        }
+        DEBUG_TOOLBAR_CONFIG = {'JQUERY_URL': ''}
     except ImportError:
         # Silently continue if django-debug-toolbar isn't installed
         pass
@@ -395,5 +405,7 @@ if DEBUG:
 if DEBUG:
     print("============ Wasa2il Features ============")
     for feature, enabled in FEATURES.items():
-        print(" - %-25s      %8s" % (feature, ["DISABLED", "ENABLED"][enabled]))
+        print(
+            " - %-25s      %8s" % (feature, ["DISABLED", "ENABLED"][enabled])
+        )
     print("==========================================")

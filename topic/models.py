@@ -36,9 +36,9 @@ class TopicQuerySet(models.QuerySet):
                     favorited=Count(
                         Case(
                             When(usertopic__user=user, then=True),
-                            output_field=BooleanField
+                            output_field=BooleanField,
                         ),
-                        distinct=True
+                        distinct=True,
                     )
                 )
 
@@ -46,24 +46,32 @@ class TopicQuerySet(models.QuerySet):
         topics = topics.annotate(issue_count=Count('issue', distinct=True))
 
         # Annotate usertopic count.
-        topics = topics.annotate(usertopic_count=Count('usertopic', distinct=True))
+        topics = topics.annotate(
+            usertopic_count=Count('usertopic', distinct=True)
+        )
 
         # Annotate counts of issues that are open and/or being voted on.
         topics = topics.annotate(
             issues_open=Count(
                 Case(
                     When(issue__deadline_votes__gte=now, then=True),
-                    output_field=IntegerField()
+                    output_field=IntegerField(),
                 ),
-                distinct=True
+                distinct=True,
             ),
             issues_voting=Count(
                 Case(
-                    When(Q(issue__deadline_votes__gte=now, issue__deadline_proposals__lt=now), then=True),
-                    output_field=IntegerField()
+                    When(
+                        Q(
+                            issue__deadline_votes__gte=now,
+                            issue__deadline_proposals__lt=now,
+                        ),
+                        then=True,
+                    ),
+                    output_field=IntegerField(),
                 ),
-                distinct=True
-            )
+                distinct=True,
+            ),
         )
 
         return topics
@@ -71,12 +79,15 @@ class TopicQuerySet(models.QuerySet):
 
 class Topic(models.Model):
     """A collection of issues unified categorically."""
+
     objects = TopicQuerySet.as_manager()
 
     name = models.CharField(max_length=128, verbose_name=_('Name'))
     slug = models.SlugField(max_length=128, blank=True)
 
-    description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
+    description = models.TextField(
+        verbose_name=_("Description"), null=True, blank=True
+    )
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -84,7 +95,7 @@ class Topic(models.Model):
         null=True,
         blank=True,
         related_name='topic_created_by',
-        on_delete=SET_NULL
+        on_delete=SET_NULL,
     )
     modified_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -92,7 +103,7 @@ class Topic(models.Model):
         null=True,
         blank=True,
         related_name='topic_modified_by',
-        on_delete=SET_NULL
+        on_delete=SET_NULL,
     )
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -103,7 +114,9 @@ class Topic(models.Model):
         ordering = ["name"]
 
     def new_comments(self):
-        return Comment.objects.filter(issue__topics=self).order_by("-created")[:10]
+        return Comment.objects.filter(issue__topics=self).order_by("-created")[
+            :10
+        ]
 
     def __str__(self):
         return u'%s' % (self.name)
@@ -111,6 +124,7 @@ class Topic(models.Model):
 
 class UserTopic(models.Model):
     """Whether a user likes a topic."""
+
     topic = models.ForeignKey('topic.Topic', on_delete=CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
 

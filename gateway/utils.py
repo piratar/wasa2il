@@ -14,7 +14,6 @@ from gateway.exceptions import IcePirateException
 def user_to_member_args(user):
     info = {
         'json_api_key': settings.ICEPIRATE['key'],
-
         'ssn': user.userprofile.verified_ssn,
         'name': user.userprofile.verified_name,
         'email': user.email,
@@ -27,7 +26,13 @@ def user_to_member_args(user):
     # If email_wanted is None, then we still don't know the user's preference,
     # so we'll say nothing about it.
     if user.userprofile.email_wanted is not None:
-        info.update({'email_wanted': 'true' if user.userprofile.email_wanted else 'false'})
+        info.update(
+            {
+                'email_wanted': 'true'
+                if user.userprofile.email_wanted
+                else 'false'
+            }
+        )
 
     return info
 
@@ -45,7 +50,9 @@ def response_to_results(response):
     error = remote_data['error'] if 'error' in remote_data else None
 
     if error is not None:
-        raise IcePirateException('Error in communication with member database: %s' % error, error)
+        raise IcePirateException(
+            'Error in communication with member database: %s' % error, error
+        )
 
     # TODO: The success-indicator and error are redundant because we are now
     # throwing an exception when something goes wrong.
@@ -57,9 +64,13 @@ def add_member(user):
     data = user_to_member_args(user)
 
     try:
-        response = requests.post('%s/member/api/add/' % settings.ICEPIRATE['url'], data=data)
+        response = requests.post(
+            '%s/member/api/add/' % settings.ICEPIRATE['url'], data=data
+        )
     except:
-        raise IcePirateException('Failed adding member to remote member registry')
+        raise IcePirateException(
+            'Failed adding member to remote member registry'
+        )
 
     return response_to_results(response)
 
@@ -70,11 +81,14 @@ def update_member(user):
 
     try:
         response = requests.post(
-            '%s/member/api/update/ssn/%s/' % (settings.ICEPIRATE['url'], user.userprofile.verified_ssn),
-            data=data
+            '%s/member/api/update/ssn/%s/'
+            % (settings.ICEPIRATE['url'], user.userprofile.verified_ssn),
+            data=data,
         )
     except:
-        raise IcePirateException('Failed updating member in remote member registry')
+        raise IcePirateException(
+            'Failed updating member in remote member registry'
+        )
 
     return response_to_results(response)
 
@@ -84,10 +98,12 @@ def get_member(ssn):
     try:
         response = requests.post(
             '%s/member/api/get/ssn/%s/' % (settings.ICEPIRATE['url'], ssn),
-            data={'json_api_key': settings.ICEPIRATE['key']}
+            data={'json_api_key': settings.ICEPIRATE['key']},
         )
     except:
-        raise IcePirateException('Failed getting member from remote member registry')
+        raise IcePirateException(
+            'Failed getting member from remote member registry'
+        )
 
     return response_to_results(response)
 
@@ -96,17 +112,17 @@ def add_member_to_membergroup(user, polity):
 
     try:
         response = requests.post(
-            '%s/member/api/add-to-membergroup/%s/' % (
-                settings.ICEPIRATE['url'],
-                user.userprofile.verified_ssn
-            ),
+            '%s/member/api/add-to-membergroup/%s/'
+            % (settings.ICEPIRATE['url'], user.userprofile.verified_ssn),
             data={
                 'json_api_key': settings.ICEPIRATE['key'],
                 'membergroup_techname': polity.slug,
-            }
+            },
         )
     except:
-        raise IcePirateException('Failed getting member from remote member registry')
+        raise IcePirateException(
+            'Failed getting member from remote member registry'
+        )
 
     return response_to_results(response)
 
@@ -122,8 +138,7 @@ def apply_member_locally(member, user):
     # Add user to polities according to remote user's groups, as well as
     # front polity, if one is designated.
     membership_polities = Polity.objects.filter(
-        Q(slug__in=member['groups'].keys())
-        | Q(is_front_polity=True)
+        Q(slug__in=member['groups'].keys()) | Q(is_front_polity=True)
     )
     for polity in membership_polities:
         polity.members.add(user)
@@ -140,10 +155,14 @@ def apply_member_locally(member, user):
         polity.officers.remove(user)
 
     # Sync info on polity eligibility of user.
-    polities_eligible = Polity.objects.filter(slug__in=member['eligible_groups'])
+    polities_eligible = Polity.objects.filter(
+        slug__in=member['eligible_groups']
+    )
     for polity in polities_eligible:
         polity.eligibles.add(user)
-    for polity in user.polities_eligible.exclude(id__in=[p.id for p in polities_eligible]):
+    for polity in user.polities_eligible.exclude(
+        id__in=[p.id for p in polities_eligible]
+    ):
         polity.eligibles.remove(user)
 
     # Keep track of whether we need to save the profile.

@@ -15,36 +15,57 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='polity',
             name='push_before_election_end',
-            field=models.BooleanField(default=False, verbose_name='Send notification an hour before election ends?'),
+            field=models.BooleanField(
+                default=False,
+                verbose_name='Send notification an hour before election ends?',
+            ),
         ),
         migrations.AddField(
             model_name='polity',
             name='push_before_vote_end',
-            field=models.BooleanField(default=False, verbose_name='Send notification an hour before voting ends?'),
+            field=models.BooleanField(
+                default=False,
+                verbose_name='Send notification an hour before voting ends?',
+            ),
         ),
         migrations.AddField(
             model_name='polity',
             name='push_on_debate_start',
-            field=models.BooleanField(default=False, verbose_name='Send notification when debate starts?'),
+            field=models.BooleanField(
+                default=False,
+                verbose_name='Send notification when debate starts?',
+            ),
         ),
         migrations.AddField(
             model_name='polity',
             name='push_on_election_end',
-            field=models.BooleanField(default=False, verbose_name='Send notification when an election ends?'),
+            field=models.BooleanField(
+                default=False,
+                verbose_name='Send notification when an election ends?',
+            ),
         ),
         migrations.AddField(
             model_name='polity',
             name='push_on_election_start',
-            field=models.BooleanField(default=False, verbose_name='Send notification when an election starts?'),
+            field=models.BooleanField(
+                default=False,
+                verbose_name='Send notification when an election starts?',
+            ),
         ),
         migrations.AddField(
             model_name='polity',
             name='push_on_vote_end',
-            field=models.BooleanField(default=False, verbose_name='Send notification when voting ends?'),
+            field=models.BooleanField(
+                default=False,
+                verbose_name='Send notification when voting ends?',
+            ),
         ),
         migrations.AddField(
             model_name='polity',
             name='push_on_vote_start',
-            field=models.BooleanField(default=False, verbose_name='Send notification when issue goes to vote?'),
+            field=models.BooleanField(
+                default=False,
+                verbose_name='Send notification when issue goes to vote?',
+            ),
         ),
     ]

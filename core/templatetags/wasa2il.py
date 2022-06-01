@@ -26,7 +26,9 @@ def may_expire(dt):
     css_class = 'expired' if dt < now else 'not-expired'
     formatted_datetime = dateformat.format(dt, settings.DATETIME_FORMAT)
 
-    return mark_safe('<span class="%s">%s</span>' % (css_class, formatted_datetime))
+    return mark_safe(
+        '<span class="%s">%s</span>' % (css_class, formatted_datetime)
+    )
 
 
 @register.filter
@@ -71,7 +73,9 @@ def thumbnail(file, size='104x104'):
 
         # Check if the image is newer than the requested thumbnail, and if so,
         # remove the thumbnail so that it will be regenerated.
-        if os.path.exists(thumb_fullpath) and os.path.getmtime(file.path) > os.path.getmtime(thumb_fullpath):
+        if os.path.exists(thumb_fullpath) and os.path.getmtime(
+            file.path
+        ) > os.path.getmtime(thumb_fullpath):
             os.unlink(thumb_fullpath)
 
         # Create the thumbnail if it does not already exist.
@@ -91,7 +95,11 @@ def thumbnail(file, size='104x104'):
 @register.filter(is_safe=True)
 @stringfilter
 def markdown(value):
-    return mark_safe(markdown2.markdown(value, extras=['break-on-newline']).replace('\\', ''))
+    return mark_safe(
+        markdown2.markdown(value, extras=['break-on-newline']).replace(
+            '\\', ''
+        )
+    )
 
 
 @register.filter(is_safe=True, needs_autoescape=True)
@@ -102,11 +110,8 @@ def urlize(value, trim_url_limit=None, autoescape=None):
             value,
             trim_url_limit=trim_url_limit,
             nofollow=True,
-            autoescape=autoescape
-        ).replace(
-            '<a',
-            '<a target="_blank"'
-        )
+            autoescape=autoescape,
+        ).replace('<a', '<a target="_blank"')
     )
 
 
@@ -122,6 +127,7 @@ def repeater(string, count):
     # number to another in a template.
     return str(string) * count
 
+
 @register.simple_tag(takes_context=True)
 def add_breadcrumb(context, name=None, url=False, **kwargs):
     if not 'request' in context:
@@ -129,12 +135,13 @@ def add_breadcrumb(context, name=None, url=False, **kwargs):
 
     if not hasattr(context['request'], 'breadcrumbs'):
         context['request'].breadcrumbs = []
-    breadcrumb = { "name": name, "url": url }
+    breadcrumb = {"name": name, "url": url}
     if 'prepend' in kwargs:
         context['request'].breadcrumbs.insert(0, breadcrumb)
     else:
         context['request'].breadcrumbs.append(breadcrumb)
     return ""
+
 
 @register.inclusion_tag('_breadcrumbs.html', takes_context=True)
 def render_breadcrumbs(context):
@@ -146,10 +153,8 @@ def render_breadcrumbs(context):
         breadcrumbs = request.breadcrumbs
     else:
         breadcrumbs = []
-    return {
-        'breadcrumbs': breadcrumbs,
-        'currentpath': request.path
-    }
+    return {'breadcrumbs': breadcrumbs, 'currentpath': request.path}
+
 
 @register.inclusion_tag('_comments_section.html')
 def comments_section(obj_key, obj_id, closed=False):
@@ -157,7 +162,7 @@ def comments_section(obj_key, obj_id, closed=False):
         'obj_id': obj_id,
         'obj_key': obj_key,
         'closed': closed,
-        'btntext': _('Add comment')
+        'btntext': _('Add comment'),
     }
 
 

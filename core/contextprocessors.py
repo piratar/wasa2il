@@ -13,7 +13,7 @@ def globals(request):
         'INSTANCE_VERSION': settings.WASA2IL_VERSION,
         'FEATURES': settings.FEATURES,
         'GCM_APP_ID': settings.GCM_APP_ID,
-        'settings': settings
+        'settings': settings,
     }
 
     # Get global variables from GlobalsMiddleWare.
@@ -25,7 +25,9 @@ def globals(request):
 def auto_logged_out(request):
     if hasattr(request, 'auto_logged_out') and request.auto_logged_out:
         return {
-            'splash_message': _('For security reasons, you have been automatically logged out due to inactivity.')
+            'splash_message': _(
+                'For security reasons, you have been automatically logged out due to inactivity.'
+            )
         }
 
     return {}

@@ -34,9 +34,12 @@ def _ordered_candidates(user, all_candidates, candidates):
         return []
 
     if user.is_authenticated:
-        randish = int(md5((repr(user) + str(user.id)).encode('utf-8')).hexdigest()[:8], 16)
+        randish = int(
+            md5((repr(user) + str(user.id)).encode('utf-8')).hexdigest()[:8],
+            16,
+        )
     else:
-        randish = random.randint(0, 0xffffff)
+        randish = random.randint(0, 0xFFFFFF)
 
     def _sname(u):
         try:
@@ -58,8 +61,10 @@ def _ordered_candidates(user, all_candidates, candidates):
 
 @jsonize
 def election_poll(request, **kwargs):
-    election = get_object_or_404(Election,
-        id=request.POST.get("election", request.GET.get("election", -1)))
+    election = get_object_or_404(
+        Election,
+        id=request.POST.get("election", request.GET.get("election", -1)),
+    )
 
     user_can_vote = election.can_vote(request.user)
     all_candidates = election.get_candidates()
@@ -67,31 +72,41 @@ def election_poll(request, **kwargs):
     ctx = {
         "logged_out": not request.user.is_authenticated,
         "election": {
-            "user_is_candidate":
-                (request.user in [x.user for x in election.candidate_set.all()]),
+            "user_is_candidate": (
+                request.user in [x.user for x in election.candidate_set.all()]
+            ),
             "election_state": election.election_state(),
             "votes": election.get_vote_count(),
             "candidates": all_candidates,
-            "vote": {}}}
+            "vote": {},
+        },
+    }
 
     ctx["election"]["candidates"]["html"] = render_to_string(
-        "election/_election_candidate_list.html", {
+        "election/_election_candidate_list.html",
+        {
             "user_can_vote": user_can_vote,
             "election": election,
             "candidate_total": len(all_candidates),
             "candidates": _ordered_candidates(
                 request.user,
                 Candidate.objects.filter(election=election),
-                election.get_unchosen_candidates(request.user)),
-            "candidate_selected": False})
+                election.get_unchosen_candidates(request.user),
+            ),
+            "candidate_selected": False,
+        },
+    )
 
     ctx["election"]["vote"]["html"] = render_to_string(
-        "election/_election_candidate_list.html", {
+        "election/_election_candidate_list.html",
+        {
             "user_can_vote": user_can_vote,
             "election": election,
             "candidate_total": len(all_candidates),
             "candidates": election.get_vote(request.user),
-            "candidate_selected": True})
+            "candidate_selected": True,
+        },
+    )
 
     for k, v in kwargs.items():
         ctx["election"][k] = v
@@ -113,7 +128,9 @@ def election_candidacy(request):
     if val == 0:
         Candidate.objects.filter(user=request.user, election=election).delete()
     elif election.can_be_candidate(request.user):
-        cand, created = Candidate.objects.get_or_create(user=request.user, election=election)
+        cand, created = Candidate.objects.get_or_create(
+            user=request.user, election=election
+        )
 
     return election_poll(request)
 
@@ -126,7 +143,7 @@ def _record_votes(election, user, order):
         candidate = Candidate.objects.get(id=order[i])
         ElectionVote(
             election=election, user=user, candidate=candidate, value=i
-            ).save()
+        ).save()
 
 
 @require_http_methods(["POST"])
@@ -161,13 +178,17 @@ def election_showclosed(request):
     ctx = {}
 
     polity_id = int(request.GET.get('polity_id', 0))
-    showclosed = int(request.GET.get('showclosed', 0)) # 0 = False, 1 = True
+    showclosed = int(request.GET.get('showclosed', 0))  # 0 = False, 1 = True
 
     try:
         if polity_id:
-            elections = Election.objects.filter(Q(polity_id=polity_id) | Q(polity__parent_id=polity_id))
+            elections = Election.objects.filter(
+                Q(polity_id=polity_id) | Q(polity__parent_id=polity_id)
+            )
         else:
-            elections = Election.objects.order_by('polity__name', '-deadline_votes')
+            elections = Election.objects.order_by(
+                'polity__name', '-deadline_votes'
+            )
 
         if not showclosed:
             elections = elections.recent()
@@ -184,25 +205,33 @@ def election_showclosed(request):
         }
 
         ctx['showclosed'] = showclosed
-        ctx['html'] = render_to_string('election/_elections_recent_table.html', html_ctx)
+        ctx['html'] = render_to_string(
+            'election/_elections_recent_table.html', html_ctx
+        )
         ctx['ok'] = True
     except Exception as e:
-        ctx['error'] = e.__str__() if settings.DEBUG else 'Error raised. Turn on DEBUG for details.'
+        ctx['error'] = (
+            e.__str__()
+            if settings.DEBUG
+            else 'Error raised. Turn on DEBUG for details.'
+        )
 
     return ctx
 
 
-def election_stats_download(request, polity_id=None, election_id=None, filename=None):
+def election_stats_download(
+    request, polity_id=None, election_id=None, filename=None
+):
     election = get_object_or_404(
         Election,
         id=election_id,
         polity_id=polity_id,
         is_processed=True,
-        stats_publish_files=True
+        stats_publish_files=True,
     )
 
     filetype = filename.split('.')[-1].lower()
-    assert(filetype in ('json', 'xlsx', 'ods', 'html'))
+    assert filetype in ('json', 'xlsx', 'ods', 'html')
 
     response = HttpResponse(
         election.get_formatted_stats(filetype, user=request.user),
@@ -210,8 +239,9 @@ def election_stats_download(request, polity_id=None, election_id=None, filename=
             'json': 'application/json; charset=utf-8',
             'ods': 'application/vnd.oasis.opendocument.spreadsheet',
             'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'html': 'text/html; charset=utf-8'
-        }.get(filetype, 'application/octet-stream'))
+            'html': 'text/html; charset=utf-8',
+        }.get(filetype, 'application/octet-stream'),
+    )
 
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
     return response
@@ -220,23 +250,37 @@ def election_stats_download(request, polity_id=None, election_id=None, filename=
 @login_required
 def election_candidates_details(request, polity_id, election_id):
     try:
-        election = Election.objects.get(id=election_id, polity_id=polity_id, polity__officers=request.user)
+        election = Election.objects.get(
+            id=election_id, polity_id=polity_id, polity__officers=request.user
+        )
     except Election.DoesNotExist:
         raise PermissionDenied()
 
-    candidates = election.candidate_set.select_related('user__userprofile').order_by('user__userprofile__verified_name')
+    candidates = election.candidate_set.select_related(
+        'user__userprofile'
+    ).order_by('user__userprofile__verified_name')
 
     candidate_list = ['"SSN","Name from registry","Email address","Username"']
     for user in [c.user for c in candidates]:
-        candidate_list.append(','.join(['"%s"' % item for item in [
-            user.userprofile.verified_ssn,
-            user.userprofile.verified_name,
-            user.email,
-            user.username,
-        ]]))
+        candidate_list.append(
+            ','.join(
+                [
+                    '"%s"' % item
+                    for item in [
+                        user.userprofile.verified_ssn,
+                        user.userprofile.verified_name,
+                        user.email,
+                        user.username,
+                    ]
+                ]
+            )
+        )
 
     filename = u'Candidates - %s.csv' % election.name
 
-    response = HttpResponse('\n'.join(candidate_list), content_type='application/csv; charset=utf-8')
+    response = HttpResponse(
+        '\n'.join(candidate_list),
+        content_type='application/csv; charset=utf-8',
+    )
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
     return response

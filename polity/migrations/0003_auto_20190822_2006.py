@@ -15,16 +15,36 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='polity',
             name='created_by',
-            field=models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='polity_created_by', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                blank=True,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='polity_created_by',
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
             model_name='polity',
             name='modified_by',
-            field=models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='polity_modified_by', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                blank=True,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='polity_modified_by',
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
             model_name='polity',
             name='parent',
-            field=models.ForeignKey(blank=True, help_text='Parent polity', null=True, on_delete=django.db.models.deletion.SET_NULL, to='polity.Polity'),
+            field=models.ForeignKey(
+                blank=True,
+                help_text='Parent polity',
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to='polity.Polity',
+            ),
         ),
     ]

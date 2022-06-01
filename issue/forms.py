@@ -7,6 +7,7 @@ from issue.models import Comment, Document, DocumentContent, Issue
 
 from django.utils.translation import ugettext as _
 
+
 class IssueForm(Wasa2ilForm):
     class Meta:
         model = Issue
@@ -49,10 +50,17 @@ class DocumentContentForm(Wasa2ilForm):
         # here, so that the comparison is on an equal footing.
         text = self.cleaned_data['text'].replace('\r\n', '\n')
         pred = self.instance.document.preferred_version()
-        if pred is not None and pred.id != self.instance.id and pred.text.strip() == text.strip():
-            raise ValidationError(_('Content must differ from previous version'))
+        if (
+            pred is not None
+            and pred.id != self.instance.id
+            and pred.text.strip() == text.strip()
+        ):
+            raise ValidationError(
+                _('Content must differ from previous version')
+            )
 
         return text
+
 
 class CommentForm(forms.ModelForm):
     class Meta:

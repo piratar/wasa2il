@@ -17,11 +17,13 @@ from django.utils.translation import ugettext_lazy as _
 
 class EmailConfirmation(models.Model):
 
-    ACTIONS = (
-        ('email_change', _('Email change')),
-    )
+    ACTIONS = (('email_change', _('Email change')),)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='email_confirmations', on_delete=CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='email_confirmations',
+        on_delete=CASCADE,
+    )
 
     key = models.CharField(max_length=40)
     timing_created = models.DateTimeField(auto_now=True)
@@ -34,7 +36,7 @@ class EmailConfirmation(models.Model):
         if self.key == '':
             # Automatically generate a unique key, but make sure that it isn't
             # already in use.
-            key = self.generate_key();
+            key = self.generate_key()
             while EmailConfirmation.objects.filter(key=key).count() > 0:
                 key = self.generate_key()
             self.key = key
@@ -42,14 +44,18 @@ class EmailConfirmation(models.Model):
         super(EmailConfirmation, self).save(*args, **kwargs)
 
     def generate_key(self):
-        random_string = get_random_string(length=32, allowed_chars=string.printable)
+        random_string = get_random_string(
+            length=32, allowed_chars=string.printable
+        )
         return hashlib.sha1(random_string.encode('utf-8')).hexdigest()
 
     def send(self, request):
         action_msg = dict(self.ACTIONS)[self.action]
 
         subject = '%s%s' % (settings.EMAIL_SUBJECT_PREFIX, action_msg)
-        confirmation_url =  request.build_absolute_uri(reverse('email_confirmation', args=(self.key,)))
+        confirmation_url = request.build_absolute_uri(
+            reverse('email_confirmation', args=(self.key,))
+        )
         email = self.data if self.action == 'email_change' else self.user.email
 
         ctx = {

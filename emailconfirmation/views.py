@@ -13,6 +13,7 @@ from emailconfirmation.models import EmailConfirmation
 
 from gateway.utils import update_member
 
+
 def email_confirmation(request, key):
     try:
         con = EmailConfirmation.objects.get(key=key)
@@ -42,7 +43,9 @@ def email_confirmation(request, key):
     EmailConfirmation.objects.filter(user=con.user, action=con.action).delete()
 
     # Clean up expired confirmation requests, since we're here.
-    EmailConfirmation.objects.filter(timing_created__lt=timezone.now() - timedelta(days=1)).delete()
+    EmailConfirmation.objects.filter(
+        timing_created__lt=timezone.now() - timedelta(days=1)
+    ).delete()
 
     ctx = {
         'action_msg': action_msg,
@@ -51,4 +54,3 @@ def email_confirmation(request, key):
         'return_name': return_name,
     }
     return render(request, 'emailconfirmation/confirmed.html', ctx)
-

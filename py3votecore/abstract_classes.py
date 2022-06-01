@@ -89,14 +89,20 @@ class SingleWinnerVotingSystem(FixedWinnerVotingSystem, metaclass=ABCMeta):
 
 
 # Given a set of candidates, return a fixed number of winners
-class AbstractSingleWinnerVotingSystem(SingleWinnerVotingSystem, metaclass=ABCMeta):
+class AbstractSingleWinnerVotingSystem(
+    SingleWinnerVotingSystem, metaclass=ABCMeta
+):
     @abstractmethod
     def __init__(self, ballots, multiple_winner_class, tie_breaker=None):
         self.multiple_winner_class = multiple_winner_class
-        super(AbstractSingleWinnerVotingSystem, self).__init__(ballots, tie_breaker=tie_breaker)
+        super(AbstractSingleWinnerVotingSystem, self).__init__(
+            ballots, tie_breaker=tie_breaker
+        )
 
     def calculate_results(self):
-        self.multiple_winner_instance = self.multiple_winner_class(self.ballots, tie_breaker=self.tie_breaker, required_winners=1)
+        self.multiple_winner_instance = self.multiple_winner_class(
+            self.ballots, tie_breaker=self.tie_breaker, required_winners=1
+        )
         self.__dict__.update(self.multiple_winner_instance.__dict__)
         self.winner = list(self.winners)[0]
         del self.winners
@@ -113,7 +119,9 @@ class OrderingVotingSystem(VotingSystem, metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, ballots, tie_breaker=None, winner_threshold=None):
         self.winner_threshold = winner_threshold
-        super(OrderingVotingSystem, self).__init__(ballots, tie_breaker=tie_breaker)
+        super(OrderingVotingSystem, self).__init__(
+            ballots, tie_breaker=tie_breaker
+        )
 
     def as_dict(self):
         data = super(OrderingVotingSystem, self).as_dict()
@@ -126,9 +134,17 @@ class OrderingVotingSystem(VotingSystem, metaclass=ABCMeta):
 # smaller subset of candidates until all candidates are consumed.
 class AbstractOrderingVotingSystem(OrderingVotingSystem, metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, ballots, single_winner_class, winner_threshold=None, tie_breaker=None):
+    def __init__(
+        self,
+        ballots,
+        single_winner_class,
+        winner_threshold=None,
+        tie_breaker=None,
+    ):
         self.single_winner_class = single_winner_class
-        super(AbstractOrderingVotingSystem, self).__init__(ballots, winner_threshold=winner_threshold, tie_breaker=tie_breaker)
+        super(AbstractOrderingVotingSystem, self).__init__(
+            ballots, winner_threshold=winner_threshold, tie_breaker=tie_breaker
+        )
 
     def calculate_results(self):
         self.order = []
@@ -136,12 +152,16 @@ class AbstractOrderingVotingSystem(OrderingVotingSystem, metaclass=ABCMeta):
         remaining_ballots = deepcopy(self.ballots)
         remaining_candidates = True
         while (
-            (remaining_candidates is True or len(remaining_candidates) > 1)
-            and (self.winner_threshold is None or len(self.order) < self.winner_threshold)
+            remaining_candidates is True or len(remaining_candidates) > 1
+        ) and (
+            self.winner_threshold is None
+            or len(self.order) < self.winner_threshold
         ):
 
             # Given the remaining ballots, who should win?
-            result = self.single_winner_class(deepcopy(remaining_ballots), tie_breaker=self.tie_breaker)
+            result = self.single_winner_class(
+                deepcopy(remaining_ballots), tie_breaker=self.tie_breaker
+            )
 
             # Mark the candidate that won
             r = {'winner': result.winner}
@@ -159,10 +179,15 @@ class AbstractOrderingVotingSystem(OrderingVotingSystem, metaclass=ABCMeta):
                 self.candidates = result.candidates
                 remaining_candidates = copy(self.candidates)
             remaining_candidates.remove(result.winner)
-            remaining_ballots = self.ballots_without_candidate(result.ballots, result.winner)
+            remaining_ballots = self.ballots_without_candidate(
+                result.ballots, result.winner
+            )
 
         # Note the last remaining candidate
-        if (self.winner_threshold is None or len(self.order) < self.winner_threshold):
+        if (
+            self.winner_threshold is None
+            or len(self.order) < self.winner_threshold
+        ):
             r = {'winner': list(remaining_candidates)[0]}
             self.order.append(r['winner'])
             self.rounds.append(r)

@@ -28,6 +28,9 @@ requests==2.22.0
 signxml==2.7.2
 suds-jurko==0.6
 
+# Development
+black==22.3.0
+
 # Unpinned (not found in production!)
 dj_database_url
 gunicorn

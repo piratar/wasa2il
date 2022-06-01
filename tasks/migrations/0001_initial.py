@@ -20,12 +20,26 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Task',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(max_length=128, verbose_name='Name'),
+                ),
                 ('slug', models.SlugField(blank=True, max_length=128)),
                 ('description', models.TextField(verbose_name='Description')),
                 ('objectives', models.TextField(verbose_name='Objectives')),
-                ('requirements', models.TextField(verbose_name='Requirements')),
+                (
+                    'requirements',
+                    models.TextField(verbose_name='Requirements'),
+                ),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('volunteers_needed', models.IntegerField(default=1)),
@@ -38,25 +52,61 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TaskCategory',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('name', models.CharField(max_length=128)),
             ],
         ),
         migrations.CreateModel(
             name='TaskRequest',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('date_offered', models.DateTimeField(auto_now_add=True)),
                 ('is_accepted', models.BooleanField(default=False)),
                 ('whyme', models.TextField(verbose_name='Why me?')),
-                ('task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tasks.Task')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'task',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='tasks.Task',
+                    ),
+                ),
+                (
+                    'user',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name='TaskSkill',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('name', models.CharField(max_length=128)),
             ],
         ),
@@ -68,17 +118,33 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='task',
             name='created_by',
-            field=models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='task_created_by', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                blank=True,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='task_created_by',
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
             model_name='task',
             name='modified_by',
-            field=models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='task_modified_by', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                blank=True,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='task_modified_by',
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
             model_name='task',
             name='polity',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='polity.Polity'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='polity.Polity'
+            ),
         ),
         migrations.AddField(
             model_name='task',

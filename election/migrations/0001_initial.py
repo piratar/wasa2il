@@ -20,31 +20,159 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Candidate',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name='Election',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(max_length=128, verbose_name='Name'),
+                ),
                 ('slug', models.SlugField(blank=True, max_length=128)),
-                ('voting_system', models.CharField(choices=[(b'condorcet', 'Condorcet'), (b'schulze', 'Schulze, ordered list'), (b'schulze_old', 'Schulze, ordered list (old)'), (b'schulze_new', 'Schulze, ordered list (new)'), (b'schulze_both', 'Schulze, ordered list (both)'), (b'stcom', 'Steering Committee Election'), (b'stv1', 'STV, single winner'), (b'stv2', 'STV, two winners'), (b'stv3', 'STV, three winners'), (b'stv4', 'STV, four winners'), (b'stv5', 'STV, five winners'), (b'stv8', 'STV, eight winners'), (b'stv10', 'STV, ten winners'), (b'stonethor', 'STV partition with Schulze ranking')], max_length=30, verbose_name='Voting system')),
-                ('results_are_ordered', models.BooleanField(default=True, verbose_name='Results are ordered')),
-                ('results_limit', models.IntegerField(blank=True, null=True, verbose_name='How many candidates will be publicly listed in the results of an election')),
-                ('deadline_candidacy', models.DateTimeField(verbose_name='Deadline for candidacies')),
-                ('starttime_votes', models.DateTimeField(blank=True, null=True, verbose_name='Election begins')),
-                ('deadline_votes', models.DateTimeField(verbose_name='Election ends')),
-                ('deadline_joined_org', models.DateTimeField(blank=True, null=True, verbose_name='Membership deadline')),
+                (
+                    'voting_system',
+                    models.CharField(
+                        choices=[
+                            (b'condorcet', 'Condorcet'),
+                            (b'schulze', 'Schulze, ordered list'),
+                            (b'schulze_old', 'Schulze, ordered list (old)'),
+                            (b'schulze_new', 'Schulze, ordered list (new)'),
+                            (b'schulze_both', 'Schulze, ordered list (both)'),
+                            (b'stcom', 'Steering Committee Election'),
+                            (b'stv1', 'STV, single winner'),
+                            (b'stv2', 'STV, two winners'),
+                            (b'stv3', 'STV, three winners'),
+                            (b'stv4', 'STV, four winners'),
+                            (b'stv5', 'STV, five winners'),
+                            (b'stv8', 'STV, eight winners'),
+                            (b'stv10', 'STV, ten winners'),
+                            (
+                                b'stonethor',
+                                'STV partition with Schulze ranking',
+                            ),
+                        ],
+                        max_length=30,
+                        verbose_name='Voting system',
+                    ),
+                ),
+                (
+                    'results_are_ordered',
+                    models.BooleanField(
+                        default=True, verbose_name='Results are ordered'
+                    ),
+                ),
+                (
+                    'results_limit',
+                    models.IntegerField(
+                        blank=True,
+                        null=True,
+                        verbose_name='How many candidates will be publicly listed in the results of an election',
+                    ),
+                ),
+                (
+                    'deadline_candidacy',
+                    models.DateTimeField(
+                        verbose_name='Deadline for candidacies'
+                    ),
+                ),
+                (
+                    'starttime_votes',
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name='Election begins'
+                    ),
+                ),
+                (
+                    'deadline_votes',
+                    models.DateTimeField(verbose_name='Election ends'),
+                ),
+                (
+                    'deadline_joined_org',
+                    models.DateTimeField(
+                        blank=True,
+                        null=True,
+                        verbose_name='Membership deadline',
+                    ),
+                ),
                 ('is_processed', models.BooleanField(default=False)),
-                ('instructions', models.TextField(blank=True, null=True, verbose_name='Instructions')),
-                ('stats', models.TextField(blank=True, null=True, verbose_name='Statistics as JSON')),
-                ('stats_publish_ballots_basic', models.BooleanField(default=False, verbose_name='Publish basic ballot statistics')),
-                ('stats_publish_ballots_per_candidate', models.BooleanField(default=False, verbose_name='Publish ballot statistics for each candidate')),
-                ('stats_publish_files', models.BooleanField(default=False, verbose_name='Publish advanced statistics (downloadable)')),
-                ('candidate_polities', models.ManyToManyField(blank=True, related_name='remote_election_candidates', to='polity.Polity', verbose_name='Candidate polities')),
-                ('polity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='polity.Polity')),
-                ('voting_polities', models.ManyToManyField(blank=True, related_name='remote_election_votes', to='polity.Polity', verbose_name='Voting polities')),
+                (
+                    'instructions',
+                    models.TextField(
+                        blank=True, null=True, verbose_name='Instructions'
+                    ),
+                ),
+                (
+                    'stats',
+                    models.TextField(
+                        blank=True,
+                        null=True,
+                        verbose_name='Statistics as JSON',
+                    ),
+                ),
+                (
+                    'stats_publish_ballots_basic',
+                    models.BooleanField(
+                        default=False,
+                        verbose_name='Publish basic ballot statistics',
+                    ),
+                ),
+                (
+                    'stats_publish_ballots_per_candidate',
+                    models.BooleanField(
+                        default=False,
+                        verbose_name='Publish ballot statistics for each candidate',
+                    ),
+                ),
+                (
+                    'stats_publish_files',
+                    models.BooleanField(
+                        default=False,
+                        verbose_name='Publish advanced statistics (downloadable)',
+                    ),
+                ),
+                (
+                    'candidate_polities',
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name='remote_election_candidates',
+                        to='polity.Polity',
+                        verbose_name='Candidate polities',
+                    ),
+                ),
+                (
+                    'polity',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='polity.Polity',
+                    ),
+                ),
+                (
+                    'voting_polities',
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name='remote_election_votes',
+                        to='polity.Polity',
+                        verbose_name='Voting polities',
+                    ),
+                ),
             ],
             options={
                 'ordering': ['-deadline_votes'],
@@ -53,18 +181,54 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ElectionResult',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('vote_count', models.IntegerField()),
-                ('election', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='result', to='election.Election')),
+                (
+                    'election',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='result',
+                        to='election.Election',
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name='ElectionResultRow',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('order', models.IntegerField()),
-                ('candidate', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='election.Candidate')),
-                ('election_result', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='rows', to='election.ElectionResult')),
+                (
+                    'candidate',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='election.Candidate',
+                    ),
+                ),
+                (
+                    'election_result',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='rows',
+                        to='election.ElectionResult',
+                    ),
+                ),
             ],
             options={
                 'ordering': ['order'],
@@ -73,25 +237,62 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ElectionVote',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('value', models.IntegerField()),
-                ('candidate', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='election.Candidate')),
-                ('election', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='election.Election')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'candidate',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='election.Candidate',
+                    ),
+                ),
+                (
+                    'election',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='election.Election',
+                    ),
+                ),
+                (
+                    'user',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
             model_name='candidate',
             name='election',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='election.Election'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='election.Election',
+            ),
         ),
         migrations.AddField(
             model_name='candidate',
             name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterUniqueTogether(
             name='electionvote',
-            unique_together=set([('election', 'user', 'candidate'), ('election', 'user', 'value')]),
+            unique_together=set(
+                [
+                    ('election', 'user', 'candidate'),
+                    ('election', 'user', 'value'),
+                ]
+            ),
         ),
     ]
