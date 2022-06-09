@@ -41,19 +41,8 @@
   border-top: 1px solid $background-lightgray;
 }
 
-
 .sidebar-nav .dropdown-menu {
-  width: $sidebar-width;
-}
-
-.sidebar-nav .dropdown-menu li {
-  text-indent: 0px;
-  border-bottom: 1px solid $background-lightgray;
-}
-
-.sidebar-nav .dropdown-menu li > a {
-  white-space: normal;
-  padding-left: 10px;
+  min-width: $sidebar-width;
 }
 
 .sidebar-nav li {
@@ -83,12 +72,6 @@
 
 .sidebar-nav li > span.label {
   margin-left: 10px;
-}
-
-.navbar-toggle {
-  float: left;
-  margin-left: 12px;
-  margin-right: 6px;
 }
 
 @media(max-width:767px) {

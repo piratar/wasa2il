@@ -30,9 +30,9 @@ class Wasa2ilForm(forms.ModelForm):
 
         # Make form pretty
         self.helper = FormHelper(self)
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-3'
-        self.helper.field_class = 'col-md-6'
+        self.helper.form_class = ''
+        self.helper.label_class = 'col-lg-3'
+        self.helper.field_class = 'col-lg-6'
 
         # Add save/cancel buttons
         self.helper.add_input(Submit('save', _('Save')))
@@ -60,4 +60,4 @@ class Wasa2ilForm(forms.ModelForm):
             elif field_type is ModelMultipleChoiceField:
                 field.widget = forms.CheckboxSelectMultiple()
             elif field_type is DateTimeField:
-                field.widget = DateTimeWidget(options=self.dateTimeOptions, bootstrap_version=3)
+                field.widget = DateTimeWidget(options=self.dateTimeOptions, bootstrap_version=4)

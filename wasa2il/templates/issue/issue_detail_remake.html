@@ -44,7 +44,7 @@
 {% endif %}
 
 {% if issue.issue_state == 'voting' and can_vote %}
-<div class="col-md-12 col-xs-12 well">
+<div class="col-md-12 well">
     <h2>{% trans "Vote" %} <small>{% trans "for or against this issue" %}</small></h2>
     <div class="alert alert-danger hidden">{% trans "There was an error while processing your vote. Please try again." %}</div>
     <div data-toggle="buttons-radio" style="text-align: center;">

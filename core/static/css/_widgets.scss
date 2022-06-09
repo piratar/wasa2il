@@ -4,7 +4,14 @@
   font-family: $font-heading;
 }
 
+.btn-default:hover {
+  background-color: $color-btn-primary;
+  color: white;
+  cursor: pointer;
+}
+
 .btn-default {
+  border: 1px solid #ccc;
   background: none;
   background-image: none;
   background-color: $color-btn-light;

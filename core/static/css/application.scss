@@ -3,7 +3,6 @@
 @import "_constants.scss";
 
 body {
-  margin-top: 70px;
   padding-bottom: 40px;
   font-size: $font-size;
 }
@@ -75,8 +74,16 @@ footer {
 .rejected { color: #a00; }
 .abstained { color: grey; }
 
-#ajax-status-messages { position: absolute; top: 55px; width: 100%; }
-#ajax-status-messages div { max-width: 400px; margin: 0 auto 0 auto; }
+#ajax-status-messages {
+  position: absolute;
+  top: 85px;
+  right: 10px;
+  z-index:1;
+}
+#ajax-status-messages div {
+  max-width: 50vw;
+  margin: 0 auto 0 auto;
+}
 
 /* Headers */
 h1 {
@@ -127,6 +134,9 @@ div#submit-working { background: #bbb; }
 #cancel-url { display: none; }
 
 .dropdown-menu { cursor: pointer; }
+.dropdown-item:hover{
+  color:white;
+}
 
 .nav-tabs>li.active>a {
   border-left-width: 2px;

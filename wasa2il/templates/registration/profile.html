@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load bootstrap %}
+{% load crispy_forms_tags %}
 {% block content %}
 <section class="content">
 <h1>{{user.name}}</h1>
@@ -7,7 +7,7 @@
 	<form action="/accounts/profile/" method="POST">
 		{%csrf_token%}
 		<fieldset>
-			{{form|bootstrap}}
+			{{form|crispy}}
 			<label></label><input class="btn btn-primary" type="submit" value="Save"/>
 		</fieldset>
 	</form>

@@ -122,14 +122,14 @@
 {% endif %}
 
 <div class="row">
-    <div class="col-md-6 col-xs-12">
+    <div class="col-lg-6">
         <p>{{ election.description }}</p>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6 col-xs-12">
-        <table id="election_details" class="table table-compact">
+    <div class="col-lg-6">
+        <table id="election_details" class="table table-sm">
             <tr id="cand_deadline"><th>{% trans "Deadline for candidacies" %}:</th><td>
                 {{ election.deadline_candidacy|may_expire }}
                 <small style="float: right">
@@ -173,8 +173,8 @@
     </div>
 
 {% if statistics and election.stats_publish_ballots_basic %}
-    <div class="col-md-6 col-xs-12">
-        <table id="election_ballot_stats" class="table table-compact">
+    <div class="col-lg-6">
+        <table id="election_ballot_stats" class="table table-sm">
             <tr><th>{% trans "Shortest ballot length" %}:</th><td id="election_ballot_length_shortest">
                 {{ statistics.ballot_length_shortest.length }}
                 <small style="float: right">
@@ -210,7 +210,7 @@
 <div class="row">
 {% endif %}
 
-    <div class="col-md-{% if statistics and election.stats_publish_ballots_basic %}12{% else %}6{% endif %} col-xs-12">
+    <div class="col-lg-{% if statistics and election.stats_publish_ballots_basic %}12{% else %}6{% endif %} ">
         {% if election.instructions %}
             {% if not voting_interface_enabled or election.election_state != 'voting' or started_voting or step == "vote" %}
                 <div class="alert alert-success">
@@ -293,7 +293,7 @@
 {% if election.election_state != 'concluded' %}
 <div class="row">
     {% if voting_interface_enabled and election.election_state == 'voting' %}
-    <div class="col-md-5 col-xs-12 well voting">
+    <div class="col-lg-7 border-right voting">
         {% if started_voting or step == "vote" %}
         <h2>{% trans "Votes" %} <small>{% trans "your favorites first!" %}</small></h2>
         <ol id="vote" class="candidates sortable">
@@ -312,13 +312,12 @@
             <li>{% trans "Your vote will be counted when the deadline has passed" %}</li>
         </ul>
         <div class="alert alert-success start-voting">
-            <a href="?step=vote"><button><b>{% trans "Start Voting" %}</b></button></a>
+            <a href="?step=vote" class="btn btn-primary btn-lg">{% trans "Start Voting" %}</a>
         </div>
         {% endif %}
     </div>
-    <div class="col-md-1"></div>
     {% endif %}
-    <div class="col-md-5 col-xs-12 well"><a name="candidates"></a>
+    <div class="col-lg-5 well"><a name="candidates"></a>
         <h2>{% trans "Candidates" %} <small>{% trans "running in this election" %}</small></h2>
         {% if can_run %}
         <div class="text-center">

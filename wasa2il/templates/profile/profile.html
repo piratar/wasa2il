@@ -24,12 +24,12 @@
   </div>
   {% endfor %}
 
-  <div class="profile">
-    <div class="profile-bio">
+  <div class="row">
+    <div class="col-lg-6">
       <h1>{% trans "Biography" %}</h1>
-        <div class="profile-picture">
-          <img class="img-thumbnail" src="{{ profile.picture.url }}" />
-        </div>
+      <div class="text-center my-3">
+        <img class="img-thumbnail" style="max-height:350px" src="{{ profile.picture.url }}" />
+      </div>
         {% if profile.bio %}
             {{ profile.bio|urlize|markdown }}
         {% else %}
@@ -42,7 +42,7 @@
         {% endif %}
 
     </div>
-    <div class="profile-thingsdone">
+    <div class="col-lg-6">
 
         {% if user.id == profile_user.id %}
         <div class="profile-polities">
