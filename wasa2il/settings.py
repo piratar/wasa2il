@@ -50,6 +50,7 @@ DATABASE_PASSWORD=os.environ.get('W2_DATABASE_PASSWORD', 'wasa2il')
 DATABASE_PORT=os.environ.get('W2_DATABASE_PORT', '3306')
 DATABASE_USER=os.environ.get('W2_DATABASE_USER', 'wasa2il')
 DATABASE_EXPORT_DB_NAME=os.environ.get('W2_DATABASE_EXPORT_DB_NAME', '')
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ## Locale settings
 DATETIME_FORMAT=os.environ.get('W2_DATETIME_FORMAT', 'd/m/Y H:i:s')
