@@ -26,5 +26,4 @@ python-dateutil==2.8.1
 python-graph-core==1.8.2
 requests==2.22.0
 signxml==2.7.2
-suds-jurko==0.6
 django_mdmail
