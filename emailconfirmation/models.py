@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import hashlib
 import string
 
-from core.django_mdmail import send_mail
+from django_mdmail import send_mail
 
 from django.conf import settings
 from django.db import models

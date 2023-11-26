@@ -15,15 +15,14 @@ django-termsandconditions==2.0
 django-utils-six
 
 # Misc
-Pillow==7.0.0
+pillow==10.1.0
 commonmark==0.8.0
 diff_match_patch==20181111
 lxml==4.9.3
 markdown2==2.3.8
-mdmail==0.1.3
 pilkit==2.0
 python-dateutil==2.8.1
 python-graph-core==1.8.2
 requests==2.22.0
 signxml==2.7.2
-django_mdmail
+django_mdmail==0.5.2
