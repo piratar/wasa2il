@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
-from core.django_mdmail import convert_md_templates
+from django_mdmail import convert_md_templates
 
 class CoreConfig(AppConfig):
     name = 'core'

@@ -18,7 +18,7 @@ django-utils-six
 Pillow==7.0.0
 commonmark==0.8.0
 diff_match_patch==20181111
-lxml==4.4.2
+lxml==4.9.3
 markdown2==2.3.8
 mdmail==0.1.3
 pilkit==2.0
@@ -27,7 +27,4 @@ python-graph-core==1.8.2
 requests==2.22.0
 signxml==2.7.2
 suds-jurko==0.6
-
-# Unpinned (not found in production!)
-dj_database_url
-gunicorn
+django_mdmail
