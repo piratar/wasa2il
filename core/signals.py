@@ -9,7 +9,7 @@ from core.models import UserProfile
 from languagecontrol.utils import set_language
 
 
-user_verified = Signal(providing_args=['user', 'request'])
+user_verified = Signal()
 
 
 @receiver(post_save, sender=User)

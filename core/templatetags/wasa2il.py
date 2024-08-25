@@ -11,7 +11,7 @@ from django.template.defaultfilters import stringfilter
 from django.utils.formats import dateformat
 from django.utils.html import urlize as urlize_impl
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from issue.models import Vote
 

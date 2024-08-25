@@ -1,7 +1,7 @@
 from wasa2il.forms import Wasa2ilForm
 from django.forms import CharField
 from django.forms import Textarea
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from tasks.models import Task
 

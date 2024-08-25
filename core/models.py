@@ -15,7 +15,7 @@ from django.db.models import Q
 from django.db.models import SET_NULL
 from django.db.models import When
 from django.contrib.auth.models import User as BaseUser
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from registration.signals import user_registered
 

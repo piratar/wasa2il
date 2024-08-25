@@ -5,7 +5,7 @@ import json
 from wasa2il import settings
 
 from django.utils import translation
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from core.models import event_register, event_time_since_last
 from core.models import User
 

@@ -7,7 +7,7 @@ import sys
 from collections import OrderedDict
 
 if __name__ != "__main__":
-    from django.utils.translation import ugettext_lazy as _
+    from django.utils.translation import gettext_lazy as _
 else:
     _ = lambda x: x
 

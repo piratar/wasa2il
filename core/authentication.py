@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 
 
 class CustomAuthenticationBackend(ModelBackend):

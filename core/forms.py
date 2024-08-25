@@ -7,7 +7,7 @@ from django.forms import TextInput
 from django.forms import TypedChoiceField
 from django.forms import ValidationError
 from django.forms.widgets import ChoiceWidget
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from registration.forms import RegistrationForm
 

@@ -5,24 +5,25 @@
 # run the `update-dependencies` make target, and
 
 # Django packages
-django==3.2.23
-django-bootstrap-form==3.4
-django-crispy-forms==1.8.1
-django-dotenv==1.4.2
-django-prosemirror==0.0.12
-django-registration-redux==2.7
-django-termsandconditions==2.0
+django
+django-bootstrap-form
+django-crispy-forms
+django-dotenv
+django-prosemirror
+django-registration-redux
+django-termsandconditions
 django-utils-six
 
 # Misc
-pillow==10.1.0
-commonmark==0.8.0
-diff_match_patch==20181111
-lxml==4.9.3
-markdown2==2.3.8
-pilkit==2.0
-python-dateutil==2.8.1
-python-graph-core==1.8.2
-requests==2.22.0
-signxml==2.7.2
-django_mdmail==0.5.2
+pillow
+commonmark
+diff_match_patch
+lxml
+markdown2
+pilkit
+python-dateutil
+python-graph-core
+requests
+signxml
+django_mdmail
+setuptools

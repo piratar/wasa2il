@@ -29,7 +29,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.conf import settings
 from django.utils import timezone
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.utils.encoding import force_bytes
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt

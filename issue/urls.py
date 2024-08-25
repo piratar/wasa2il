@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.views.generic import UpdateView
@@ -21,23 +21,23 @@ from issue.views import issues
 
 urlpatterns = [
 
-    url(r'^polity/(?P<polity_id>\d+)/issues/$', issues, name='issues'),
-    url(r'^polity/(?P<polity_id>\d+)/issue/(?P<issue_id>\d+)/edit/$', issue_add_edit, name='issue_edit'),
-    url(r'^polity/(?P<polity_id>\d+)/issue/new/(documentcontent/(?P<documentcontent_id>\d+)/)?$', issue_add_edit, name='issue_add'),
-    url(r'^polity/(?P<polity_id>\d+)/issue/(?P<issue_id>\d+)/$', never_cache(issue_view), name='issue'),
+    re_path(r'^polity/(?P<polity_id>\d+)/issues/$', issues, name='issues'),
+    re_path(r'^polity/(?P<polity_id>\d+)/issue/(?P<issue_id>\d+)/edit/$', issue_add_edit, name='issue_edit'),
+    re_path(r'^polity/(?P<polity_id>\d+)/issue/new/(documentcontent/(?P<documentcontent_id>\d+)/)?$', issue_add_edit, name='issue_add'),
+    re_path(r'^polity/(?P<polity_id>\d+)/issue/(?P<issue_id>\d+)/$', never_cache(issue_view), name='issue'),
 
-    url(r'^polity/(?P<polity_id>\d+)/agreements/$', document_agreements, name="agreements"),
-    url(r'^polity/(?P<polity_id>\d+)/document/new/$', document_add),
-    url(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/v(?P<version>\d+)/$', document_view, name='document_view'),
-    url(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/v(?P<version>\d+)/edit/$', documentcontent_edit, name='documentcontent_edit'),
-    url(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/new/$', documentcontent_add, name='documentcontent_add'),
-    url(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/$', document_view, name='document'),
+    re_path(r'^polity/(?P<polity_id>\d+)/agreements/$', document_agreements, name="agreements"),
+    re_path(r'^polity/(?P<polity_id>\d+)/document/new/$', document_add),
+    re_path(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/v(?P<version>\d+)/$', document_view, name='document_view'),
+    re_path(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/v(?P<version>\d+)/edit/$', documentcontent_edit, name='documentcontent_edit'),
+    re_path(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/new/$', documentcontent_add, name='documentcontent_add'),
+    re_path(r'^polity/(?P<polity_id>\d+)/document/(?P<document_id>\d+)/$', document_view, name='document'),
 
-    url(r'^api/issue/comment/send/$', never_cache(issue_comment_send)),
-    url(r'^api/issue/poll/$', never_cache(issue_poll)),
-    url(r'^api/issue/vote/$', never_cache(issue_vote)),
-    url(r'^api/issue/showclosed/$', issue_showclosed),
+    re_path(r'^api/issue/comment/send/$', never_cache(issue_comment_send)),
+    re_path(r'^api/issue/poll/$', never_cache(issue_poll)),
+    re_path(r'^api/issue/vote/$', never_cache(issue_vote)),
+    re_path(r'^api/issue/showclosed/$', issue_showclosed),
 
-    url(r'^api/documentcontent/render-diff/$', documentcontent_render_diff),
-    url(r'^api/documentcontent/(?P<documentcontent_id>\d+)/retract/$', documentcontent_retract),
+    re_path(r'^api/documentcontent/render-diff/$', documentcontent_render_diff),
+    re_path(r'^api/documentcontent/(?P<documentcontent_id>\d+)/retract/$', documentcontent_retract),
 ]

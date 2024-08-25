@@ -5,7 +5,7 @@ from wasa2il.forms import Wasa2ilForm
 
 from issue.models import Comment, Document, DocumentContent, Issue
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 class IssueForm(Wasa2ilForm):
     class Meta:

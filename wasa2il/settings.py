@@ -379,21 +379,6 @@ LOGIN_REDIRECT_URL = "/"
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 if DEBUG:
-    import imp
-    try:
-        imp.find_module('debug_toolbar')
-
-        INSTALLED_APPS += ('debug_toolbar.apps.DebugToolbarConfig',)
-        MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-        INTERNAL_IPS = ('127.0.0.1',)
-        DEBUG_TOOLBAR_CONFIG = {
-            'JQUERY_URL': ''
-        }
-    except ImportError:
-        # Silently continue if django-debug-toolbar isn't installed
-        pass
-
-if DEBUG:
     print("============ Wasa2il Features ============")
     for feature, enabled in FEATURES.items():
         print(" - %-25s      %8s" % (feature, ["DISABLED", "ENABLED"][enabled]))
