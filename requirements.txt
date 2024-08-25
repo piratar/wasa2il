@@ -8,6 +8,7 @@
 django
 django-bootstrap-form
 django-crispy-forms
+crispy-bootstrap3
 django-dotenv
 django-prosemirror
 django-registration-redux

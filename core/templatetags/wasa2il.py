@@ -1,13 +1,13 @@
 import os
 import markdown2
 
-from datetime import datetime
 from PIL import Image
 from pilkit.processors import SmartResize
 
 from django import template
 from django.conf import settings
 from django.template.defaultfilters import stringfilter
+from django.utils import timezone
 from django.utils.formats import dateformat
 from django.utils.html import urlize as urlize_impl
 from django.utils.safestring import mark_safe
@@ -21,7 +21,7 @@ register = template.Library()
 
 @register.filter()
 def may_expire(dt):
-    now = datetime.now()
+    now = timezone.now()
 
     css_class = 'expired' if dt < now else 'not-expired'
     formatted_datetime = dateformat.format(dt, settings.DATETIME_FORMAT)

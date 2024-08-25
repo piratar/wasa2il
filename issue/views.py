@@ -1,21 +1,17 @@
 import json
 
-from datetime import datetime
 from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView
-from django.views.generic import DetailView
-from django.views.generic import ListView
+from django.utils import timezone
 
 from issue.forms import DocumentForm, DocumentContentForm, IssueForm
 from issue.models import Document, DocumentContent, Issue
@@ -127,7 +123,7 @@ def issue_view(request, polity_id, issue_id):
     # protect users from having to answer for something they said a long time
     # ago. To try and achieve both goals, we require a logged in user to see
     # comments to older issues.
-    comment_protection_timing = datetime.now() - timedelta(days=settings.RECENT_ISSUE_DAYS)
+    comment_protection_timing = timezone.now() - timedelta(days=settings.RECENT_ISSUE_DAYS)
     if not request.user.is_authenticated and issue.deadline_votes < comment_protection_timing:
         ctx['comments_hidden'] = True
 

@@ -1,6 +1,5 @@
 from base64 import b64decode
-from datetime import datetime, timedelta
-from xml.etree.ElementTree import ParseError
+from datetime import timedelta
 import contextlib
 import json
 import os
@@ -26,11 +25,8 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponseBadRequest
 from django.http import Http404
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.core.exceptions import PermissionDenied
 from django.conf import settings
 from django.utils import timezone
-from django.utils.translation import gettext as _
-from django.utils.encoding import force_bytes
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from termsandconditions.models import TermsAndConditions
@@ -51,19 +47,13 @@ from election.models import Candidate
 from election.models import Election
 from election.models import ElectionResult
 from emailconfirmation.models import EmailConfirmation
-from issue.forms import DocumentForm
-from issue.models import Document
-from issue.models import DocumentContent
 from issue.models import Issue
 from polity.models import Polity
-from topic.models import Topic
 
 from gateway.utils import get_member
 from gateway.utils import update_member
 
 from languagecontrol.utils import set_language
-
-from hashlib import sha1
 
 # BEGIN - Included for Wasa2ilRegistrationView and Wasa2ilActivationView
 from django.contrib.auth import login
@@ -157,8 +147,8 @@ def view_admintools(request):
     users = {
         'total_count': User.objects.count(),
         'verified_count': User.objects.filter(is_active=True).count(),
-        'last30_count': User.objects.filter(last_login__gte=datetime.now()-timedelta(days=30)).count(),
-        'last365_count': User.objects.filter(last_login__gte=datetime.now()-timedelta(days=365)).count(),
+        'last30_count': User.objects.filter(last_login__gte=timezone.now()-timedelta(days=30)).count(),
+        'last365_count': User.objects.filter(last_login__gte=timezone.now()-timedelta(days=365)).count(),
     }
     return render(request, 'admintools.html', {'push_form': push_form, 'users': users})
 
@@ -694,7 +684,7 @@ def verify(request):
     profile.verified_ssn = auth['UserSSN']
     profile.verified_name = auth['Name']
     profile.verified_assertion_id = assertion_id
-    profile.verified_timing = datetime.now()
+    profile.verified_timing = timezone.now()
     profile.save()
     event_register('user_verified', user=request.user)
 

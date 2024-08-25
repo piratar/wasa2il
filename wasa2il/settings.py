@@ -3,8 +3,8 @@
 
 import os
 from wasa2il.utils import here
-from datetime import datetime
 from hashlib import sha256
+from django.utils import timezone
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -123,7 +123,7 @@ if not GCM_APP_ID:  # We cannot have push notifications without a registered app
 with open(os.path.join(BASE_DIR, 'VERSION'), 'r') as f:
     WASA2IL_VERSION = f.readlines().pop(0).strip()
     h = sha256()
-    h.update(("%s:%s" % (WASA2IL_VERSION, datetime.now())).encode('utf-8'))
+    h.update(("%s:%s" % (WASA2IL_VERSION, timezone.now())).encode('utf-8'))
     WASA2IL_HASH = h.hexdigest()[:7]
 
 
@@ -302,6 +302,7 @@ INSTALLED_APPS = (
     'diff_match_patch',
     'datetimewidget',
     'crispy_forms',
+    'crispy_bootstrap3',
     'termsandconditions',
 
     'languagecontrol',

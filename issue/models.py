@@ -35,6 +35,7 @@ class Issue(models.Model):
     objects = IssueManager()
 
     SPECIAL_PROCESS_CHOICES = (
+        (None, _("---")),
         ('accepted_at_assembly', _('Accepted at assembly')),
         ('rejected_at_assembly', _('Rejected at assembly')),
         ('retracted', _('Retracted')),

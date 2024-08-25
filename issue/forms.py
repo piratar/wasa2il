@@ -8,6 +8,12 @@ from issue.models import Comment, Document, DocumentContent, Issue
 from django.utils.translation import gettext as _
 
 class IssueForm(Wasa2ilForm):
+
+    special_process = forms.ChoiceField(
+        choices=Issue.SPECIAL_PROCESS_CHOICES,
+        required=False
+    )
+
     class Meta:
         model = Issue
         exclude = (
@@ -32,6 +38,9 @@ class IssueForm(Wasa2ilForm):
 
 
 class DocumentForm(Wasa2ilForm):
+
+    document_type = forms.ChoiceField(choices=Document.DOCUMENT_TYPE_CHOICES)
+
     class Meta:
         model = Document
         exclude = ('user', 'polity', 'slug', 'issues')

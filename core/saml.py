@@ -1,11 +1,7 @@
 from datetime import datetime
 from signxml import XMLVerifier
-from xml.etree import ElementTree
-
 from django.conf import settings
-from django.contrib.auth import login
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.utils import timezone
 
 
 class SamlException(Exception):
@@ -42,7 +38,9 @@ def authenticate(input_xml, ca_pem_file):
     #   first 19 characters.
     time_limit_lower = datetime.strptime(conds_xml.attrib['NotBefore'][:19],'%Y-%m-%dT%H:%M:%S')
     time_limit_upper = datetime.strptime(conds_xml.attrib['NotOnOrAfter'][:19],'%Y-%m-%dT%H:%M:%S')
-    now = datetime.now()
+    time_limit_lower = timezone.make_aware(time_limit_lower, timezone.get_current_timezone())
+    time_limit_upper = timezone.make_aware(time_limit_upper, timezone.get_current_timezone())
+    now = timezone.now()
     if time_limit_lower > now or time_limit_upper < now:
         raise SamlException('Remote authentication expired')
 

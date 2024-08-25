@@ -5,13 +5,14 @@
 #
 import random
 import traceback
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.utils import IntegrityError
 from django.http import HttpRequest
+from django.utils import timezone
 
 from core.models import *
 from polity.models import Polity, PolityRuleset
@@ -46,7 +47,7 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options):
-        now = datetime.now()
+        now = timezone.now()
 
         if not options.get('full'):
             print()

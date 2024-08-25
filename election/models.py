@@ -1,6 +1,5 @@
 import json
 import os
-from datetime import datetime
 from datetime import timedelta
 
 from django.conf import settings
@@ -9,13 +8,14 @@ from django.db import models
 from django.db import transaction
 from django.db.models import CASCADE
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 from election.utils import BallotCounter
 
 
 class ElectionQuerySet(models.QuerySet):
     def recent(self):
-        return self.filter(deadline_votes__gt=datetime.now() - timedelta(days=settings.RECENT_ELECTION_DAYS))
+        return self.filter(deadline_votes__gt=timezone.now() - timedelta(days=settings.RECENT_ELECTION_DAYS))
 
 class Election(models.Model):
     """
@@ -275,7 +275,7 @@ class Election(models.Model):
 
     def election_state(self):
         # Short-hands.
-        now = datetime.now()
+        now = timezone.now()
         deadline_candidacy = self.deadline_candidacy
         deadline_votes = self.deadline_votes
         voting_start_time = self.voting_start_time()

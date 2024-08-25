@@ -1,28 +1,18 @@
 #coding:utf-8
 import os
-import re
 import json
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.conf import settings
 from django.db import models
-from django.db.models import BooleanField
 from django.db.models import CASCADE
-from django.db.models import Case
 from django.db.models import Count
-from django.db.models import IntegerField
 from django.db.models import Q
 from django.db.models import SET_NULL
-from django.db.models import When
 from django.contrib.auth.models import User as BaseUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from registration.signals import user_registered
-
-from diff_match_patch.diff_match_patch import diff_match_patch
-
-from issue.models import DocumentContent
-from issue.models import Issue
 
 import inspect
 
@@ -198,4 +188,4 @@ def event_time_since_last(module, action):
     if len(e) == 0:
         return timedelta(100000000)
     else:
-        return datetime.now() - e[0].timestamp
+        return timezone.now() - e[0].timestamp

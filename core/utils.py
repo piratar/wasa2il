@@ -4,12 +4,13 @@ import requests
 import json
 from wasa2il import settings
 
+from django.utils import timezone
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from core.models import event_register, event_time_since_last
 from core.models import User
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 import issue
@@ -40,8 +41,8 @@ def calculate_age_from_ssn(ssn):
     day = int(ssn[0:2])
 
     # Calculate the differences between birthdate and today.
-    birthdate = datetime(year, month, day)
-    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    birthdate = timezone.datetime(year, month, day, tzinfo=timezone.get_current_timezone())
+    today = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
     age = relativedelta(today, birthdate).years
 
     return age
@@ -63,7 +64,7 @@ def heartbeat():
     # Do all sorts of things that
     #   a) are due at this point in time.
     #   b) take a short amount of time to do.
-    now = datetime.now()
+    now = timezone.now()
 
     issue.heartbeat(now)
     election.heartbeat(now)
@@ -74,8 +75,8 @@ def heartbeat():
         users = {
             'total_count': User.objects.count(),
             'verified_count': User.objects.filter(is_active=True).count(),
-            'last30_count': User.objects.filter(last_login__gte=datetime.now()-timedelta(days=30)).count(),
-            'last365_count': User.objects.filter(last_login__gte=datetime.now()-timedelta(days=365)).count(),
+            'last30_count': User.objects.filter(last_login__gte=timezone.now()-timedelta(days=30)).count(),
+            'last365_count': User.objects.filter(last_login__gte=timezone.now()-timedelta(days=365)).count(),
         }
         event_register('user_review', category='statistics', event=users)
 

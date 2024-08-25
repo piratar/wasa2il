@@ -1,10 +1,10 @@
-import datetime
 import copy
 import json
 import logging
 import random
 import sys
 from collections import OrderedDict
+from django.utils import timezone
 
 if __name__ != "__main__":
     from django.utils.translation import gettext_lazy as _
@@ -234,7 +234,7 @@ class BallotAnalyzer(BallotContainer):
     def stats_as_text(self, stats):
         lines = [
             '<!-- %s --><html><head><meta charset="UTF-8"></head><body><pre>' % (
-                datetime.datetime.now()),
+                timezone.now()),
             '',
             'Analyzed %d ballots with %d candidates.' % (
                 stats['ballots'], len(stats['candidates']))]

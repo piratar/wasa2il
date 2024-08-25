@@ -2,15 +2,15 @@
 from django.conf import settings
 from django.shortcuts import redirect, render
 from django.urls import resolve
+from django.utils import timezone
 from django.utils.deprecation import MiddlewareMixin
-
-from core.models import UserProfile
 
 from polity.models import Polity
 
 from django.contrib import auth
 
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 
 # A middleware to make certain variables available to both templates and views.
 class GlobalsMiddleware(MiddlewareMixin):
@@ -61,7 +61,7 @@ class AutoLogoutMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if hasattr(settings, 'AUTO_LOGOUT_DELAY'):
 
-            now = datetime.now()
+            now = timezone.now()
 
             if not request.user.is_authenticated :
                 # Set the last visit to now when attempting to log in, so that
@@ -76,6 +76,7 @@ class AutoLogoutMiddleware(MiddlewareMixin):
 
             if 'last_visit' in request.session:
                 last_visit = datetime.strptime(request.session['last_visit'], '%Y-%m-%d %H:%M:%S')
+                last_visit = timezone.make_aware(last_visit, timezone.get_current_timezone())
                 if now - last_visit > timedelta(0, settings.AUTO_LOGOUT_DELAY * 60, 0):
                     auth.logout(request)
                     request.auto_logged_out = True

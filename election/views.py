@@ -1,4 +1,3 @@
-from datetime import datetime
 from datetime import timedelta
 
 from django.conf import settings
@@ -10,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 
 from election.forms import ElectionForm
 from election.models import Election
@@ -58,7 +58,7 @@ def election_view(request, polity_id, election_id):
     # about in the future. Still, we'd like to retain some history of their
     # candidacy. To try and attain both goals, we require a login for older
     # elections.
-    election_protection_timing = datetime.now() - timedelta(days=settings.RECENT_ISSUE_DAYS)
+    election_protection_timing = timezone.now() - timedelta(days=settings.RECENT_ISSUE_DAYS)
     if not request.user.is_authenticated and election.deadline_votes < election_protection_timing:
         return redirect_to_login(request.path)
 
@@ -85,7 +85,7 @@ def election_view(request, polity_id, election_id):
         'polity': polity,
         'election': election,
         'step': request.GET.get('step', None),
-        'now': datetime.now().strftime('%d/%m/%Y %H:%I'),
+        'now': timezone.now().strftime('%d/%m/%Y %H:%I'),
         'ordered_candidates': ordered_candidates,
         'statistics': statistics,
         'vote_count': vote_count,

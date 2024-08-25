@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
-from sys import stdout, stderr
-from datetime import datetime
-
+from sys import stdout
 from django.core.management.base import BaseCommand
+from django.utils import timezone
+from issue.models import Issue
 
-from core.models import *
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        now = datetime.now()
+        now = timezone.now()
 
         unprocessed_issues = Issue.objects.filter(
             deadline_votes__lte=now,

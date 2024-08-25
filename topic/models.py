@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.conf import settings
 from django.db import models
 from django.db.models import BooleanField
@@ -10,6 +8,7 @@ from django.db.models import IntegerField
 from django.db.models import Q
 from django.db.models import SET_NULL
 from django.db.models import When
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from core.models import UserProfile
@@ -22,7 +21,7 @@ class TopicQuerySet(models.QuerySet):
         '''
 
         topics = self
-        now = datetime.now()
+        now = timezone.now()
 
         if not user.is_anonymous:
             if not UserProfile.objects.get(user=user).topics_showall:

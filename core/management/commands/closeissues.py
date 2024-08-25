@@ -1,15 +1,14 @@
-from sys import stdout, stderr
-from datetime import datetime
-
+from sys import stdout
 from django.core.management.base import BaseCommand
+from django.utils import timezone
+from core.models import Issue
 
-from core.models import *
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        now = datetime.now()
+        now = timezone.now()
 
         issues = Issue.objects.all()
         for i in issues:
