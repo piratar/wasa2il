@@ -6,6 +6,7 @@ cffi==1.17.0
 chardet==5.2.0
 charset-normalizer==3.3.2
 commonmark==0.9.1
+crispy-bootstrap3==2024.1
 cryptography==43.0.0
 cssselect==1.2.0
 cssutils==2.11.1
@@ -33,7 +34,7 @@ pycparser==2.22
 python-dateutil==2.9.0.post0
 python-graph-core==1.8.2
 requests==2.32.3
-setuptools==73.0.1
+setuptools==74.0.0
 signxml==4.0.0
 six==1.16.0
 soupsieve==2.6
