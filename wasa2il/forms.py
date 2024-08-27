@@ -47,17 +47,5 @@ class Wasa2ilForm(forms.ModelForm):
         for fieldname in self.fields:
             field = self.fields[fieldname]
             field_type = type(field)
-            if field_type is ModelChoiceField:
-                field.widget = forms.RadioSelect()
-                # Remove ugly and pointless '---------' option.
-                if field.required:
-                    field.empty_label = None
-            elif field_type is TypedChoiceField:
-                field.widget = forms.RadioSelect()
-                # Remove ugly and pointless '---------' option.
-                if field.required and len(field.choices) > 0 and field.choices[0][1] == '---------':
-                    field.choices.pop(0)
-            elif field_type is ModelMultipleChoiceField:
-                field.widget = forms.CheckboxSelectMultiple()
-            elif field_type is DateTimeField:
+            if field_type is DateTimeField:
                 field.widget = DateTimeWidget(options=self.dateTimeOptions, bootstrap_version=3)
