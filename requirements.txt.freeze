@@ -1,7 +1,8 @@
 asgiref==3.8.1
+audkenni @ git+https://github.com/binary-is/audkenni.git@0bad919520d7e282e0b230c08b7dce6a9ad2275c
 beautifulsoup4==4.12.3
 cachetools==5.5.0
-certifi==2024.7.4
+certifi==2024.8.30
 cffi==1.17.0
 chardet==5.2.0
 charset-normalizer==3.3.2
@@ -27,10 +28,13 @@ Markdown==3.7
 markdown2==2.5.0
 mdmail==0.1.3
 more-itertools==10.4.0
+nanoid==2.0.0
 pilkit==3.0
 pillow==10.4.0
+pkce==1.0.3
 premailer==3.10.0
 pycparser==2.22
+PyJWT==2.9.0
 python-dateutil==2.9.0.post0
 python-graph-core==1.8.2
 requests==2.32.3
