@@ -68,7 +68,7 @@ class VerificationForm(Form):
     phone = CharField(label=_("Phone"))
 
     def clean_phone(self):
-        phone = self.cleaned_data["phone"]
+        phone = self.cleaned_data.get("phone", "")
         phone = phone.replace("-", "").replace(" ", "")
 
         if not phone.isdigit():
