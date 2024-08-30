@@ -625,7 +625,7 @@ def verify(request):
         form = VerificationForm(request.POST)
         if form.is_valid():
             try:
-                person = see_some_id(form.cleaned_data.get("phone"), "Prófun")
+                person = see_some_id(form.cleaned_data.get("phone"), _("Pirate Party voting system verification"))
             except Exception:
                 form.add_error(
                     None,
