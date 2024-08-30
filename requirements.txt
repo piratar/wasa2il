@@ -28,3 +28,6 @@ requests
 signxml
 django_mdmail
 setuptools
+
+# Auðkenni
+git+https://github.com/binary-is/audkenni.git@main#egg=audkenni

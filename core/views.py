@@ -15,6 +15,7 @@ import urllib
 from urllib.parse import parse_qs
 # SSO done
 
+from audkenni import see_some_id
 from django.contrib.auth import logout
 from django.urls import reverse
 from django.shortcuts import render
@@ -29,11 +30,13 @@ from django.conf import settings
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import gettext as _
 from termsandconditions.models import TermsAndConditions
 
 from django.contrib.auth.models import User
 from core.models import UserProfile, event_register
 from core.forms import UserProfileForm
+from core.forms import VerificationForm
 from core.forms import Wasa2ilRegistrationForm
 from core.forms import PushNotificationForm
 from core.saml import authenticate
@@ -613,100 +616,81 @@ class Wasa2ilActivationView(ActivationView):
         return user
 
     def get_success_url(self, user):
-        return '%s?returnTo=%s' % (reverse('tc_accept_page'), reverse('login_or_saml_redirect'))
-
-
-@csrf_exempt
-def verify(request):
-
-    if request.method != 'POST':
-        raise HttpResponseBadRequest("Bad request")
-
-    token = request.POST.get('token')
-    if not token:
-        return HttpResponseRedirect(settings.SAML['URL'])
-
-    if not request.user.is_authenticated:
-        # This means that we have received (or should have received) a SAML
-        # XML file via the form variable "token", POST-ed from the IceKey
-        # website. In order to figure out which user that SAML document
-        # belongs to, the user must be already logged in. However, since at
-        # least Django 2.1, session cookies are set with the SameSite property
-        # set to "Lax", which means that the session is not initialized on
-        # POST page loads if the POST originates from another website, which
-        # is exactly what the IceKey website does. Thus, on the page load that
-        # receives the SAML XML file, the user is not logged in and thus we
-        # cannot determine which user the SAML XML file belongs to. To remedy
-        # this, we will grab the token if the user is not logged in (because
-        # of the SameSite restriction), place it in an HTML form and
-        # automatically submit it to the same page again.
-        return render(request, 'registration/verification_autopost.html', {'token': token})
-
-    # XML is received as a base64-encoded string.
-    input_xml = b64decode(token)
-
-    try:
-        assertion_id, auth = authenticate(input_xml, settings.SAML['CERT'])
-    except SamlException as e:
-        ctx = {'e': e}
-        return render(request, 'registration/saml_error.html', ctx)
-
-    # Make sure that the user is, in fact, human.
-    if is_ssn_human_or_institution(auth['UserSSN']) != 'human':
-        ctx = {
-            'ssn': auth['UserSSN'],
-            'name': auth['Name'].encode('utf8'),
-        }
-        return render(request, 'registration/verification_invalid_entity.html', ctx)
-
-    # Make sure that user has reached the minimum required age, if applicable.
-    if hasattr(settings, 'AGE_LIMIT') and settings.AGE_LIMIT > 0:
-        age = calculate_age_from_ssn(auth['UserSSN'])
-        if age < settings.AGE_LIMIT:
-            logout(request)
-            ctx = {
-                'age': age,
-                'age_limit': settings.AGE_LIMIT,
-            }
-            return render(request, 'registration/verification_age_limit.html', ctx)
-
-    if UserProfile.objects.filter(verified_ssn=auth['UserSSN']).exists():
-        taken_user = UserProfile.objects.select_related('user').get(verified_ssn=auth['UserSSN']).user
-        ctx = {
-            'taken_user': taken_user,
-        }
-
-        logout(request)
-
-        return render(request, 'registration/verification_duplicate.html', ctx)
-
-    profile = request.user.userprofile  # It shall exist at this point
-    profile.verified_ssn = auth['UserSSN']
-    profile.verified_name = auth['Name']
-    profile.verified_assertion_id = assertion_id
-    profile.verified_timing = timezone.now()
-    profile.save()
-    event_register('user_verified', user=request.user)
-
-    user_verified.send(sender=request.user.__class__, user=request.user, request=request)
-
-    return HttpResponseRedirect('/')
+        return '%s?returnTo=%s' % (reverse('tc_accept_page'), reverse('verify'))
 
 
 @login_required
-def login_or_saml_redirect(request):
-    '''
-    Check if user is verified. If so, redirect to the specified login
-    redirection page. Otherwise, redirect to the SAML login page for
-    verification. This is done in a view instead of redirecting straight from
-    SamlMiddleware so that other login-related middleware can be allowed to do
-    their thing before the SAML page, most notably TermsAndConditions, which
-    we want immediately following the login, before verification.
-    '''
-    if request.user.userprofile.verified:
-        return redirect(settings.LOGIN_REDIRECT_URL)
+def verify(request):
+    if request.method == "POST":
+        form = VerificationForm(request.POST)
+        if form.is_valid():
+            try:
+                person = see_some_id(form.cleaned_data.get("phone"), "Prófun")
+            except Exception:
+                form.add_error(
+                    None,
+                    _("An unknown error occurred while verifying electronic ID.")
+                )
+                ctx = {
+                    "form": form,
+                }
+                return render(request, "registration/verification_needed.html", ctx)
+
+            ssn = person["nationalRegisterId"]
+            name = person["name"]
+            signature = person["signature"]
+
+            # Make sure that the user is, in fact, human.
+            if is_ssn_human_or_institution(ssn) != 'human':
+                ctx = {
+                    "ssn": ssn,
+                    "name": name,
+                }
+                return render(request, 'registration/verification_invalid_entity.html', ctx)
+
+            # Make sure that user has reached the minimum required age, if applicable.
+            if hasattr(settings, 'AGE_LIMIT') and settings.AGE_LIMIT > 0:
+                age = calculate_age_from_ssn(ssn)
+                if age < settings.AGE_LIMIT:
+                    logout(request)
+                    ctx = {
+                        'age': age,
+                        'age_limit': settings.AGE_LIMIT,
+                    }
+                    return render(request, 'registration/verification_age_limit.html', ctx)
+
+            if UserProfile.objects.filter(verified_ssn=ssn).exists():
+                taken_user = UserProfile.objects.select_related('user').get(verified_ssn=ssn).user
+                ctx = {
+                    'taken_user': taken_user,
+                }
+
+                logout(request)
+
+                return render(request, 'registration/verification_duplicate.html', ctx)
+
+            profile = request.user.userprofile  # It shall exist at this point
+            profile.verified_ssn = ssn
+            profile.verified_name = name
+            profile.verified_signature = signature
+            profile.verified_timing = timezone.now()
+            profile.save()
+            event_register('user_verified', user=request.user)
+
+            user_verified.send(
+                sender=request.user.__class__,
+                user=request.user,
+                request=request
+            )
+
+            return redirect("/")
     else:
-        return redirect(settings.SAML['URL'])
+        form = VerificationForm()
+
+    ctx = {
+        "form": form,
+    }
+    return render(request, "registration/verification_needed.html", ctx)
 
 
 @login_required

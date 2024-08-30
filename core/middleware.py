@@ -25,7 +25,7 @@ class GlobalsMiddleware(MiddlewareMixin):
             'WASA2IL_HASH': settings.WASA2IL_HASH,
             'CONTACT_EMAIL': settings.CONTACT_EMAIL,
             'ORGANIZATION_NEWS_URL': settings.ORGANIZATION_NEWS_URL,
-            'using_saml': len(settings.SAML['URL']) > 0,
+            'FEATURE_AUDKENNI': settings.FEATURES["audkenni"],
         }
 
         try:
@@ -84,44 +84,24 @@ class AutoLogoutMiddleware(MiddlewareMixin):
             request.session['last_visit'] = now.strftime('%Y-%m-%d %H:%M:%S')
 
 
-# Middleware for requiring SAML verification before allowing a logged in user
-# to do anything else.
-class SamlMiddleware(MiddlewareMixin):
+class VerificationMiddleware(MiddlewareMixin):
+    """
+    Insists on verifying using electronic ID if feature is turned on.
+    """
+
     def process_request(self, request):
 
-        if settings.SAML['URL']: # Is SAML support enabled?
+        if not settings.FEATURES['audkenni']:
+            return
 
-            if hasattr(settings, 'SAML_VERIFICATION_EXCLUDE_URL_PREFIX_LIST'):
-                exclude_urls = settings.SAML_VERIFICATION_EXCLUDE_URL_PREFIX_LIST
-            else:
-                exclude_urls = []
+        # Short-hands.
+        path_ok = request.path_info in [
+            '/accounts/verify/',
+            '/accounts/logout/',
+            '/terms/',
+        ]
+        logged_in = request.user.is_authenticated
+        verified = request.user.userprofile.verified if logged_in else False
 
-            # Short-hands.
-            path_ok = request.path_info in [
-                '/accounts/verify/',
-                '/accounts/logout/',
-                '/accounts/login-or-saml-redirect/'
-            ] or any([request.path_info.find(p) == 0 for p in exclude_urls])
-            logged_in = request.user.is_authenticated
-            verified = request.user.userprofile.verified if logged_in else False
-
-            if logged_in and not verified and not path_ok:
-                ctx = { 'auth_url': settings.SAML['URL'] }
-                return render(request, 'registration/verification_needed.html', ctx)
-
-    def process_response(self, request, response):
-
-        if settings.SAML['URL'] and hasattr(request, 'user'):
-            logged_in = request.user.is_authenticated
-            verified = request.user.userprofile.verified if logged_in else False
-            just_logged_in = (
-                request.path == '/accounts/login/'
-                and response.status_code == 302
-                and response.url == settings.LOGIN_REDIRECT_URL
-            )
-
-            if logged_in and just_logged_in and not verified:
-                return redirect('/accounts/login-or-saml-redirect/')
-
-            return response
-        return response
+        if logged_in and not verified and not path_ok:
+            return redirect("verify")

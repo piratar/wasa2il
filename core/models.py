@@ -59,16 +59,19 @@ class User(BaseUser):
 
 
 class UserProfile(models.Model):
+
     """A user's profile data. Contains various informative areas, plus various settings."""
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=CASCADE)
 
     # Verification
-    # Field `verified_token` was used with SAML 1.2 whereas
-    # `verified_assertion_id` has been used since adopting SAML 2.
     verified_ssn = models.CharField(max_length=30, null=True, blank=True, unique=True)
     verified_name = models.CharField(max_length=100, null=True, blank=True)
+    # `verified_token` was used with SAML 1.2 before it was deprecated.
     verified_token = models.CharField(max_length=100, null=True, blank=True)
+    # `verified_assertion_id` was used with SAML 2.0 before it was deprecated.
     verified_assertion_id = models.CharField(max_length=50, null=True, blank=True)
+    # `verified_signature` is used with Auðkenni's REST API.
+    verified_signature = models.CharField(max_length=4096, null=True, blank=True)
     verified_timing = models.DateTimeField(null=True, blank=True)
     # When using SAML, the 'verified' field is set to true if verified_ssn,
     # verified_name and verified_timing have all been set with actual content.
@@ -111,7 +114,7 @@ class UserProfile(models.Model):
                 'default.jpg'
             )
 
-        if settings.SAML['URL']:
+        if settings.FEATURES['audkenni']:
             self.verified = all((
                 self.verified_ssn is not None and len(self.verified_ssn) > 0,
                 self.verified_name is not None and len(self.verified_name) > 0

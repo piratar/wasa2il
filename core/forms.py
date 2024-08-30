@@ -63,5 +63,22 @@ class Wasa2ilRegistrationForm(RegistrationForm):
         label=_('Consent for sending email')
     )
 
+
+class VerificationForm(Form):
+    phone = CharField(label=_("Phone"))
+
+    def clean_phone(self):
+        phone = self.cleaned_data["phone"]
+        phone = phone.replace("-", "").replace(" ", "")
+
+        if not phone.isdigit():
+            raise ValidationError(_("Invalid phone number."))
+
+        if len(phone) != 7:
+            raise ValidationError(_("Phone number must be 7 digits."))
+
+        return phone
+
+
 class PushNotificationForm(Form):
     text = CharField(label=_('Message'))

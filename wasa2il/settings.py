@@ -104,16 +104,11 @@ ICEPIRATE = {
     'key': os.environ.get('W2_ICEPIRATE_KEY', '')
 }
 
-# SAML (2.0) support
-SAML = {
-    'URL': os.environ.get('W2_SAML_URL', ''),
-    'CERT': os.environ.get('W2_SAML_CERT', '')
-}
-
 FEATURES = {
     'tasks': os.environ.get('W2_FEATURE_TASKS', False) == '1',
     'topic': os.environ.get('W2_FEATURE_TOPIC', False) == '1',
     'push_notifications': os.environ.get('W2_FEATURE_PUSH_NOTIFICATIONS', False) == '1',
+    'audkenni': os.environ.get('W2_FEATURE_AUDKENNI', False) == '1',
 }
 
 if not GCM_APP_ID:  # We cannot have push notifications without a registered app ID.
@@ -247,7 +242,7 @@ MIDDLEWARE = (
     'core.middleware.AutoLogoutMiddleware',
     'termsandconditions.middleware.TermsAndConditionsRedirectMiddleware',
     'core.middleware.GlobalsMiddleware',
-    'core.middleware.SamlMiddleware',
+    'core.middleware.VerificationMiddleware',
 )
 try:
     MIDDLEWARE += LOCAL_MIDDLEWARE
@@ -367,10 +362,6 @@ TERMS_EXCLUDE_URL_PREFIX_LIST = (
     '/accounts/login/',
     '/accounts/logout/',
     '/accounts/verify/',
-)
-
-SAML_VERIFICATION_EXCLUDE_URL_PREFIX_LIST = (
-    '/terms/',
 )
 
 AUTH_PROFILE_MODULE = "core.UserProfile"

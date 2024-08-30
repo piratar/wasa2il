@@ -1,4 +1,5 @@
 from django.urls import include
+from django.urls import path
 from django.urls import re_path
 from django.shortcuts import redirect
 from django.conf import settings
@@ -53,12 +54,10 @@ urlpatterns = [
         name='auth_password_reset'
     ),
     re_path(r'^accounts/reset-password/done/$', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    # Auðkenni verification.
+    path("accounts/verify/", core_views.verify, name="verify"),
 
-    # SAML-related URLs.
-    re_path(r'^accounts/verify/', core_views.verify),
-    re_path(r'^accounts/login-or-saml-redirect/', core_views.login_or_saml_redirect, name='login_or_saml_redirect'),
-
-    re_path(r'^accounts/', include('registration.backends.default.urls')),
+    path('accounts/', include('registration.backends.default.urls')),
 
     re_path(r'^help/$', TemplateView.as_view(template_name='help/is/index.html')),
     re_path(r'^help/(?P<page>.*)/$', core_views.help),

@@ -45,9 +45,9 @@
     </div>
 </div>
 
-{% if using_saml %}
+{% if FEATURE_AUDKENNI %}
 <p>
-    <b>{% trans 'Attention' %}:</b> {% trans 'You may need to verify your account via island.is in the next step.' %}
+    <b>{% trans 'Attention' %}:</b> {% trans 'You will need to verify your account with electronic ID in the next step.' %}
 </p>
 {% endif %}
 
