@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-30 14:12+0000\n"
+"POT-Creation-Date: 2024-08-30 22:02+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Icelandic\n"
@@ -140,7 +140,11 @@ msgstr "Hvort eigi að sýna mál þings, eða einungis stjörnumerkt."
 msgid "Add comment"
 msgstr "Bæta við ummælum"
 
-#: core/views.py:664
+#: core/views.py:628
+msgid "Pirate Party voting system verification"
+msgstr "Staðfesting í kosningakerfi Pírata"
+
+#: core/views.py:632
 msgid "An unknown error occurred while verifying electronic ID."
 msgstr "Óþekkt villa átti sér stað við staðfestingu með rafrænum skilríkjum."
 
