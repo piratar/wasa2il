@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-17 10:07+0000\n"
+"POT-Creation-Date: 2024-08-30 14:12+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Icelandic\n"
@@ -66,64 +66,73 @@ msgstr "Já"
 msgid "No"
 msgstr "Nei"
 
-#: core/forms.py:63 core/models.py:105
+#: core/forms.py:63 core/models.py:98
 msgid "Consent for sending email"
 msgstr "Samþykki fyrir póstsendingum"
 
-#: core/forms.py:67
-msgid "Message"
-msgstr ""
-
-#: core/models.py:89 election/models.py:38 issue/models.py:52
-#: issue/models.py:368 issue/models.py:426 polity/models.py:26
-#: tasks/models.py:50 topic/models.py:76
-msgid "Name"
-msgstr "Nafn"
-
-#: core/models.py:89
-msgid "The name to display on the site."
-msgstr "Nafnið sem birtist á vefnum."
-
-#: core/models.py:90 wasa2il/templates/tasks/task_applications.html:64
+#: core/forms.py:68 core/models.py:83
+#: wasa2il/templates/tasks/task_applications.html:64
 msgid "Phone"
 msgstr "Sími"
 
-#: core/models.py:90
+#: core/forms.py:75
+msgid "Invalid phone number."
+msgstr "Ógilt símanúmer."
+
+#: core/forms.py:78
+msgid "Phone number must be 7 digits."
+msgstr "Símanúmer verður að vera 7 tölustafir."
+
+#: core/forms.py:84
+msgid "Message"
+msgstr "Skilaboð"
+
+#: core/models.py:82 election/models.py:38 issue/models.py:53
+#: issue/models.py:369 issue/models.py:427 polity/models.py:26
+#: tasks/models.py:50 topic/models.py:75
+msgid "Name"
+msgstr "Nafn"
+
+#: core/models.py:82
+msgid "The name to display on the site."
+msgstr "Nafnið sem birtist á vefnum."
+
+#: core/models.py:83
 msgid ""
 "Mostly intended for active participants such as volunteers and candidates."
 msgstr ""
 "Fyrst og fremst fyrir virka þátttakendur, t.d. sjálfboðaliða og "
 "frambjóðendur."
 
-#: core/models.py:91
+#: core/models.py:84
 msgid "E-mail visible"
 msgstr "Netfang sýnilegt"
 
-#: core/models.py:91
+#: core/models.py:84
 msgid "Whether to display your email address on your profile page."
 msgstr "Við sýnum <strong>ekki</strong> netföng notenda okkar opinberlega."
 
-#: core/models.py:92
+#: core/models.py:85
 msgid "Bio"
 msgstr "Saga"
 
-#: core/models.py:93 wasa2il/templates/profile/profile.html:40
+#: core/models.py:86 wasa2il/templates/profile/profile.html:40
 msgid "Declaration of interests"
 msgstr "Hagsmunaskráning"
 
-#: core/models.py:94
+#: core/models.py:87
 msgid "Picture"
 msgstr "Mynd"
 
-#: core/models.py:106
+#: core/models.py:99
 msgid "Whether to consent to receiving notifications via email."
 msgstr "Samþykki fyrir því að fá tilkynningar með tölvupósti."
 
-#: core/models.py:109 wasa2il/templates/admintools_push.html:16
+#: core/models.py:102 wasa2il/templates/admintools_push.html:16
 msgid "Language"
 msgstr "Tungumál"
 
-#: core/models.py:110
+#: core/models.py:103
 msgid "Whether to show all topics in a polity, or only starred."
 msgstr "Hvort eigi að sýna mál þings, eða einungis stjörnumerkt."
 
@@ -131,7 +140,11 @@ msgstr "Hvort eigi að sýna mál þings, eða einungis stjörnumerkt."
 msgid "Add comment"
 msgstr "Bæta við ummælum"
 
-#: election/models.py:30 issue/models.py:46
+#: core/views.py:664
+msgid "An unknown error occurred while verifying electronic ID."
+msgstr "Óþekkt villa átti sér stað við staðfestingu með rafrænum skilríkjum."
+
+#: election/models.py:30 issue/models.py:47
 #: wasa2il/templates/election/_elections_recent_table.html:33
 #: wasa2il/templates/election/election_list.html:55
 #: wasa2il/templates/issue/_issues_recent_table.html:38
@@ -139,7 +152,7 @@ msgstr "Bæta við ummælum"
 msgid "Concluded"
 msgstr "Lokið"
 
-#: election/models.py:31 issue/models.py:47
+#: election/models.py:31 issue/models.py:48
 #: wasa2il/templates/election/_elections_recent_table.html:31
 #: wasa2il/templates/election/election_list.html:53
 #: wasa2il/templates/issue/_issues_recent_table.html:27
@@ -306,42 +319,46 @@ msgid "Content must differ from previous version"
 msgstr "Texti verður að vera frábrugðinn fyrri útgáfu."
 
 #: issue/models.py:38
+msgid "---"
+msgstr ""
+
+#: issue/models.py:39
 msgid "Accepted at assembly"
 msgstr "Samþykkt á samkomu"
 
-#: issue/models.py:39
+#: issue/models.py:40
 msgid "Rejected at assembly"
 msgstr "Hafnað á samkomu"
 
-#: issue/models.py:40 issue/models.py:438
+#: issue/models.py:41 issue/models.py:439
 #: wasa2il/templates/issue/_issues_recent_table.html:31
 #: wasa2il/templates/issue/issues.html:57
 msgid "Retracted"
 msgstr "Dregin til baka"
 
-#: issue/models.py:48 wasa2il/templates/issue/_issues_recent_table.html:25
+#: issue/models.py:49 wasa2il/templates/issue/_issues_recent_table.html:25
 #: wasa2il/templates/issue/issues.html:51
 msgid "Accepting proposals"
 msgstr "Opið fyrir tillögur"
 
-#: issue/models.py:49 wasa2il/templates/issue/_issues_recent_table.html:23
+#: issue/models.py:50 wasa2il/templates/issue/_issues_recent_table.html:23
 #: wasa2il/templates/issue/issues.html:49
 msgid "In discussion"
 msgstr "Í umræðu"
 
-#: issue/models.py:53
+#: issue/models.py:54
 msgid ""
 "A great issue name expresses the essence of a proposal as briefly as "
 "possible."
 msgstr ""
 "Frábært málsnafn lýsir kjarna tillögunnar eins stuttlega og mögulegt er."
 
-#: issue/models.py:60 issue/models.py:432 polity/models.py:37
-#: topic/models.py:79 wasa2il/templates/issue/document_detail.html:139
+#: issue/models.py:61 issue/models.py:433 polity/models.py:37
+#: topic/models.py:78 wasa2il/templates/issue/document_detail.html:139
 msgid "Description"
 msgstr "Lýsing"
 
-#: issue/models.py:61
+#: issue/models.py:62
 msgid ""
 "An issue description is usually just a copy of the proposal's description, "
 "but you can customize it here if you so wish."
@@ -349,7 +366,7 @@ msgstr ""
 "Lýsing máls er venjulega afrit af lýsingu tillögunnar, en þú getur sérsniðið "
 "hana hér ef þú vilt."
 
-#: issue/models.py:84 wasa2il/templates/_sidenav_polity.html:26
+#: issue/models.py:85 wasa2il/templates/_sidenav_polity.html:33
 #: wasa2il/templates/issue/_agreements_list.html:12
 #: wasa2il/templates/polity/polity_detail.html:34
 #: wasa2il/templates/polity/polity_list.html:29
@@ -358,22 +375,22 @@ msgstr ""
 msgid "Topics"
 msgstr "Málaflokkar"
 
-#: issue/models.py:97
+#: issue/models.py:98
 msgid "Ruleset"
 msgstr "Reglur"
 
-#: issue/models.py:115 wasa2il/templates/issue/_issue_detail_metadata.html:28
+#: issue/models.py:116 wasa2il/templates/issue/_issue_detail_metadata.html:28
 #: wasa2il/templates/issue/issue_detail.html:79
 msgid "Special process"
 msgstr "Sérstakur ferill"
 
-#: issue/models.py:266
+#: issue/models.py:267
 #, fuzzy, python-format
 #| msgid "Show closed issues"
 msgid "Voting closed on issue '%s'."
 msgstr "Sýna lokuð mál"
 
-#: issue/models.py:302 issue/models.py:435
+#: issue/models.py:303 issue/models.py:436
 #: wasa2il/templates/issue/_issue_detail_metadata.html:57
 #: wasa2il/templates/issue/_issues_recent_table.html:33
 #: wasa2il/templates/issue/issue_detail.html:108
@@ -381,7 +398,7 @@ msgstr "Sýna lokuð mál"
 msgid "Accepted"
 msgstr "Samþykkt"
 
-#: issue/models.py:302 issue/models.py:436
+#: issue/models.py:303 issue/models.py:437
 #: wasa2il/templates/issue/_issue_detail_metadata.html:57
 #: wasa2il/templates/issue/_issues_recent_table.html:35
 #: wasa2il/templates/issue/issue_detail.html:108
@@ -389,36 +406,36 @@ msgstr "Samþykkt"
 msgid "Rejected"
 msgstr "Hafnað"
 
-#: issue/models.py:362
+#: issue/models.py:363
 msgid "Policy"
 msgstr "Stefna"
 
-#: issue/models.py:363
+#: issue/models.py:364
 msgid "Bylaw"
 msgstr "Lög"
 
-#: issue/models.py:364
+#: issue/models.py:365
 msgid "Motion"
 msgstr "Ályktun"
 
-#: issue/models.py:365
+#: issue/models.py:366
 msgid "Other"
 msgstr "Annað"
 
-#: issue/models.py:430 wasa2il/templates/election/election_view.html:277
+#: issue/models.py:431 wasa2il/templates/election/election_view.html:277
 #: wasa2il/templates/issue/stub/document_view.html:84
 msgid "Text"
 msgstr "Texti"
 
-#: issue/models.py:434
+#: issue/models.py:435
 msgid "Proposed"
 msgstr "Tillaga"
 
-#: issue/models.py:437
+#: issue/models.py:438
 msgid "Deprecated"
 msgstr "Úrelt"
 
-#: issue/views.py:76 wasa2il/templates/issue/documentcontent_add.html:15
+#: issue/views.py:72 wasa2il/templates/issue/documentcontent_add.html:15
 #: wasa2il/templates/issue/documentcontent_edit.html:14
 #: wasa2il/templates/termsandconditions/tc_accept_terms.html:20
 #: wasa2il/templates/termsandconditions/tc_view_terms.html:20
@@ -753,44 +770,44 @@ msgstr ""
 msgid "Otherwise, please email us at"
 msgstr "Ef ekki, vinsamlegast sendið okkur póst á netfangið"
 
-#: wasa2il/templates/_sidenav_polity.html:13
+#: wasa2il/templates/_sidenav_polity.html:14
 msgid "Overview"
 msgstr "Yfirlit"
 
-#: wasa2il/templates/_sidenav_polity.html:17
+#: wasa2il/templates/_sidenav_polity.html:20
 #: wasa2il/templates/issue/issues.html:20
 #: wasa2il/templates/topic/topic_detail.html:28
 #: wasa2il/templates/topic/topic_list.html:25
 msgid "Issues"
 msgstr "Mál"
 
-#: wasa2il/templates/_sidenav_polity.html:21
+#: wasa2il/templates/_sidenav_polity.html:26
 #: wasa2il/templates/election/election_list.html:9
 #: wasa2il/templates/election/election_list.html:25
 #: wasa2il/templates/profile/profile.html:77
 msgid "Elections"
 msgstr "Kosningar"
 
-#: wasa2il/templates/_sidenav_polity.html:31
+#: wasa2il/templates/_sidenav_polity.html:40
 #: wasa2il/templates/help/is/agreement.html:6
 #: wasa2il/templates/issue/document_list.html:12
 #: wasa2il/templates/polity/polity_detail.html:33
 msgid "Agreements"
 msgstr "Samþykktir"
 
-#: wasa2il/templates/_sidenav_polity.html:37
+#: wasa2il/templates/_sidenav_polity.html:48
 msgid "Volunteer for tasks"
 msgstr "Grasrótarinn"
 
-#: wasa2il/templates/_sidenav_polity.html:44
+#: wasa2il/templates/_sidenav_polity.html:56
 msgid "You are an officer in this polity."
 msgstr "Þú ert umsjónarmaður þessa þings."
 
-#: wasa2il/templates/_sidenav_polity.html:46
+#: wasa2il/templates/_sidenav_polity.html:58
 msgid "You are a member of this polity."
 msgstr "Þú ert meðlimur þessa þings."
 
-#: wasa2il/templates/_sidenav_polity.html:49
+#: wasa2il/templates/_sidenav_polity.html:61
 #: wasa2il/templates/election/election_view.html:103
 #: wasa2il/templates/election/election_view.html:116
 #: wasa2il/templates/issue/issue_detail.html:32
@@ -810,38 +827,37 @@ msgstr "Verk notanda"
 msgid "News Site"
 msgstr "Fréttavefur"
 
-#: wasa2il/templates/_user_actions.html:18
+#: wasa2il/templates/_user_actions.html:28
 msgid "Sub-polities"
 msgstr "Aðildarfélög"
 
-#: wasa2il/templates/_user_actions.html:44
+#: wasa2il/templates/_user_actions.html:54
 msgid "My profile"
 msgstr "Mín síða"
 
-#: wasa2il/templates/_user_actions.html:45
+#: wasa2il/templates/_user_actions.html:55
 msgid "My settings"
 msgstr "Stillingar"
 
-#: wasa2il/templates/_user_actions.html:46
+#: wasa2il/templates/_user_actions.html:56
 #: wasa2il/templates/accounts/personal_data.html:11
 msgid "Personal data"
 msgstr "Persónugögn"
 
-#: wasa2il/templates/_user_actions.html:48
+#: wasa2il/templates/_user_actions.html:58
 #: wasa2il/templates/registration/verification_invalid_entity.html:17
-#: wasa2il/templates/registration/verification_needed.html:12
 #: wasa2il/templates/termsandconditions/tc_accept_terms.html:49
 msgid "Logout"
 msgstr "Útskrá"
 
-#: wasa2il/templates/_user_actions.html:52
+#: wasa2il/templates/_user_actions.html:62
 #: wasa2il/templates/registration/login.html:11
 #: wasa2il/templates/registration/logout.html:12
 #: wasa2il/templates/registration/password_reset_complete.html:13
 msgid "Log in"
 msgstr "Innskrá"
 
-#: wasa2il/templates/_user_actions.html:53
+#: wasa2il/templates/_user_actions.html:63
 #: wasa2il/templates/registration/login.html:30
 #: wasa2il/templates/registration/registration_form.html:11
 #: wasa2il/templates/registration/registration_form.html:30
@@ -1520,9 +1536,9 @@ msgid ""
 "assumptions made by the authors of the agreement, followed by a list of "
 "declarations\n"
 "which the signatory polities agree to. <a href=\"http://www.europarl.europa."
-"eu/sides/getDoc.do?pubRef=-//EP//NONSGML+WDECL+P7-DCL-2010-0047+0+DOC+PDF"
-"+V0//EN&language=EN\">Here is a delightful example</a> - hover over "
-"different parts to see what they're for.\n"
+"eu/sides/getDoc.do?pubRef=-//EP//NONSGML+WDECL+P7-"
+"DCL-2010-0047+0+DOC+PDF+V0//EN&language=EN\">Here is a delightful example</"
+"a> - hover over different parts to see what they're for.\n"
 "<div style=\"margin: 20px; margin-left:  50px; width: 500px; padding: 30px; "
 "border: 1px solid #000;\">\n"
 "\t<p><b>0047/2010</b></p>\n"
@@ -1783,8 +1799,8 @@ msgid ""
 "happens. Wasa2il has to be flexible enough to accomodate the varying \n"
 "meta-rules of a given polity, otherwise the polity may decide that Wasa2il "
 "isn't \n"
-"useful to them. Sometimes these rules are referred to as \"rules of procedure"
-"\" \n"
+"useful to them. Sometimes these rules are referred to as \"rules of "
+"procedure\" \n"
 "or \"constitution\", depending on the type of polity which is using them.\n"
 "</p>\n"
 "<p>\n"
@@ -1971,8 +1987,8 @@ msgid ""
 "</p>\n"
 "<h3>Voting on a proposal</h3>\n"
 "<p>\n"
-"In order for a proposal to be accepted, it needs to be <a href=\"/help/vote"
-"\">voted</a> on in accordance with the rules of the polity.\n"
+"In order for a proposal to be accepted, it needs to be <a href=\"/help/"
+"vote\">voted</a> on in accordance with the rules of the polity.\n"
 "Before the entire proposal can be voted on, the polity first needs to "
 "resolve which version of the document it is voting on. This\n"
 "is done by voting on all of the change proposals to the proposal "
@@ -2596,7 +2612,10 @@ msgid "Attention"
 msgstr "Athugið"
 
 #: wasa2il/templates/registration/login.html:50
-msgid "You may need to verify your account via island.is in the next step."
+#, fuzzy
+#| msgid "You may need to verify your account via island.is in the next step."
+msgid ""
+"You will need to verify your account with electronic ID in the next step."
 msgstr "Hugsanlega þarf að staðfesta auðkenningu á island.is í næsta skrefi."
 
 #: wasa2il/templates/registration/logout.html:8
@@ -2804,23 +2823,19 @@ msgstr ""
 msgid "Try again"
 msgstr "Reyna aftur"
 
-#: wasa2il/templates/registration/verification_needed.html:6
+#: wasa2il/templates/registration/verification_needed.html:8
 msgid "Verification needed"
 msgstr "Staðfestingar er þörf"
 
-#: wasa2il/templates/registration/verification_needed.html:8
+#: wasa2il/templates/registration/verification_needed.html:14
 msgid ""
 "The account registration process cannot be completed until verification has "
 "been provided."
 msgstr "Staðfestingu á auðkenni þarf til þess að klára skráningarferli."
 
-#: wasa2il/templates/registration/verification_needed.html:9
-msgid "Please select one of the following options"
-msgstr "Vinsamlegast veljið einn eftirfarandi valmöguleika"
-
-#: wasa2il/templates/registration/verification_needed.html:11
-msgid "Verify identity"
-msgstr "Staðfesta auðkenni"
+#: wasa2il/templates/registration/verification_needed.html:18
+msgid "Verify"
+msgstr "Staðfesta"
 
 #: wasa2il/templates/tasks/dialog_task_delete.html:6
 msgid "Delete task"
@@ -3107,6 +3122,12 @@ msgid ""
 msgstr ""
 "Endilega skráðu þig inn með aðgangi ofurnotanda, sem á að hafa verið búinn "
 "til í innsetningarferlinu, til þess að búa til nýtt þing."
+
+#~ msgid "Please select one of the following options"
+#~ msgstr "Vinsamlegast veljið einn eftirfarandi valmöguleika"
+
+#~ msgid "Verify identity"
+#~ msgstr "Staðfesta auðkenni"
 
 #~ msgid "In polity"
 #~ msgstr "Í þingi"
