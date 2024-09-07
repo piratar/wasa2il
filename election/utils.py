@@ -67,7 +67,7 @@ class BallotContainer(object):
     def load_ballots(self, filename):
         """Load ballots from disk"""
         with open(filename, 'r') as fd:
-            self.ballots += json.load(fd, encoding='utf-8')
+            self.ballots += json.load(fd)
         self.candidates = self.get_candidates()
         return self
 
