@@ -5,13 +5,9 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from crispy_forms.layout import Button
 
-from datetimewidget.widgets import DateTimeWidget
-
 from django.conf import settings
 from django.forms.fields import DateTimeField
-from django.forms.fields import TypedChoiceField
-from django.forms.models import ModelChoiceField
-from django.forms.models import ModelMultipleChoiceField
+
 
 class Wasa2ilForm(forms.ModelForm):
     '''
@@ -48,4 +44,4 @@ class Wasa2ilForm(forms.ModelForm):
             field = self.fields[fieldname]
             field_type = type(field)
             if field_type is DateTimeField:
-                field.widget = DateTimeWidget(options=self.dateTimeOptions, bootstrap_version=3)
+                field.widget = forms.DateTimeInput(attrs={'type': 'datetime-local'})

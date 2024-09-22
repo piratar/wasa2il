@@ -267,26 +267,6 @@ class PickerWidgetMixin(object):
     media = property(_media)
 
 
-class DateTimeWidget(PickerWidgetMixin, DateTimeInput):
-    """
-    DateTimeWidget is the corresponding widget for Datetime field, it renders both the date and time
-    sections of the datetime picker.
-    """
-
-    format_name = 'DATETIME_INPUT_FORMATS'
-    glyphicon = 'glyphicon-th'
-
-    def __init__(self, attrs=None, options=None, usel10n=None, bootstrap_version=None):
-
-        if options is None:
-            options = {}
-
-        # Set the default options to show only the datepicker object
-        options['format'] = options.get('format', 'dd/mm/yyyy hh:ii')
-
-        super(DateTimeWidget, self).__init__(attrs, options, usel10n, bootstrap_version)
-
-
 class DateWidget(PickerWidgetMixin, DateInput):
     """
     DateWidget is the corresponding widget for Date field, it renders only the date section of
