@@ -23,7 +23,6 @@
         .user_can_vote, .user_can_run {display: inline-block; float: right;}
         {% with election_state as election.election_state %}
             {% if election_state != 'concluded' %}
-                table#election_details tr {display: none;}
                 {% if election_state == 'voting' %}
                     table#election_details tr#vote_deadline,
                 {% elif election_state == 'waiting' %}
@@ -162,14 +161,59 @@
             </td></tr>
 {% endif %}
             <tr><th>{% trans "Voting system" %}:</th><td>{{ election.get_voting_system_display }}</td></tr>
-            <tr id="show_details"><td colspan=2>
-                <a onclick="show_details();" href="#">{% trans "Details ..." %}</a>
-            </td></tr>
             <tr><th>{% trans "Candidates" %}:</th><td id="election_candidates_count">{{ election.candidate_set.count }}
             </td></tr>
             <tr id="counted_votes"><th>{% trans "Votes" %}:</th><td id="election_votes_count">{{ election.get_vote_count }}
             </td></tr>
         </table>
+
+        {% if election.election_state != 'concluded' %}
+            {% if voting_interface_enabled and election.election_state == 'voting' %}
+            <div class="col-md-16 col-xs-12 well voting">
+                {% if started_voting or step == "vote" %}
+                <h2>{% trans "Votes" %} <small>{% trans "your favorites first!" %}</small></h2>
+                <ol id="vote" class="candidates sortable">
+
+                </ol>
+                {% else %}
+                    {% if election.instructions %}
+                    <h2>{% trans "About This Election" %}</h2>
+                    <p>{{ election.instructions|urlize|markdown }}</p>
+                    {% endif %}
+                <h2>{% trans "How To Vote" %}</h2>
+                <ul>
+                    <li>{% trans "Click the Start Voting button to begin" %}</li>
+                    <li>{% trans "Click a Vote button to vote for a candidate" %}</li>
+                    <li>{% trans "Click the arrows to move your favorite candidates to the top" %}</li>
+                    <li>{% trans "Your vote will be counted when the deadline has passed" %}</li>
+                </ul>
+                <div class="alert alert-success start-voting">
+                    <a href="?step=vote"><button><b>{% trans "Start Voting" %}</b></button></a>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div class="col-md-16 col-xs-12 well"><a name="candidates"></a>
+                <h2>{% trans "Candidates" %} <small>{% trans "running in this election" %}</small></h2>
+                {% if can_run %}
+                <div class="text-center">
+                    <a class="btn btn-primary btn-lg" role="button" style="display: none;" id="election_button_announce" onclick="election_candidacy_announce();">{% trans 'Announce candidacy' %}</a>
+                    <a class="btn btn-primary btn-lg" role="button" style="display: none;" id="election_button_withdraw" onclick="election_candidacy_withdraw();"
+                         {% if election.election_state == 'voting' or election.election_state == 'waiting' %}
+                         data-confirm="{% trans "Are you sure you want to withdraw? This can not be undone." %}"
+                         {% endif %}
+                         >{% trans 'Withdraw candidacy' %}</a>
+                </div>
+                <br clear="both">
+                {% endif %}
+
+                <div id="election_candidates" style="margin-top: 1em;">
+                    <ul class="candidates{% if started_voting or step == "vote" %}{% else %} hidebuttons{% endif %}" id="candidates">
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+
     </div>
 
 {% if statistics and election.stats_publish_ballots_basic %}
@@ -289,56 +333,6 @@
 </div>
 {% endif %}
 
-
-{% if election.election_state != 'concluded' %}
-<div class="row">
-    {% if voting_interface_enabled and election.election_state == 'voting' %}
-    <div class="col-md-5 col-xs-12 well voting">
-        {% if started_voting or step == "vote" %}
-        <h2>{% trans "Votes" %} <small>{% trans "your favorites first!" %}</small></h2>
-        <ol id="vote" class="candidates sortable">
-
-        </ol>
-        {% else %}
-            {% if election.instructions %}
-            <h2>{% trans "About This Election" %}</h2>
-            <p>{{ election.instructions|urlize|markdown }}</p>
-            {% endif %}
-        <h2>{% trans "How To Vote" %}</h2>
-        <ul>
-            <li>{% trans "Click the Start Voting button to begin" %}</li>
-            <li>{% trans "Click a Vote button to vote for a candidate" %}</li>
-            <li>{% trans "Click the arrows to move your favorite candidates to the top" %}</li>
-            <li>{% trans "Your vote will be counted when the deadline has passed" %}</li>
-        </ul>
-        <div class="alert alert-success start-voting">
-            <a href="?step=vote"><button><b>{% trans "Start Voting" %}</b></button></a>
-        </div>
-        {% endif %}
-    </div>
-    <div class="col-md-1"></div>
-    {% endif %}
-    <div class="col-md-5 col-xs-12 well"><a name="candidates"></a>
-        <h2>{% trans "Candidates" %} <small>{% trans "running in this election" %}</small></h2>
-        {% if can_run %}
-        <div class="text-center">
-            <a class="btn btn-primary btn-lg" role="button" style="display: none;" id="election_button_announce" onclick="election_candidacy_announce();">{% trans 'Announce candidacy' %}</a>
-            <a class="btn btn-primary btn-lg" role="button" style="display: none;" id="election_button_withdraw" onclick="election_candidacy_withdraw();"
-                 {% if election.election_state == 'voting' or election.election_state == 'waiting' %}
-                 data-confirm="{% trans "Are you sure you want to withdraw? This can not be undone." %}"
-                 {% endif %}
-                 >{% trans 'Withdraw candidacy' %}</a>
-        </div>
-        <br clear="both">
-        {% endif %}
-
-        <div id="election_candidates" style="margin-top: 1em;">
-            <ul class="candidates{% if started_voting or step == "vote" %}{% else %} hidebuttons{% endif %}" id="candidates">
-            </ul>
-        </div>
-    </div>
-</div>
-{% endif %}
 
 <!-- This is used by the Javascript for CSRF and to detect when users get
      logged out due to inactivity. -->
