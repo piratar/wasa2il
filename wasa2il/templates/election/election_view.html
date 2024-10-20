@@ -127,7 +127,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6 col-xs-12">
+    <div class="col-md-{% if election.election_state == "accepting_candidates" or election.election_state == "waiting" %}6{% else %}12{% endif %} col-xs-12">
         <table id="election_details" class="table table-compact">
             <tr id="cand_deadline"><th>{% trans "Deadline for candidacies" %}:</th><td>
                 {{ election.deadline_candidacy|may_expire }}
@@ -169,17 +169,13 @@
 
         {% if election.election_state != 'concluded' %}
             {% if voting_interface_enabled and election.election_state == 'voting' %}
-            <div class="col-md-16 col-xs-12 well voting">
+            <div class="col-md-6 col-xs-12 well voting">
                 {% if started_voting or step == "vote" %}
                 <h2>{% trans "Votes" %} <small>{% trans "your favorites first!" %}</small></h2>
                 <ol id="vote" class="candidates sortable">
 
                 </ol>
                 {% else %}
-                    {% if election.instructions %}
-                    <h2>{% trans "About This Election" %}</h2>
-                    <p>{{ election.instructions|urlize|markdown }}</p>
-                    {% endif %}
                 <h2>{% trans "How To Vote" %}</h2>
                 <ul>
                     <li>{% trans "Click the Start Voting button to begin" %}</li>
@@ -193,7 +189,7 @@
                 {% endif %}
             </div>
             {% endif %}
-            <div class="col-md-16 col-xs-12 well"><a name="candidates"></a>
+            <div class="col-md-{% if election.election_state == "voting" %}6{% else %}12{% endif %} col-xs-12 well"><a name="candidates"></a>
                 <h2>{% trans "Candidates" %} <small>{% trans "running in this election" %}</small></h2>
                 {% if can_run %}
                 <div class="text-center">
@@ -256,7 +252,7 @@
 
     <div class="col-md-{% if statistics and election.stats_publish_ballots_basic %}12{% else %}6{% endif %} col-xs-12">
         {% if election.instructions %}
-            {% if not voting_interface_enabled or election.election_state != 'voting' or started_voting or step == "vote" %}
+            {% if election.election_state == 'accepting_candidates' or election.election_state == 'waiting' %}
                 <div class="alert alert-success">
                     <h3>{% trans "About This Election" %}</h3>
                     <p>{{ election.instructions|urlize|markdown }}</p>
