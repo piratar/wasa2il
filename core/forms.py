@@ -71,11 +71,11 @@ class VerificationForm(Form):
         phone = self.cleaned_data.get("phone", "")
         phone = phone.replace("-", "").replace(" ", "")
 
-        if not phone.isdigit():
+        if not phone.lstrip("+").isdigit():
             raise ValidationError(_("Invalid phone number."))
 
-        if len(phone) != 7:
-            raise ValidationError(_("Phone number must be 7 digits."))
+        if len(phone) < 7:
+            raise ValidationError(_("Phone number must be at least 7 digits."))
 
         return phone
 
