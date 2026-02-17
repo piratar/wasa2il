@@ -28,4 +28,4 @@ def auto_logged_out(request):
             'splash_message': _('For security reasons, you have been automatically logged out due to inactivity.')
         }
 
-    return {}
+    return {'splash_message': ''}

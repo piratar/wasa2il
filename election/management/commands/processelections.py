@@ -30,7 +30,7 @@ class Command(BaseCommand):
                     print()
                     return
 
-            elections = Election.objects.filter(is_processed=False)
+            elections = Election.objects.filter(is_processed=False).order_by('-id')
 
             for election in elections:
                 if (options.get('election_id') and

@@ -10,6 +10,7 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     re_path(r'^$', core_views.home, name='home'),
+    path('induce-error', core_views.induce_error, name='induce_error'),
     re_path(r'^service-worker.js', TemplateView.as_view(
             template_name="service-worker.js",
             content_type='application/javascript'),

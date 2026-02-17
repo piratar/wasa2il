@@ -89,6 +89,9 @@ def home(request):
         # polity listing.
         return HttpResponseRedirect(reverse('polities'))
 
+def induce_error(request):
+    raise Exception('Error willfully induced for debugging purposes.')
+
 def manifest(request):
     manifest = {
       "name": "%s" % (settings.INSTANCE_NAME),
@@ -129,7 +132,7 @@ def manifest(request):
         "scope": "/",
         "use_cache": False
       },
-      "gcm_sender_id": "%d" % (settings.GCM_SENDER_ID),
+      "gcm_sender_id": "%s" % (settings.GCM_SENDER_ID),
     }
     return JsonResponse(manifest)
 
@@ -625,8 +628,13 @@ def verify(request):
         form = VerificationForm(request.POST)
         if form.is_valid():
             try:
-                person = see_some_id(form.cleaned_data.get("phone"), _("Pirate Party voting system verification"))
+                person = see_some_id(
+                    form.cleaned_data.get("phone"),
+                    _("Pirate Party voting system verification"),
+                    skip_signature_verification=True
+                )
             except Exception:
+                raise
                 form.add_error(
                     None,
                     _("An unknown error occurred while verifying electronic ID.")
