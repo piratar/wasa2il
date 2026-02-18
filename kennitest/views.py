@@ -7,7 +7,9 @@ import urllib.parse
 from jose import jwt
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+
 from django.shortcuts import render
 
 from kennitest import constants
@@ -118,7 +120,7 @@ def receive(request):
     decoded_header = jwt.get_unverified_header(id_token)
     kid = decoded_header.get("kid", "")  # get the key id
     alg = decoded_header.get("alg", "")  # get the signing algorithm
-    key = utils.get_key_from_oidc_provider(kid)
+    key = get_key_from_oidc_provider(kid)
     payload = jwt.decode(
         id_token,
         key,
@@ -127,4 +129,4 @@ def receive(request):
         options={"verify_at_hash": False},
     )
 
-    return str(payload)
+    return HttpResponse(str(payload), content_type="text/plain")

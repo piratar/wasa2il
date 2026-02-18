@@ -4,5 +4,5 @@ from kennitest import views as kenniviews
 
 urlpatterns = [
 	re_path('$', kenniviews.handler),
-	re_path('receive/$', kenniviews.receive),
+	re_path('response/$', kenniviews.receive),
 ]
