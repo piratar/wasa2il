@@ -17,6 +17,7 @@ from django.contrib import admin
 
 urlpatterns = [
     # Uncomment the admin/doc line below to enable admin documentation:
+    re_path(r'toy/', include('kennitest.urls')),
     re_path(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
     re_path(r'^admin/', admin.site.urls),

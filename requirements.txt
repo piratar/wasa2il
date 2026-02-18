@@ -31,3 +31,6 @@ setuptools
 
 # Auðkenni
 git+https://github.com/binary-is/audkenni.git@main#egg=audkenni
+
+# Due to Kenni.is
+python-jose
