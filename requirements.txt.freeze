@@ -12,7 +12,7 @@ cryptography==43.0.0
 cssselect==1.2.0
 cssutils==2.11.1
 diff-match-patch==20230430
-Django==5.1.15
+Django==5.1
 django-bootstrap-form==3.4
 django-crispy-forms==2.3
 django-dotenv==1.4.2
