@@ -58,6 +58,8 @@ from gateway.utils import update_member
 
 from languagecontrol.utils import set_language
 
+from kenniclient import views as kenniclient_views
+
 # BEGIN - Included for Wasa2ilRegistrationView and Wasa2ilActivationView
 from django.contrib.auth import login
 from django.contrib.sites.shortcuts import get_current_site
@@ -624,83 +626,9 @@ class Wasa2ilActivationView(ActivationView):
 
 @login_required
 def verify(request):
-    if request.method == "POST":
-        form = VerificationForm(request.POST)
-        if form.is_valid():
-            try:
-                person = see_some_id(
-                    form.cleaned_data.get("phone"),
-                    _("Pirate Party voting system verification"),
-                    skip_signature_verification=True
-                )
-            except Exception:
-                raise
-                form.add_error(
-                    None,
-                    _("An unknown error occurred while verifying electronic ID.")
-                )
-                ctx = {
-                    "form": form,
-                }
-                return render(request, "registration/verification_needed.html", ctx)
+    return kenniclient_views.redirect(request)
 
-            ssn = person["nationalRegisterId"]
-            name = person["name"]
-            signature = person["signature"]
-
-            # Make sure that the user is, in fact, human.
-            if is_ssn_human_or_institution(ssn) != 'human':
-                ctx = {
-                    "ssn": ssn,
-                    "name": name,
-                }
-                return render(request, 'registration/verification_invalid_entity.html', ctx)
-
-            # Make sure that user has reached the minimum required age, if applicable.
-            if hasattr(settings, 'AGE_LIMIT') and settings.AGE_LIMIT > 0:
-                age = calculate_age_from_ssn(ssn)
-                if age < settings.AGE_LIMIT:
-                    logout(request)
-                    ctx = {
-                        'age': age,
-                        'age_limit': settings.AGE_LIMIT,
-                    }
-                    return render(request, 'registration/verification_age_limit.html', ctx)
-
-            if UserProfile.objects.filter(verified_ssn=ssn).exists():
-                taken_user = UserProfile.objects.select_related('user').get(verified_ssn=ssn).user
-                ctx = {
-                    'taken_user': taken_user,
-                }
-
-                logout(request)
-
-                return render(request, 'registration/verification_duplicate.html', ctx)
-
-            profile = request.user.userprofile  # It shall exist at this point
-            profile.verified_ssn = ssn
-            profile.verified_name = name
-            profile.verified_signature = signature
-            profile.verified_timing = timezone.now()
-            profile.save()
-            event_register('user_verified', user=request.user)
-
-            user_verified.send(
-                sender=request.user.__class__,
-                user=request.user,
-                request=request
-            )
-
-            return redirect("/")
-    else:
-        form = VerificationForm()
-
-    ctx = {
-        "form": form,
-    }
-    return render(request, "registration/verification_needed.html", ctx)
-
-
+    
 @login_required
 def sso(request):
     if not hasattr(settings, 'DISCOURSE_URL'):

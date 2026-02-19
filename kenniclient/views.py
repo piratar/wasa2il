@@ -6,14 +6,20 @@ import urllib.parse
 
 from jose import jwt
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
 from django.shortcuts import render
 
-from kennitest import constants
-from kennitest import forms as kenniforms
+from core.models import UserProfile, event_register
+from core.signals import user_verified
+from core.utils import is_ssn_human_or_institution
+from core.utils import calculate_age_from_ssn
+
+from kenniclient import constants
+from kenniclient import forms as kenniforms
 
 AUTH_ENDPOINT = f"{constants.ISSUER}/oidc/auth"
 TOKEN_ENDPOINT = f"{constants.ISSUER}/oidc/token"
@@ -70,31 +76,24 @@ def get_key_from_oidc_provider(kid: str):
     return desired_key
 
 @login_required
-def handler(request):
-    if request.method == "GET":
-        form = kenniforms.Kennitala
-    elif request.method == "POST":
-        form = kenniforms.Kennitala(request.POST)
-        if form.is_valid():
-            code_verifier = generate_code_verifier()
-            request.session['code_verifier'] = code_verifier
-            query_params = {
-                'client_id':constants.CLIENT_ID,
-                'redirect_uri':constants.REDIRECT_URL,
-                'response_type':"code",
-                'response_mode':"query",
-                'scope':constants.SCOPE,
-                'state':secrets.token_urlsafe(32),
-                'nonce':secrets.token_urlsafe(32),
-                'code_challenge':generate_code_challenge(code_verifier),
-                'code_challenge_method':"S256",
-            }
-            authentication_request_url = (
-                f"{AUTH_ENDPOINT}?{urllib.parse.urlencode(query_params)}"
-            )
-            return HttpResponseRedirect(authentication_request_url)
-
-    return render(request, "registration/kennitest.html", {'form':form})
+def redirect(request):
+    code_verifier = generate_code_verifier()
+    request.session['code_verifier'] = code_verifier
+    query_params = {
+        'client_id':constants.CLIENT_ID,
+        'redirect_uri':constants.REDIRECT_URL,
+        'response_type':"code",
+        'response_mode':"query",
+        'scope':constants.SCOPE,
+        'state':secrets.token_urlsafe(32),
+        'nonce':secrets.token_urlsafe(32),
+        'code_challenge':generate_code_challenge(code_verifier),
+        'code_challenge_method':"S256",
+    }
+    authentication_request_url = (
+        f"{AUTH_ENDPOINT}?{urllib.parse.urlencode(query_params)}"
+    )
+    return HttpResponseRedirect(authentication_request_url)
 
 @login_required
 def receive(request):
@@ -129,4 +128,49 @@ def receive(request):
         options={"verify_at_hash": False},
     )
 
-    return HttpResponse(str(payload), content_type="text/plain")
+    ssn = payload["national_id"]
+    name = payload["name"]
+
+    if is_ssn_human_or_institution(ssn) != 'human':
+        ctx = {
+            "ssn": ssn,
+            "name": name,
+        }
+        return render(request, 'registration/verification_invalid_entity.html', ctx)
+
+    # Make sure that user has reached the minimum required age, if applicable.
+    if hasattr(settings, 'AGE_LIMIT') and settings.AGE_LIMIT > 0:
+        age = calculate_age_from_ssn(ssn)
+        if age < settings.AGE_LIMIT:
+            logout(request)
+            ctx = {
+                'age': age,
+                'age_limit': settings.AGE_LIMIT,
+            }
+            return render(request, 'registration/verification_age_limit.html', ctx)
+
+    if UserProfile.objects.filter(verified_ssn=ssn).exists():
+        taken_user = UserProfile.objects.select_related('user').get(verified_ssn=ssn).user
+        ctx = {
+            'taken_user': taken_user,
+        }
+        
+        logout(request)
+
+        return render(request, 'registration/verification_duplicate.html', ctx)
+
+    profile = request.user.userprofile  # It shall exist at this point
+    profile.verified_ssn = ssn
+    profile.verified_name = name
+    profile.verified_signature = str(payload)
+    profile.verified_timing = timezone.now()
+    profile.save()
+    event_register('user_verified', user=request.user)
+    
+    user_verified.send(
+        sender=request.user.__class__,
+        user=request.user,
+        request=request
+    )
+
+    return HttpResponseRedirect("/")

@@ -12,12 +12,12 @@ from django.views import static
 from registration.backends.default.views import RegistrationView
 
 from core import views as core_views
+from kenniclient import views as kenni_views
 
 from django.contrib import admin
 
 urlpatterns = [
     # Uncomment the admin/doc line below to enable admin documentation:
-    re_path(r'toy/', include('kennitest.urls')),
     re_path(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
     re_path(r'^admin/', admin.site.urls),
@@ -59,7 +59,7 @@ urlpatterns = [
     path("accounts/verify/", core_views.verify, name="verify"),
 
     path('accounts/', include('registration.backends.default.urls')),
-
+    path('kenni/receive', kenni_views.receive),
     re_path(r'^help/$', TemplateView.as_view(template_name='help/is/index.html')),
     re_path(r'^help/(?P<page>.*)/$', core_views.help),
 
